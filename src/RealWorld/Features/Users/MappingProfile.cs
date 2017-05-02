@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 
-namespace RealWorld.Features.Person
+namespace RealWorld.Features.Users
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
-            CreateMap<Create.Command, Domain.Person>(MemberList.Source);
+            CreateMap<Domain.Person, Domain.User>(MemberList.None);
         }
     }
 }
