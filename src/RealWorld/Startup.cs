@@ -99,7 +99,20 @@ namespace RealWorld
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true,
                 TokenValidationParameters = tokenValidationParameters,
-                AuthenticationScheme = JwtIssuerOptions.Scheme
+                AuthenticationScheme = JwtIssuerOptions.Scheme,
+                Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = context =>
+                    {
+                        //Have to modify request since the standard for this project uses Token instead of Bearer
+                        string auth = context.Request.Headers["Authorization"];
+                        if (auth.StartsWith("Token ", StringComparison.OrdinalIgnoreCase))
+                        {
+                            context.Request.Headers["Authorization"] = "Bearer " + auth.Substring("Token ".Length).Trim();
+                        }
+                        return Task.CompletedTask;
+                    }
+                }
             });
             app.UseMvc();
 
