@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using RealWorld.Infrastructure;
@@ -8,7 +9,7 @@ namespace RealWorld.Features.Person
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<Domain.Person>
         {
             public string Username { get; set; }
 
@@ -23,7 +24,7 @@ namespace RealWorld.Features.Person
             public string Salt { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IAsyncRequestHandler<Command, Domain.Person>
         {
             private readonly RealWorldContext _db;
 
@@ -32,11 +33,12 @@ namespace RealWorld.Features.Person
                 _db = db;
             }
 
-            public void Handle(Command message)
+            public async Task<Domain.Person> Handle(Command message)
             {
                 var person = Mapper.Map<Command, Domain.Person>(message);
-                _db.Persons.Add(person);
-                _db.SaveChanges();
+                var add = _db.Persons.Add(person);
+                await _db.SaveChangesAsync();
+                return person;
             }
         }
     }

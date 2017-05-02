@@ -12,8 +12,6 @@ We've gone to great lengths to adhere to the ASP.NET Core community styleguides 
 
 For more information on how to this works with other frontends/backends, head over to the [RealWorld](https://github.com/gothinkster/realworld) repo.
 
-[![CircleCI](https://circleci.com/gh/adamhathcock/realworld-aspnetcore-kit/tree/master.svg?style=svg)](https://circleci.com/gh/adamhathcock/realworld-aspnetcore-kit/tree/master)
-
 # How it works
 
 This is using ASP.NET Core with:
@@ -27,6 +25,8 @@ This is using ASP.NET Core with:
 - Entity Framework Core
 - Built-in Swagger via [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
 - [Cake](http://cakebuild.net/) for building!
+
+This basic architecture is based on this reference architecture: [https://github.com/jbogard/ContosoUniversityCore](https://github.com/jbogard/ContosoUniversityCore)
 
 # Getting started
 
@@ -49,3 +49,7 @@ Build Docker and run:
 
 Swagger URL:
 `http://localhost:5000/swagger`
+
+# Circle CI 
+
+[![CircleCI](https://circleci.com/gh/adamhathcock/realworld-aspnetcore-kit/tree/master.svg?style=svg)](https://circleci.com/gh/adamhathcock/realworld-aspnetcore-kit/tree/master)
