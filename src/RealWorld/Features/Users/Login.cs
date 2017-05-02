@@ -1,17 +1,21 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using RealWorld.Infrastructure;
+using RealWorld.Infrastructure.Security;
 
 namespace RealWorld.Features.Users
 {
     public class Login
     {
-        public class Command : IRequest<Domain.User>
+        public class UserData
         {
             public string Username { get; set; }
 
@@ -20,31 +24,40 @@ namespace RealWorld.Features.Users
             public string Password { get; set; }
         }
 
+        public class Command : IRequest<Domain.User>
+        {
+            public UserData User { get; set; }
+        }
+
         public class Handler : IAsyncRequestHandler<Command, Domain.User>
         {
             private readonly RealWorldContext _db;
             private readonly IPasswordHasher _passwordHasher;
+            private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-            public Handler(RealWorldContext db, IPasswordHasher passwordHasher)
+            public Handler(RealWorldContext db, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator)
             {
                 _db = db;
                 _passwordHasher = passwordHasher;
+                _jwtTokenGenerator = jwtTokenGenerator;
             }
 
             public async Task<Domain.User> Handle(Command message)
             {
-                var person = await _db.Persons.Where(x => x.Email == message.Email).SingleOrDefaultAsync();
+                var person = await _db.Persons.Where(x => x.Email == message.User.Email).SingleOrDefaultAsync();
                 if (person == null)
                 {
                     throw new RestException(HttpStatusCode.Unauthorized);
                 }
 
-                if (!person.Hash.SequenceEqual(_passwordHasher.Hash(message.Password, person.Salt)))
+                if (!person.Hash.SequenceEqual(_passwordHasher.Hash(message.User.Password, person.Salt)))
                 {
                     throw new RestException(HttpStatusCode.Unauthorized);
                 }
-
-                return Mapper.Map<Domain.Person, Domain.User>(person); ;
+             
+                var user  = Mapper.Map<Domain.Person, Domain.User>(person); ;
+                user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
+                return user;
             }
         }
     }

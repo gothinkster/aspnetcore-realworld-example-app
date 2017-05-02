@@ -1,4 +1,4 @@
-﻿namespace RealWorld.Infrastructure
+﻿namespace RealWorld.Infrastructure.Security
 {
     public interface IPasswordHasher
     {

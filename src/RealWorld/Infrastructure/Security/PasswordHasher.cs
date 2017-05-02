@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace RealWorld.Infrastructure
+namespace RealWorld.Infrastructure.Security
 {
     public class PasswordHasher : IPasswordHasher
     {

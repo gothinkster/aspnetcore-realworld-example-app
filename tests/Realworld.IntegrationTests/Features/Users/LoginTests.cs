@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using RealWorld.Domain;
+using RealWorld.Features.Users;
 using RealWorld.Infrastructure;
+using RealWorld.Infrastructure.Security;
 using Xunit;
 
 namespace Realworld.IntegrationTests.Features.Users
@@ -14,6 +16,7 @@ namespace Realworld.IntegrationTests.Features.Users
             var salt = Guid.NewGuid().ToByteArray();
             var person = new Person
             {
+                Username = "username",
                 Email = "email",
                 Hash = new PasswordHasher().Hash("password", salt),
                 Salt = salt
@@ -22,14 +25,19 @@ namespace Realworld.IntegrationTests.Features.Users
 
             var command = new RealWorld.Features.Users.Login.Command()
             {
-                Email = "email",
-                Password = "password"
+                User = new Login.UserData()
+                {
+                    Email = "email",
+                    Password = "password"
+                }
             };
 
             var user = await SendAsync(command);
 
             Assert.NotNull(user);
-            Assert.Equal(user.Email, command.Email);
+            Assert.Equal(user.Email, command.User.Email);
+            Assert.Equal(user.Username, "username");
+            Assert.NotNull(user.Token);
         }
     }
 }

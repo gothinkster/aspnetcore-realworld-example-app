@@ -7,16 +7,24 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RealWorld.Domain;
 using RealWorld.Infrastructure;
+using RealWorld.Infrastructure.Security;
 
 namespace RealWorld.Features.Users
 {
     public class Create
     {
-        public class Command : IRequest<Domain.User>
+        public class UserData
         {
+            public string Username { get; set; }
+
             public string Email { get; set; }
 
             public string Password { get; set; }
+        }
+
+        public class Command : IRequest<Domain.User>
+        {
+            public UserData User { get; set; }
         }
 
         public class Handler : IAsyncRequestHandler<Command, Domain.User>
@@ -32,7 +40,7 @@ namespace RealWorld.Features.Users
 
             public async Task<Domain.User> Handle(Command message)
             {
-                if (await _db.Persons.Where(x => x.Email == message.Email).AnyAsync())
+                if (await _db.Persons.Where(x => x.Username == message.User.Username).AnyAsync())
                 {
                     throw new RestException(HttpStatusCode.BadRequest);
                 }
@@ -40,8 +48,9 @@ namespace RealWorld.Features.Users
                 var salt = Guid.NewGuid().ToByteArray();
                 var person = new Person
                 {
-                    Email = message.Email,
-                    Hash = _passwordHasher.Hash(message.Password, salt),
+                    Username = message.User.Username,
+                    Email = message.User.Email,
+                    Hash = _passwordHasher.Hash(message.User.Password, salt),
                     Salt = salt
                 };
 

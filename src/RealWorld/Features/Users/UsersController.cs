@@ -15,14 +15,14 @@ namespace RealWorld.Features.Users
         }
 
         [HttpPost]
-        public async Task<Domain.User> Create(Create.Command command)
+        public async Task<Domain.User> Create([FromBody] Create.Command command)
         {
             return await _mediator.Send(command);
         }
 
 
         [HttpPost("login")]
-        public async Task<Domain.User> Login(Create.Command command)
+        public async Task<Domain.User> Login([FromBody] Login.Command command)
         {
             return await _mediator.Send(command);
         }

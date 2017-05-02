@@ -2,14 +2,17 @@
 using System.Text;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RealWorld.Infrastructure;
+using RealWorld.Infrastructure.Security;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace RealWorld
@@ -46,6 +49,16 @@ namespace RealWorld
             services.AddAutoMapper();
 
             services.AddScoped<IPasswordHasher, PasswordHasher>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddOptions();
+
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("somethinglongerforthisdumbalgorithmisrequired"));
+            services.Configure<JwtIssuerOptions>(options =>
+            {
+                options.Issuer = "issuer";
+                options.Audience = "Audience";
+                options.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+            });
 
             Mapper.AssertConfigurationIsValid();
         }
@@ -55,22 +68,19 @@ namespace RealWorld
         {
             loggerFactory.AddConsole();
 
-            app.UseMvc();
-
-            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("key"));
-
-
+            var options = app.ApplicationServices.GetRequiredService<IOptions<JwtIssuerOptions>>();
+            
             var tokenValidationParameters = new TokenValidationParameters
             {
                 // The signing key must match!
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = signingKey,
+                IssuerSigningKey = options.Value.SigningCredentials.Key,
                 // Validate the JWT Issuer (iss) claim
                 ValidateIssuer = true,
-                ValidIssuer = "issuer",
+                ValidIssuer = options.Value.Issuer,
                 // Validate the JWT Audience (aud) claim
                 ValidateAudience = true,
-                ValidAudience = "audience",
+                ValidAudience = options.Value.Audience,
                 // Validate the token expiry
                 ValidateLifetime = true,
                 // If you want to allow a certain amount of clock drift, set that here:
@@ -82,7 +92,9 @@ namespace RealWorld
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true,
                 TokenValidationParameters = tokenValidationParameters,
+                AuthenticationScheme = JwtBearerDefaults.AuthenticationScheme
             });
+            app.UseMvc();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint
             app.UseSwagger(c =>
