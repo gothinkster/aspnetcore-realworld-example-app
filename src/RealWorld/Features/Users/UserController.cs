@@ -8,11 +8,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RealWorld.Infrastructure.Security;
 
 namespace RealWorld.Features.Users
 {
     [Route("user")]
-    [Authorize(ActiveAuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(ActiveAuthenticationSchemes = JwtIssuerOptions.Scheme)]
     public class UserController : Controller
     {
         private readonly IMediator _mediator;
@@ -23,13 +24,20 @@ namespace RealWorld.Features.Users
         }
 
         [HttpGet]
-        public Task<Domain.User> GetCurrent()
+        public async Task<UserEnvelope> GetCurrent()
         {
-            
-            return _mediator.Send(new Details.Query()
+            var user = await _mediator.Send(new Details.Query()
             {
                 Username = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value
             });
+            if (user != null)
+            {
+                return new UserEnvelope
+                {
+                    User = user
+                };
+            }
+            return null;
         }
 
         [HttpPut]

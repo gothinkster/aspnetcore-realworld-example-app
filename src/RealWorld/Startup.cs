@@ -2,11 +2,8 @@
 using System.Text;
 using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -92,7 +89,7 @@ namespace RealWorld
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true,
                 TokenValidationParameters = tokenValidationParameters,
-                AuthenticationScheme = JwtBearerDefaults.AuthenticationScheme
+                AuthenticationScheme = JwtIssuerOptions.Scheme
             });
             app.UseMvc();
 

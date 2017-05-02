@@ -6,6 +6,8 @@ namespace RealWorld.Infrastructure.Security
 {
     public class JwtIssuerOptions
     {
+        public const string Scheme = "Token";
+
         /// <summary>
         /// "iss" (Issuer) Claim
         /// </summary>
