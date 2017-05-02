@@ -1,7 +1,7 @@
 
 namespace RealWorld.Domain
 {
-   public class Comment : IEntity
+   public class Comment
     {
         public int CommentId { get; set; }
 

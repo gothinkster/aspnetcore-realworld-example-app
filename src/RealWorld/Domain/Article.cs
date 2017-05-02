@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace RealWorld.Domain
 {
-    public class Article : IEntity
+    public class Article
     {
         public int ArticleId { get; set; }
 

@@ -82,7 +82,7 @@ namespace Realworld.IntegrationTests
             return ExecuteScopeAsync(sp => action(sp.GetService<RealWorldContext>()));
         }
 
-        public Task InsertAsync(params IEntity[] entities)
+        public Task InsertAsync(params object[] entities)
         {
             return ExecuteDbContextAsync(db =>
             {
