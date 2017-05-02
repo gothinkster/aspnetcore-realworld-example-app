@@ -40,10 +40,12 @@ Task("Publish")
 Task("Default")
     .IsDependentOn("Restore")
     .IsDependentOn("Build")
-    .IsDependentOn("Test");
+    .IsDependentOn("Test")
+    .IsDependentOn("Publish");
 
  Task("Rebuild")
     .IsDependentOn("Restore")
     .IsDependentOn("Build");
+
 
 RunTarget(target);
