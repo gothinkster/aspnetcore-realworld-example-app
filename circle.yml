@@ -1,0 +1,32 @@
+machine:
+  environment:
+    DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  services:
+    - docker
+
+dependencies:
+  pre:
+      - sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
+      - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 417A0893
+      - sudo apt-get update
+      - sudo apt-get install dotnet-dev-1.0.1
+  override:
+    - ./build.sh build.cake --target=restore
+  cache_directories:
+    - ~/.nuget
+
+compile:
+  override:
+    - ./build.sh build.cake --target=build
+
+test:
+  override:
+    - ./build.sh build.cake --target=test
+
+deployment:
+  builds:
+    branch: [master, dev]
+    commands:
+      - mkdir publish/
+      - dotnet publish src/Realworld -f netcoreapp1.1 -c Release -o ../../publish/api --version-suffix ${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}
+      - docker build -t realworld:latest .
