@@ -41,7 +41,6 @@ namespace RealWorld
             services.AddCors();
             services.AddMvc(opt =>
                 {
-                    opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
                     opt.Conventions.Add(new GroupByApiRootConvention());
                 })
                 .AddJsonOptions(opt =>
