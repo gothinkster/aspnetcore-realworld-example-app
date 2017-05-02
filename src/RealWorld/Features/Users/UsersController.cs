@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace RealWorld.Features.Users
 {
     [Route("users")]
-    public class UsersController : Controller
+    public class UsersController
     {
         private readonly IMediator _mediator;
 

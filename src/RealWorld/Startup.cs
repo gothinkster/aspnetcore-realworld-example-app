@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using RealWorld.Infrastructure;
 using RealWorld.Infrastructure.Security;
 using Swashbuckle.AspNetCore.Swagger;
@@ -37,11 +38,16 @@ namespace RealWorld
                 x.TagActionsBy(y => y.GroupName);
             });
 
+            services.AddCors();
             services.AddMvc(opt =>
-            {
-                opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
-                opt.Conventions.Add(new GroupByApiRootConvention());
-            });
+                {
+                    opt.ModelBinderProviders.Insert(0, new EntityModelBinderProvider());
+                    opt.Conventions.Add(new GroupByApiRootConvention());
+                })
+                .AddJsonOptions(opt =>
+                {
+                    opt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                });
 
             services.AddAutoMapper();
 
@@ -64,6 +70,11 @@ namespace RealWorld
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole();
+            app.UseCors(builder =>
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod());
 
             var options = app.ApplicationServices.GetRequiredService<IOptions<JwtIssuerOptions>>();
             
