@@ -16,13 +16,13 @@ For more information on how to this works with other frontends/backends, head ov
 
 This is using ASP.NET Core with:
 
-- CQRS and MediatR
+- CQRS and [MediatR](https://github.com/jbogard/MediatR)
     - [Simplifying Development and Separating Concerns with MediatR](https://blogs.msdn.microsoft.com/cdndevs/2016/01/26/simplifying-development-and-separating-concerns-with-mediatr/)
     - [CQRS with MediatR and AutoMapper](https://lostechies.com/jimmybogard/2015/05/05/cqrs-with-mediatr-and-automapper/)
     - [Thin Controllers with CQRS and MediatR](https://codeopinion.com/thin-controllers-cqrs-mediatr/)
-- AutoMapper
+- [AutoMapper](http://automapper.org)
 - Feature folders and vertical slices
-- Entity Framework Core
+- [Entity Framework Core](https://docs.microsoft.com/en-us/ef/)
 - Built-in Swagger via [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
 - [Cake](http://cakebuild.net/) for building!
 - JWT authentication using [ASP.NET Core JWT Bearer Authentication](https://github.com/aspnet/Security/tree/dev/src/Microsoft.AspNetCore.Authentication.JwtBearer).
