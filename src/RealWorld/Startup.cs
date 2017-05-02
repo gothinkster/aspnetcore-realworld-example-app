@@ -58,7 +58,7 @@ namespace RealWorld
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
-            services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             
             services.AddOptions();
 
@@ -114,7 +114,7 @@ namespace RealWorld
                     {
                         //Have to modify request since the standard for this project uses Token instead of Bearer
                         string auth = context.Request.Headers["Authorization"];
-                        if (auth.StartsWith("Token ", StringComparison.OrdinalIgnoreCase))
+                        if (auth?.StartsWith("Token ", StringComparison.OrdinalIgnoreCase) ?? false)
                         {
                             context.Request.Headers["Authorization"] = "Bearer " + auth.Substring("Token ".Length).Trim();
                         }
