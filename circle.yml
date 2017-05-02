@@ -28,5 +28,5 @@ deployment:
     branch: [master, dev]
     commands:
       - mkdir publish/
-      - dotnet publish src/Realworld -f netcoreapp1.1 -c Release -o ../../publish/api --version-suffix ${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}
+      - ./build.sh build.cake --target=publish
       - docker build -t realworld:latest .

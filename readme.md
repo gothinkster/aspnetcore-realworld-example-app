@@ -12,6 +12,7 @@ We've gone to great lengths to adhere to the ASP.NET Core community styleguides 
 
 For more information on how to this works with other frontends/backends, head over to the [RealWorld](https://github.com/gothinkster/realworld) repo.
 
+[![CircleCI](https://circleci.com/gh/adamhathcock/realworld-aspnetcore-kit/tree/master.svg?style=svg)](https://circleci.com/gh/adamhathcock/realworld-aspnetcore-kit/tree/master)
 
 # How it works
 
@@ -28,6 +29,10 @@ This is using ASP.NET Core with:
 - [Cake](http://cakebuild.net/) for building!
 
 # Getting started
+
+Install the .NET Core SDK and lots of documentation: [https://www.microsoft.com/net/download/core](https://www.microsoft.com/net/download/core)
+
+Documentation for ASP.NET Core: [https://docs.microsoft.com/en-us/aspnet/core/](https://docs.microsoft.com/en-us/aspnet/core/)
 
 Build on OS X and Linux:
 
