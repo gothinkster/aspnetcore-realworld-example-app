@@ -1,3 +1,4 @@
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
@@ -8,12 +9,12 @@ namespace RealWorld.Features.Users
 {
     public class Details
     {
-        public class Query : IRequest<Domain.User>
+        public class Query : IRequest<UserEnvelope>
         {
             public string Username { get; set; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Domain.User>
+        public class QueryHandler : IAsyncRequestHandler<Query, UserEnvelope>
         {
             private readonly RealWorldContext _context;
 
@@ -22,10 +23,14 @@ namespace RealWorld.Features.Users
                 _context = context;
             }
 
-            public async Task<Domain.User> Handle(Query message)
+            public async Task<UserEnvelope> Handle(Query message)
             {
                 var person = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Username);
-                return Mapper.Map<Domain.Person, Domain.User>(person);
+                if (person == null)
+                {
+                    throw new RestException(HttpStatusCode.NotFound);
+                }
+                return new UserEnvelope(Mapper.Map<Domain.Person, User>(person));
             }
         }
     }

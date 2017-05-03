@@ -1,4 +1,4 @@
-namespace RealWorld.Domain
+namespace RealWorld.Features.Users
 {
     public class User
     {
@@ -11,5 +11,16 @@ namespace RealWorld.Domain
         public string Image { get; set; }
 
         public string Token { get; set; }
+    }
+
+
+    public class UserEnvelope
+    {
+        public UserEnvelope(User user)
+        {
+            User = user;
+        }
+
+        public User User { get; set; }
     }
 }

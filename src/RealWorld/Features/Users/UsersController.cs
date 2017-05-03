@@ -17,30 +17,14 @@ namespace RealWorld.Features.Users
         [HttpPost]
         public async Task<UserEnvelope> Create([FromBody] Create.Command command)
         {
-            var user = await _mediator.Send(command);
-            if (user != null)
-            {
-                return new UserEnvelope
-                {
-                    User = user
-                };
-            }
-            return null;
+            return await _mediator.Send(command);
         }
 
 
         [HttpPost("login")]
         public async Task<UserEnvelope> Login([FromBody] Login.Command command)
         {
-            var user = await _mediator.Send(command);
-            if (user != null)
-            {
-                return new UserEnvelope
-                {
-                    User = user
-                };
-            }
-            return null;
+            return await _mediator.Send(command);
         }
     }
 }

@@ -24,12 +24,12 @@ namespace RealWorld.Features.Users
             public string Password { get; set; }
         }
 
-        public class Command : IRequest<Domain.User>
+        public class Command : IRequest<UserEnvelope>
         {
             public UserData User { get; set; }
         }
 
-        public class Handler : IAsyncRequestHandler<Command, Domain.User>
+        public class Handler : IAsyncRequestHandler<Command, UserEnvelope>
         {
             private readonly RealWorldContext _db;
             private readonly IPasswordHasher _passwordHasher;
@@ -42,7 +42,7 @@ namespace RealWorld.Features.Users
                 _jwtTokenGenerator = jwtTokenGenerator;
             }
 
-            public async Task<Domain.User> Handle(Command message)
+            public async Task<UserEnvelope> Handle(Command message)
             {
                 var person = await _db.Persons.Where(x => x.Email == message.User.Email).SingleOrDefaultAsync();
                 if (person == null)
@@ -55,9 +55,9 @@ namespace RealWorld.Features.Users
                     throw new RestException(HttpStatusCode.Unauthorized);
                 }
              
-                var user  = Mapper.Map<Domain.Person, Domain.User>(person); ;
+                var user  = Mapper.Map<Domain.Person, User>(person); ;
                 user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
-                return user;
+                return new UserEnvelope(user);
             }
         }
     }

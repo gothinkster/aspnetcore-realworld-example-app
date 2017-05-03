@@ -6,7 +6,7 @@ namespace RealWorld.Features.Users
     {
         public MappingProfile()
         {
-            CreateMap<Domain.Person, Domain.User>(MemberList.None);
+            CreateMap<Domain.Person, User>(MemberList.None);
         }
     }
 }

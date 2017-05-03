@@ -34,10 +34,10 @@ namespace Realworld.IntegrationTests.Features.Users
 
             var user = await SendAsync(command);
 
-            Assert.NotNull(user);
-            Assert.Equal(user.Email, command.User.Email);
-            Assert.Equal(user.Username, "username");
-            Assert.NotNull(user.Token);
+            Assert.NotNull(user?.User);
+            Assert.Equal(user.User.Email, command.User.Email);
+            Assert.Equal(user.User.Username, "username");
+            Assert.NotNull(user.User.Token);
         }
     }
 }

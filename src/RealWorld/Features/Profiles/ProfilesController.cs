@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RealWorld.Domain;
 using RealWorld.Infrastructure.Security;
 
 namespace RealWorld.Features.Profiles
@@ -20,18 +21,10 @@ namespace RealWorld.Features.Profiles
         [HttpGet("{username}")]
         public async Task<ProfileEnvelope> Get(string username)
         {
-            var profile = await _mediator.Send(new Profiles.Details.Query()
+            return await _mediator.Send(new Profiles.Details.Query()
             {
                 Username = username
             });
-            if (profile != null)
-            {
-                return new ProfileEnvelope
-                {
-                    Profile = profile
-                };
-            }
-            return null;
         }
 
         [HttpPost("{username}/follow")]

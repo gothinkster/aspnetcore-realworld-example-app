@@ -22,12 +22,12 @@ namespace RealWorld.Features.Users
             public string Password { get; set; }
         }
 
-        public class Command : IRequest<Domain.User>
+        public class Command : IRequest<UserEnvelope>
         {
             public UserData User { get; set; }
         }
 
-        public class Handler : IAsyncRequestHandler<Command, Domain.User>
+        public class Handler : IAsyncRequestHandler<Command, UserEnvelope>
         {
             private readonly RealWorldContext _db;
             private readonly IPasswordHasher _passwordHasher;
@@ -38,7 +38,7 @@ namespace RealWorld.Features.Users
                 _passwordHasher = passwordHasher;
             }
 
-            public async Task<Domain.User> Handle(Command message)
+            public async Task<UserEnvelope> Handle(Command message)
             {
                 if (await _db.Persons.Where(x => x.Username == message.User.Username).AnyAsync())
                 {
@@ -57,7 +57,7 @@ namespace RealWorld.Features.Users
                 _db.Persons.Add(person);
                 await _db.SaveChangesAsync();
 
-                return Mapper.Map<Domain.Person, Domain.User>(person); ;
+                return new UserEnvelope(Mapper.Map<Domain.Person, User>(person));
             }
         }
     }

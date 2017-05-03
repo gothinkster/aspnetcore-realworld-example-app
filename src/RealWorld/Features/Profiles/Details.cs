@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using System.Linq;
+using System.Net;
 using Microsoft.EntityFrameworkCore;
 using RealWorld.Infrastructure;
 
@@ -9,12 +10,12 @@ namespace RealWorld.Features.Profiles
 {
     public class Details
     {
-        public class Query : IRequest<Domain.Profile>
+        public class Query : IRequest<ProfileEnvelope>
         {
             public string Username { get; set; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, Domain.Profile>
+        public class QueryHandler : IAsyncRequestHandler<Query, ProfileEnvelope>
         {
             private readonly RealWorldContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
@@ -25,12 +26,16 @@ namespace RealWorld.Features.Profiles
                 _currentUserAccessor = currentUserAccessor;
             }
 
-            public async Task<Domain.Profile> Handle(Query message)
+            public async Task<ProfileEnvelope> Handle(Query message)
             {
                 var currentUserName = _currentUserAccessor.GetCurrentUsername();
 
                 var person = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Username);
-                var profile = Mapper.Map<Domain.Person, Domain.Profile>(person);
+                if (person == null)
+                {
+                    throw new RestException(HttpStatusCode.NotFound);
+                }
+                var profile = Mapper.Map<Domain.Person, Profile>(person);
 
                 if (currentUserName != null)
                 {
@@ -40,7 +45,7 @@ namespace RealWorld.Features.Profiles
                         profile.Following = true;
                     }
                 }
-                return profile;
+                return new ProfileEnvelope(profile);
             }
         }
     }
