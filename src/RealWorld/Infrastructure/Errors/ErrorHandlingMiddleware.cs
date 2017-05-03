@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace RealWorld.Infrastructure
+namespace RealWorld.Infrastructure.Errors
 {
     public class ErrorHandlingMiddleware
     {
@@ -35,13 +35,15 @@ namespace RealWorld.Infrastructure
                 code = re.Code;
             }
 
-
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
 
             if (!string.IsNullOrWhiteSpace(exception.Message))
             {
-                var result = JsonConvert.SerializeObject(new {error = exception.Message});
+                var result = JsonConvert.SerializeObject(new
+                {
+                    errors = exception.Message
+                });
                 await context.Response.WriteAsync(result);
             }
         }

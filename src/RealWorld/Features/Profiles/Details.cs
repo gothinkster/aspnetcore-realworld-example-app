@@ -3,8 +3,10 @@ using AutoMapper;
 using MediatR;
 using System.Linq;
 using System.Net;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using RealWorld.Infrastructure;
+using RealWorld.Infrastructure.Errors;
 
 namespace RealWorld.Features.Profiles
 {
@@ -13,6 +15,14 @@ namespace RealWorld.Features.Profiles
         public class Query : IRequest<ProfileEnvelope>
         {
             public string Username { get; set; }
+        }
+
+        public class QueryValidator : AbstractValidator<Query>
+        {
+            public QueryValidator()
+            {
+                RuleFor(x => x.Username).NotNull().NotEmpty();
+            }
         }
 
         public class QueryHandler : IAsyncRequestHandler<Query, ProfileEnvelope>

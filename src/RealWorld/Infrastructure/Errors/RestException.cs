@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace RealWorld.Infrastructure
+namespace RealWorld.Infrastructure.Errors
 {
     public class RestException : Exception
     {

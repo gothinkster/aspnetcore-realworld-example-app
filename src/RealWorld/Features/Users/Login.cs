@@ -1,14 +1,12 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using RealWorld.Infrastructure;
+using RealWorld.Infrastructure.Errors;
 using RealWorld.Infrastructure.Security;
 
 namespace RealWorld.Features.Users
@@ -17,16 +15,31 @@ namespace RealWorld.Features.Users
     {
         public class UserData
         {
-            public string Username { get; set; }
-
             public string Email { get; set; }
 
             public string Password { get; set; }
         }
 
+        public class UserDataValidator : AbstractValidator<UserData>
+        {
+            public UserDataValidator()
+            {
+                RuleFor(x => x.Email).NotNull().NotEmpty();
+                RuleFor(x => x.Password).NotNull().NotEmpty();
+            }
+        }
+
         public class Command : IRequest<UserEnvelope>
         {
             public UserData User { get; set; }
+        }
+
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.User).NotNull().SetValidator(new UserDataValidator());
+            }
         }
 
         public class Handler : IAsyncRequestHandler<Command, UserEnvelope>

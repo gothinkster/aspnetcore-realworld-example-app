@@ -3,10 +3,12 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RealWorld.Domain;
 using RealWorld.Infrastructure;
+using RealWorld.Infrastructure.Errors;
 using RealWorld.Infrastructure.Security;
 
 namespace RealWorld.Features.Users
@@ -22,9 +24,27 @@ namespace RealWorld.Features.Users
             public string Password { get; set; }
         }
 
+        public class UserDataValidator : AbstractValidator<UserData>
+        {
+            public UserDataValidator()
+            {
+                RuleFor(x => x.Username).NotNull().NotEmpty();
+                RuleFor(x => x.Email).NotNull().NotEmpty();
+                RuleFor(x => x.Password).NotNull().NotEmpty();
+            }
+        }
+
         public class Command : IRequest<UserEnvelope>
         {
             public UserData User { get; set; }
+        }
+
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.User).NotNull().SetValidator(new UserDataValidator());
+            }
         }
 
         public class Handler : IAsyncRequestHandler<Command, UserEnvelope>

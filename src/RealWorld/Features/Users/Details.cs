@@ -1,9 +1,11 @@
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RealWorld.Infrastructure;
+using RealWorld.Infrastructure.Errors;
 
 namespace RealWorld.Features.Users
 {
@@ -12,6 +14,14 @@ namespace RealWorld.Features.Users
         public class Query : IRequest<UserEnvelope>
         {
             public string Username { get; set; }
+        }
+
+        public class QueryValidator : AbstractValidator<Query>
+        {
+            public QueryValidator()
+            {
+                RuleFor(x => x.Username).NotNull().NotEmpty();
+            }
         }
 
         public class QueryHandler : IAsyncRequestHandler<Query, UserEnvelope>

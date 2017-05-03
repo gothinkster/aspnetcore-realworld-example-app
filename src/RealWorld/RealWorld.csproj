@@ -12,6 +12,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.0.2" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="2.0.1" />
+    <PackageReference Include="FluentValidation" Version="6.4.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="6.4.0" />
     <PackageReference Include="MediatR" Version="3.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="1.1.1" />
