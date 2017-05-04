@@ -39,7 +39,10 @@ namespace RealWorld.Features.Articles
 
             public async Task<ArticleEnvelope> Handle(Query message)
             {
-                var article = await _context.Articles.FirstOrDefaultAsync(x => x.Slug == message.Slug);
+                var article = await _context.Articles
+                    .Include(x => x.ArticleTags)
+                    .FirstOrDefaultAsync(x => x.Slug == message.Slug);
+
                 if (article == null)
                 {
                     throw new RestException(HttpStatusCode.NotFound);

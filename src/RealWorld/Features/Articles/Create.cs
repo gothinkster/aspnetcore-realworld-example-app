@@ -97,10 +97,7 @@ namespace RealWorld.Features.Articles
 
                 await _db.SaveChangesAsync();
 
-                return new ArticleEnvelope()
-                {
-                    Article = article
-                };
+                return new ArticleEnvelope(article);
             }
         }
     }
