@@ -31,9 +31,9 @@ namespace RealWorld.Features.Users
         }
 
         [HttpPut]
-        public Task<User> UpdateUser()
+        public async Task<UserEnvelope> UpdateUser([FromBody]Edit.Command command)
         {
-            throw new NotImplementedException();
+            return await _mediator.Send(command);
         }
     }
 }
