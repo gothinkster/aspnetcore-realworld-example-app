@@ -24,6 +24,12 @@ namespace RealWorld.Features.Articles
             return await _mediator.Send(new List.Query());
         }
 
+        [HttpGet("{slug}")]
+        public async Task<ArticleEnvelope> Get(string slug)
+        {
+            return await _mediator.Send(new Details.Query(slug));
+        }
+
         [HttpPost]
         [Authorize(ActiveAuthenticationSchemes = JwtIssuerOptions.Scheme)]
         public async Task<ArticleEnvelope> Create([FromBody]Create.Command command)

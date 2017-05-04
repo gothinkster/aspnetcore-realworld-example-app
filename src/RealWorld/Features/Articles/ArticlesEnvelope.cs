@@ -9,9 +9,4 @@ namespace RealWorld.Features.Articles
 
         public int ArticlesCount => Articles?.Count ?? 0;
     }
-
-    public class ArticleEnvelope
-    {
-        public Article Article { get; set; }
-    }
 }
