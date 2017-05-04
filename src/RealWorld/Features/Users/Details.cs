@@ -35,7 +35,9 @@ namespace RealWorld.Features.Users
 
             public async Task<UserEnvelope> Handle(Query message)
             {
-                var person = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Username);
+                var person = await _context.Persons
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Username == message.Username);
                 if (person == null)
                 {
                     throw new RestException(HttpStatusCode.NotFound);

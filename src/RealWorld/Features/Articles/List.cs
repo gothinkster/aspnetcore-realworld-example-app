@@ -69,7 +69,10 @@ namespace RealWorld.Features.Articles
                 var articles = await queryable
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip(message.Offset ?? 0)
-                    .Take(message.Limit ?? 20).ToListAsync();
+                    .Take(message.Limit ?? 20)
+                    .AsNoTracking()
+                    .ToListAsync();
+
                 return new ArticlesEnvelope()
                 {
                     Articles = articles
