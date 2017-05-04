@@ -41,6 +41,7 @@ namespace RealWorld.Features.Articles
             {
                 var article = await _context.Articles
                     .Include(x => x.ArticleTags)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Slug == message.Slug);
 
                 if (article == null)
