@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace RealWorld.Domain
 {
@@ -14,12 +15,16 @@ namespace RealWorld.Domain
 
         public string Image { get; set; }
 
+        [JsonIgnore]
         public List<Article> Favorites { get; set; }
 
+        [JsonIgnore]
         public List<Person> Following { get; set; }
 
+        [JsonIgnore]
         public byte[] Hash { get; set; }
 
+        [JsonIgnore]
         public byte[] Salt { get; set; }
     }
 }
