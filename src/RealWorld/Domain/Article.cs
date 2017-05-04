@@ -1,9 +1,14 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace RealWorld.Domain
 {
     public class Article
     {
+        [JsonIgnore]
         public int ArticleId { get; set; }
 
         public string Slug { get; set; }
@@ -17,5 +22,15 @@ namespace RealWorld.Domain
         public Person Author { get; set; }
 
         public List<Comment> Comments {get;set;}
+
+        [NotMapped]
+        public List<string> TagList => (ArticleTags?.Select(x => x.TagId) ?? Enumerable.Empty<string>()).ToList();
+
+        [JsonIgnore]
+        public List<ArticleTag> ArticleTags { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime UpdatedAt { get; set; }
     }
 }

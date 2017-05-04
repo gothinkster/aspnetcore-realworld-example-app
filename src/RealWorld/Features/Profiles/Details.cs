@@ -40,7 +40,10 @@ namespace RealWorld.Features.Profiles
             {
                 var currentUserName = _currentUserAccessor.GetCurrentUsername();
 
-                var person = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Username);
+                var person = await _context.Persons
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Username == message.Username);
+
                 if (person == null)
                 {
                     throw new RestException(HttpStatusCode.NotFound);
