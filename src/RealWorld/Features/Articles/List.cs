@@ -15,14 +15,14 @@ namespace RealWorld.Features.Articles
             {
                 Tag = tag;
                 Author = author;
-                Favorited = favorited;
+                FavoritedUsername = favorited;
                 Limit = limit;
                 Offset = offset;
             }
 
             public string Tag { get; }
             public string Author { get; }
-            public string Favorited { get; }
+            public string FavoritedUsername { get; }
             public int? Limit { get; }
             public int? Offset { get; }
         }
@@ -38,9 +38,7 @@ namespace RealWorld.Features.Articles
 
             public async Task<ArticlesEnvelope> Handle(Query message)
             {
-                IQueryable<Article> queryable = _context.Articles
-                    .Include(x => x.Author)
-                    .Include(x => x.ArticleTags);
+                IQueryable<Article> queryable = _context.Articles.GetAllData();
 
                 if (!string.IsNullOrWhiteSpace(message.Tag))
                 {
@@ -60,6 +58,18 @@ namespace RealWorld.Features.Articles
                     if (author != null)
                     {
                         queryable = queryable.Where(x => x.Author == author);
+                    }
+                    else
+                    {
+                        return new ArticlesEnvelope();
+                    }
+                }
+                if (!string.IsNullOrWhiteSpace(message.FavoritedUsername))
+                {
+                    var author = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.FavoritedUsername);
+                    if (author != null)
+                    {
+                        queryable = queryable.Where(x => x.ArticleFavorites.Any(y => y.PersonId == author.PersonId));
                     }
                     else
                     {

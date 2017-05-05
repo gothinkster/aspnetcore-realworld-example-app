@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace RealWorld.Domain
@@ -17,7 +18,7 @@ namespace RealWorld.Domain
         public string Image { get; set; }
 
         [JsonIgnore]
-        public List<Article> Favorites { get; set; }
+        public List<ArticleFavorite> ArticleFavorites { get; set; }
 
         [JsonIgnore]
         public List<Person> Following { get; set; }

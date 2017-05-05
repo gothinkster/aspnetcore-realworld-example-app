@@ -56,8 +56,6 @@ namespace RealWorld.Features.Articles
             {
                 var article = await _db.Articles
                     .Where(x => x.Slug == message.Article.Slug)
-                    .Include(x => x.ArticleTags)
-                    .Include(x => x.Author)
                     .FirstOrDefaultAsync();
 
                 if (article == null)
@@ -72,7 +70,9 @@ namespace RealWorld.Features.Articles
                 
                 await _db.SaveChangesAsync();
 
-                return new ArticleEnvelope(article);
+                return new ArticleEnvelope(await _db.Articles.GetAllData()
+                    .Where(x => x.Slug == message.Article.Slug)
+                    .FirstOrDefaultAsync());
             }
         }
     }

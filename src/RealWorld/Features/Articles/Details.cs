@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentValidation;
@@ -39,10 +40,7 @@ namespace RealWorld.Features.Articles
 
             public async Task<ArticleEnvelope> Handle(Query message)
             {
-                var article = await _context.Articles
-                    .Include(x => x.ArticleTags)
-                    .Include(x => x.Author)
-                    .AsNoTracking()
+                var article = await _context.Articles.GetAllData()
                     .FirstOrDefaultAsync(x => x.Slug == message.Slug);
 
                 if (article == null)

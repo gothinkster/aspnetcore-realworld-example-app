@@ -21,13 +21,22 @@ namespace RealWorld.Domain
 
         public Person Author { get; set; }
 
-        public List<Comment> Comments {get;set;}
+        public List<Comment> Comments {get;set; }
+
+        [NotMapped]
+        public bool Favorited => ArticleFavorites?.Any() ?? false;
+
+        [NotMapped]
+        public int FavoritesCount => ArticleFavorites?.Count ?? 0;
 
         [NotMapped]
         public List<string> TagList => (ArticleTags?.Select(x => x.TagId) ?? Enumerable.Empty<string>()).ToList();
 
         [JsonIgnore]
         public List<ArticleTag> ArticleTags { get; set; }
+
+        [JsonIgnore]
+        public List<ArticleFavorite> ArticleFavorites { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
