@@ -39,6 +39,7 @@ namespace RealWorld.Features.Articles
             public async Task<ArticlesEnvelope> Handle(Query message)
             {
                 IQueryable<Article> queryable = _context.Articles
+                    .Include(x => x.Author)
                     .Include(x => x.ArticleTags);
 
                 if (!string.IsNullOrWhiteSpace(message.Tag))

@@ -5,6 +5,7 @@ namespace RealWorld.Domain
 {
     public class Person
     {
+        [JsonIgnore]
         public int PersonId { get; set; }
 
         public string Username { get; set; }
