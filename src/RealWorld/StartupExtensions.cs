@@ -4,9 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RealWorld.Infrastructure.Security;
+using Serilog;
+using Serilog.Events;
 
 namespace RealWorld
 {
@@ -66,6 +69,20 @@ namespace RealWorld
                     }
                 }
             });
+        }
+
+        public static void AddSerilogLogging(this ILoggerFactory loggerFactory)
+        {
+            // Attach the sink to the logger configuration
+            var log = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.FromLogContext()
+                //just for local debug
+                .WriteTo.LiterateConsole(outputTemplate: "{Timestamp:HH:mm:ss} [{Level}] {SourceContext} {Message}{NewLine}{Exception}")
+                .CreateLogger();
+
+            loggerFactory.AddSerilog(log);
+            Log.Logger = log;
         }
     }
 }

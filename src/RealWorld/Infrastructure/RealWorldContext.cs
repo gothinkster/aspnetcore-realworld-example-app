@@ -7,7 +7,8 @@ namespace RealWorld.Infrastructure
     {
         private readonly string _databaseName = Startup.DATABASE_FILE;
 
-        public RealWorldContext()
+        public RealWorldContext(DbContextOptions options) 
+            : base(options)
         {
         }
 
