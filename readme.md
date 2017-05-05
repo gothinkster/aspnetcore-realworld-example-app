@@ -22,7 +22,7 @@ This is using ASP.NET Core with:
     - [Thin Controllers with CQRS and MediatR](https://codeopinion.com/thin-controllers-cqrs-mediatr/)
 - [AutoMapper](http://automapper.org)
 - Feature folders and vertical slices
-- [Entity Framework Core](https://docs.microsoft.com/en-us/ef/)
+- [Entity Framework Core](https://docs.microsoft.com/en-us/ef/) on SQLite for demo purposes.  Can easily be anything else EF Core supports.  Open to porting to other ORMs/DBs.
 - Built-in Swagger via [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
 - [Cake](http://cakebuild.net/) for building!
 - JWT authentication using [ASP.NET Core JWT Bearer Authentication](https://github.com/aspnet/Security/tree/dev/src/Microsoft.AspNetCore.Authentication.JwtBearer).
