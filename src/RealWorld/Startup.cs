@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RealWorld.Infrastructure;
+using RealWorld.Infrastructure.Errors;
 using RealWorld.Infrastructure.Security;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -64,6 +65,9 @@ namespace RealWorld
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole();
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
             app.UseCors(builder =>
                 builder
                 .AllowAnyOrigin()
