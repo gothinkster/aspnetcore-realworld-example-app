@@ -16,7 +16,7 @@ Task("Build")
 Task("Test")
   .Does(() =>
 {
-    var files = GetFiles("test/**/*.csproj");
+    var files = GetFiles("tests/**/*.csproj");
     foreach(var file in files)
     {
         DotNetCoreTest(file.ToString());
