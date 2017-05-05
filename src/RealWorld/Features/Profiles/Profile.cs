@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace RealWorld.Features.Profiles
 {
     public class Profile
@@ -8,16 +10,7 @@ namespace RealWorld.Features.Profiles
 
         public string Image { get; set; }
 
-        public bool Following { get; set; }
-    }
-
-    public class ProfileEnvelope
-    {
-        public ProfileEnvelope(Profile profile)
-        {
-            Profile = profile;
-        }
-
-        public Profile Profile { get; set; }
+        [JsonProperty("following")]
+        public bool IsFollowed { get; set; }
     }
 }

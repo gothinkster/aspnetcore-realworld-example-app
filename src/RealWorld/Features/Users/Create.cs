@@ -65,6 +65,11 @@ namespace RealWorld.Features.Users
                     throw new RestException(HttpStatusCode.BadRequest);
                 }
 
+                if (await _db.Persons.Where(x => x.Email == message.User.Email).AnyAsync())
+                {
+                    throw new RestException(HttpStatusCode.BadRequest);
+                }
+
                 var salt = Guid.NewGuid().ToByteArray();
                 var person = new Person
                 {

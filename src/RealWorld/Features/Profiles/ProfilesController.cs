@@ -1,10 +1,6 @@
-using System;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RealWorld.Domain;
-using RealWorld.Infrastructure.Security;
 
 namespace RealWorld.Features.Profiles
 {
@@ -25,20 +21,6 @@ namespace RealWorld.Features.Profiles
             {
                 Username = username
             });
-        }
-
-        [HttpPost("{username}/follow")]
-        [Authorize(ActiveAuthenticationSchemes = JwtIssuerOptions.Scheme)]
-        public Task<ProfileEnvelope> Follow()
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpDelete("{username}/follow")]
-        [Authorize(ActiveAuthenticationSchemes = JwtIssuerOptions.Scheme)]
-        public Task<ProfileEnvelope> Unfollow()
-        {
-            throw new NotImplementedException();
         }
     }
 }

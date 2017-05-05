@@ -1,12 +1,7 @@
 using System.Threading.Tasks;
-using AutoMapper;
 using MediatR;
-using System.Linq;
-using System.Net;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using RealWorld.Infrastructure;
-using RealWorld.Infrastructure.Errors;
+using RealWorld.Features.Followers;
 
 namespace RealWorld.Features.Profiles
 {
@@ -27,38 +22,16 @@ namespace RealWorld.Features.Profiles
 
         public class QueryHandler : IAsyncRequestHandler<Query, ProfileEnvelope>
         {
-            private readonly RealWorldContext _context;
-            private readonly ICurrentUserAccessor _currentUserAccessor;
+            private readonly IProfileReader _profileReader;
 
-            public QueryHandler(RealWorldContext context, ICurrentUserAccessor currentUserAccessor)
+            public QueryHandler(IProfileReader profileReader)
             {
-                _context = context;
-                _currentUserAccessor = currentUserAccessor;
+                _profileReader = profileReader;
             }
 
             public async Task<ProfileEnvelope> Handle(Query message)
             {
-                var currentUserName = _currentUserAccessor.GetCurrentUsername();
-
-                var person = await _context.Persons
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Username == message.Username);
-
-                if (person == null)
-                {
-                    throw new RestException(HttpStatusCode.NotFound);
-                }
-                var profile = Mapper.Map<Domain.Person, Profile>(person);
-
-                if (currentUserName != null)
-                {
-                    var currentPerson = await _context.Persons.FirstOrDefaultAsync(x => x.Username == currentUserName);
-                    if (currentPerson.Following.Any(x => x.Username == person.Username))
-                    {
-                        profile.Following = true;
-                    }
-                }
-                return new ProfileEnvelope(profile);
+                return await _profileReader.ReadProfile(message.Username);
             }
         }
     }

@@ -23,6 +23,7 @@ namespace RealWorld.Infrastructure
         public DbSet<Tag> Tags { get; set; }
         public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<ArticleFavorite> ArticleFavorites { get; set; }
+        public DbSet<FollowedPeople> FollowedPeople { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -55,6 +56,19 @@ namespace RealWorld.Infrastructure
                 b.HasOne(pt => pt.Person)
                     .WithMany(t => t.ArticleFavorites)
                     .HasForeignKey(pt => pt.PersonId);
+            });
+
+            modelBuilder.Entity<FollowedPeople>(b =>
+            {
+                b.HasKey(t => new { t.ObserverId, t.TargetId });
+
+                b.HasOne(pt => pt.Observer)
+                    .WithMany(p => p.Followers)
+                    .HasForeignKey(pt => pt.ObserverId);
+
+                b.HasOne(pt => pt.Target)
+                    .WithMany(t => t.Following)
+                    .HasForeignKey(pt => pt.TargetId);
             });
         }
     }

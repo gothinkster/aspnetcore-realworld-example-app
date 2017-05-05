@@ -20,7 +20,10 @@ namespace RealWorld.Domain
         public List<ArticleFavorite> ArticleFavorites { get; set; }
 
         [JsonIgnore]
-        public List<Person> Following { get; set; }
+        public List<FollowedPeople> Following { get; set; }
+
+        [JsonIgnore]
+        public List<FollowedPeople> Followers { get; set; }
 
         [JsonIgnore]
         public byte[] Hash { get; set; }
