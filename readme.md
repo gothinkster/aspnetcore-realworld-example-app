@@ -37,16 +37,21 @@ Documentation for ASP.NET Core: [https://docs.microsoft.com/en-us/aspnet/core/](
 
 Build on OS X and Linux:
 
-`./build.sh build.cake`
+- `./build.sh build.cake`
 
 Build on Windows:
 
-`./build.ps1 build.cake`
+- `./build.ps1 build.cake`
 
 Build Docker and run:
 
-`docker build -t realworld:latest .`
-`docker run -p 5000:5000 realworld:latest`
+- `docker build -t realworld:latest .`
+- `docker run -p 5000:5000 realworld:latest`
+
+Or run the published
+
+- `cd publish/`
+- `dotnet Realworld.dll`
 
 Swagger URL:
 `http://localhost:5000/swagger`
