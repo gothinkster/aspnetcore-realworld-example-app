@@ -29,23 +29,24 @@ namespace RealWorld.Infrastructure.Errors
 
         private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var code = HttpStatusCode.InternalServerError;
             if (exception is RestException re)
             {
-                code = re.Code;
+                context.Response.StatusCode = (int)re.Code;
             }
-
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)code;
-
-            if (!string.IsNullOrWhiteSpace(exception.Message))
+            else
             {
-                var result = JsonConvert.SerializeObject(new
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                if (!string.IsNullOrWhiteSpace(exception.Message))
                 {
-                    errors = exception.Message
-                });
-                await context.Response.WriteAsync(result);
+                    context.Response.ContentType = "application/json";
+                    var result = JsonConvert.SerializeObject(new
+                    {
+                        errors = exception.Message
+                    });
+                    await context.Response.WriteAsync(result);
+                }
             }
+
         }
     }
 }

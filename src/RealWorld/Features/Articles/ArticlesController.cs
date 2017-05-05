@@ -37,11 +37,19 @@ namespace RealWorld.Features.Articles
             return await _mediator.Send(command);
         }
 
+        [HttpPut("{slug}")]
+        [Authorize(ActiveAuthenticationSchemes = JwtIssuerOptions.Scheme)]
+        public async Task<ArticleEnvelope> Edit(string slug, [FromBody]Edit.Command command)
+        {
+            command.Article.Slug = slug;
+            return await _mediator.Send(command);
+        }
+
         [HttpDelete("{slug}")]
         [Authorize(ActiveAuthenticationSchemes = JwtIssuerOptions.Scheme)]
-        public Task<ProfileEnvelope> Delete(string slug)
+        public async Task Delete(string slug)
         {
-            throw new NotImplementedException();
+            await _mediator.Send(new Delete.Command(slug));
         }
     }
 }
