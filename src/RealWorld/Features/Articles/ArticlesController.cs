@@ -41,7 +41,7 @@ namespace RealWorld.Features.Articles
         [Authorize(ActiveAuthenticationSchemes = JwtIssuerOptions.Scheme)]
         public async Task<ArticleEnvelope> Edit(string slug, [FromBody]Edit.Command command)
         {
-            command.Article.Slug = slug;
+            command.Slug = slug;
             return await _mediator.Send(command);
         }
 
@@ -50,20 +50,6 @@ namespace RealWorld.Features.Articles
         public async Task Delete(string slug)
         {
             await _mediator.Send(new Delete.Command(slug));
-        }
-        
-        [HttpPost("{slug}/favorite")]
-        [Authorize(ActiveAuthenticationSchemes = JwtIssuerOptions.Scheme)]
-        public async Task<ArticleEnvelope> FavoriteAdd(string slug)
-        {
-            return await _mediator.Send(new FavoriteAdd.Command(slug));
-        }
-
-        [HttpDelete("{slug}/favorite")]
-        [Authorize(ActiveAuthenticationSchemes = JwtIssuerOptions.Scheme)]
-        public async Task FavoriteDelete(string slug)
-        {
-            await _mediator.Send(new FavoriteDelete.Command(slug));
         }
     }
 }

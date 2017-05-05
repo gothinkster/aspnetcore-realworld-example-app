@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentValidation;
@@ -18,21 +19,12 @@ namespace RealWorld.Features.Articles
             public string Description { get; set; }
 
             public string Body { get; set; }
-
-            public string Slug { get; set; }
-        }
-
-        public class ArticleDataValidator : AbstractValidator<ArticleData>
-        {
-            public ArticleDataValidator()
-            {
-                RuleFor(x => x.Slug).NotNull();
-            }
         }
 
         public class Command : IRequest<ArticleEnvelope>
         {
             public ArticleData Article { get; set; }
+            public string Slug { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -55,7 +47,7 @@ namespace RealWorld.Features.Articles
             public async Task<ArticleEnvelope> Handle(Command message)
             {
                 var article = await _db.Articles
-                    .Where(x => x.Slug == message.Article.Slug)
+                    .Where(x => x.Slug == message.Slug)
                     .FirstOrDefaultAsync();
 
                 if (article == null)
@@ -67,11 +59,16 @@ namespace RealWorld.Features.Articles
                 article.Description = message.Article.Description ?? article.Description;
                 article.Body = message.Article.Body ?? article.Body;
                 article.Title = message.Article.Title ?? article.Title;
+
+                if (_db.ChangeTracker.Entries().First(x => x.Entity == article).State == EntityState.Modified)
+                {
+                    article.UpdatedAt = DateTime.UtcNow;
+                }
                 
                 await _db.SaveChangesAsync();
 
                 return new ArticleEnvelope(await _db.Articles.GetAllData()
-                    .Where(x => x.Slug == message.Article.Slug)
+                    .Where(x => x.Slug == message.Slug)
                     .FirstOrDefaultAsync());
             }
         }

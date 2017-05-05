@@ -1,16 +1,15 @@
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RealWorld.Domain;
+using RealWorld.Features.Articles;
 using RealWorld.Infrastructure;
 using RealWorld.Infrastructure.Errors;
 
-namespace RealWorld.Features.Articles
+namespace RealWorld.Features.Favorites
 {
-    public class FavoriteAdd
+    public class Delete
     {
         public class Command : IRequest<ArticleEnvelope>
         {
@@ -54,16 +53,9 @@ namespace RealWorld.Features.Articles
 
                 var favorite = await _context.ArticleFavorites.FirstOrDefaultAsync(x => x.ArticleId == article.ArticleId && x.PersonId == person.PersonId);
 
-                if (favorite == null)
+                if (favorite != null)
                 {
-                    favorite = new ArticleFavorite()
-                    {
-                        Article = article,
-                        ArticleId = article.ArticleId,
-                        Person = person,
-                        PersonId = person.PersonId
-                    };
-                    await _context.ArticleFavorites.AddAsync(favorite);
+                    _context.ArticleFavorites.Remove(favorite);
                     await _context.SaveChangesAsync();
                 }
 

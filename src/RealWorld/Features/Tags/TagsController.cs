@@ -15,7 +15,7 @@ namespace RealWorld.Features.Tags
         }
 
         [HttpGet]
-        public async Task<TagsEnvelope> Get(string username)
+        public async Task<TagsEnvelope> Get()
         {
             return await _mediator.Send(new List.Query());
         }
