@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using RealWorld.Domain;
 using RealWorld.Features.Users;
-using RealWorld.Infrastructure;
 using RealWorld.Infrastructure.Security;
 using Xunit;
 

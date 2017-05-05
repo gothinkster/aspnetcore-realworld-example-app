@@ -1,19 +1,18 @@
-﻿using System.Text;
+﻿using System;
+using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace RealWorld.Infrastructure
 {
     //https://stackoverflow.com/questions/2920744/url-slugify-algorithm-in-c
+    //https://stackoverflow.com/questions/249087/how-do-i-remove-diacritics-accents-from-a-string-in-net
     public static class Slug
     {
-        static Slug()
-        {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-        }
-
         public static string GenerateSlug(this string phrase)
         {
-            string str = phrase.RemoveAccent().ToLower();
+            string str = phrase.RemoveDiacritics().ToLower();
             // invalid chars           
             str = Regex.Replace(str, @"[^a-z0-9\s-]", "");
             // convert multiple spaces into one space   
@@ -24,10 +23,13 @@ namespace RealWorld.Infrastructure
             return str;
         }
 
-        public static string RemoveAccent(this string txt)
+        public static string RemoveDiacritics(this string text)
         {
-            byte[] bytes = System.Text.Encoding.GetEncoding("Cyrillic").GetBytes(txt);
-            return System.Text.Encoding.ASCII.GetString(bytes);
+            var s = new string(text.Normalize(NormalizationForm.FormD)
+                .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                .ToArray());
+
+            return s.Normalize(NormalizationForm.FormC);
         }
     }
 }

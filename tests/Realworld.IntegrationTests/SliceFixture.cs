@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using RealWorld;
-using RealWorld.Domain;
 using RealWorld.Infrastructure;
 
 namespace Realworld.IntegrationTests
