@@ -25,20 +25,29 @@ namespace RealWorld.Features.Articles
             public string FavoritedUsername { get; }
             public int? Limit { get; }
             public int? Offset { get; }
+            public bool IsFeed { get; set; }
         }
 
         public class QueryHandler : IAsyncRequestHandler<Query, ArticlesEnvelope>
         {
             private readonly RealWorldContext _context;
+            private readonly ICurrentUserAccessor _currentUserAccessor;
 
-            public QueryHandler(RealWorldContext context)
+            public QueryHandler(RealWorldContext context, ICurrentUserAccessor currentUserAccessor)
             {
                 _context = context;
+                _currentUserAccessor = currentUserAccessor;
             }
 
             public async Task<ArticlesEnvelope> Handle(Query message)
             {
                 IQueryable<Article> queryable = _context.Articles.GetAllData();
+
+                if (message.IsFeed && _currentUserAccessor.GetCurrentUsername() != null)
+                {
+                    var currentUser = await _context.Persons.Include(x => x.Following).FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername());
+                    queryable = queryable.Where(x => currentUser.Following.Select(y => y.TargetId).Contains(x.Author.PersonId));
+                }
 
                 if (!string.IsNullOrWhiteSpace(message.Tag))
                 {

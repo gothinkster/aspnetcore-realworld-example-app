@@ -24,6 +24,15 @@ namespace RealWorld.Features.Articles
             return await _mediator.Send(new List.Query(tag, author,favorited,limit, offset));
         }
 
+        [HttpGet("feed")]
+        public async Task<ArticlesEnvelope> GetFeed([FromQuery] string tag, [FromQuery] string author, [FromQuery] string favorited, [FromQuery] int? limit, [FromQuery] int? offset)
+        {
+            return await _mediator.Send(new List.Query(tag, author, favorited, limit, offset)
+            {
+                IsFeed = true
+            });
+        }
+
         [HttpGet("{slug}")]
         public async Task<ArticleEnvelope> Get(string slug)
         {
