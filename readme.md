@@ -58,4 +58,4 @@ Swagger URL:
 
 # Circle CI 
 
-[![CircleCI](https://circleci.com/gh/adamhathcock/realworld-aspnetcore-kit/tree/master.svg?style=svg)](https://circleci.com/gh/adamhathcock/realworld-aspnetcore-kit/tree/master)
+[![CircleCI](https://circleci.com/gh/gothinkster/aspnetcore-realworld-example-app.svg?style=svg)](https://circleci.com/gh/gothinkster/aspnetcore-realworld-example-app)
