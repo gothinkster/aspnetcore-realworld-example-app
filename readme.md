@@ -41,7 +41,7 @@ Build on OS X and Linux:
 
 Build on Windows:
 
-- `./build.ps1 build.cake`
+- `./build.ps1`
 
 Build Docker and run:
 
