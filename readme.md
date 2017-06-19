@@ -21,6 +21,7 @@ This is using ASP.NET Core with:
     - [CQRS with MediatR and AutoMapper](https://lostechies.com/jimmybogard/2015/05/05/cqrs-with-mediatr-and-automapper/)
     - [Thin Controllers with CQRS and MediatR](https://codeopinion.com/thin-controllers-cqrs-mediatr/)
 - [AutoMapper](http://automapper.org)
+- [Fluent Validation](https://github.com/JeremySkinner/FluentValidation)
 - Feature folders and vertical slices
 - [Entity Framework Core](https://docs.microsoft.com/en-us/ef/) on SQLite for demo purposes.  Can easily be anything else EF Core supports.  Open to porting to other ORMs/DBs.
 - Built-in Swagger via [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
