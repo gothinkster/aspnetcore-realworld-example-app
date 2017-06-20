@@ -46,13 +46,13 @@ Build on Windows:
 
 Build Docker and run:
 
-- `docker build -t realworld:latest .`
-- `docker run -p 5000:5000 realworld:latest`
+- `docker build -t conduit:latest .`
+- `docker run -p 5000:5000 conduit:latest`
 
 Or run the published
 
 - `cd publish/`
-- `dotnet Realworld.dll`
+- `dotnet Conduit.dll`
 
 Swagger URL:
 `http://localhost:5000/swagger`

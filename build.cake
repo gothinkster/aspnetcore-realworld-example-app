@@ -34,7 +34,7 @@ Task("Publish")
         VersionSuffix = tag
     };
                 
-    DotNetCorePublish("src/RealWorld", settings);
+    DotNetCorePublish("src/Conduit", settings);
 });
 
 Task("Default")

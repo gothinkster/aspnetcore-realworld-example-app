@@ -29,4 +29,4 @@ deployment:
     commands:
       - mkdir publish/
       - ./build.sh build.cake --target=publish
-      - docker build -t realworld:latest .
+      - docker build -t conduit:latest .
