@@ -5,4 +5,4 @@ WORKDIR /app
 
 EXPOSE 5000
 
-ENTRYPOINT ["dotnet", "RealWorld.dll"]
+ENTRYPOINT ["dotnet", "Conduit.dll"]

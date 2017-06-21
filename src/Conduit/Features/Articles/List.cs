@@ -1,0 +1,103 @@
+using System.Linq;
+using System.Threading.Tasks;
+using Conduit.Domain;
+using Conduit.Infrastructure;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
+namespace Conduit.Features.Articles
+{
+    public class List
+    {
+        public class Query : IRequest<ArticlesEnvelope>
+        {
+            public Query(string tag, string author, string favorited, int? limit, int? offset)
+            {
+                Tag = tag;
+                Author = author;
+                FavoritedUsername = favorited;
+                Limit = limit;
+                Offset = offset;
+            }
+
+            public string Tag { get; }
+            public string Author { get; }
+            public string FavoritedUsername { get; }
+            public int? Limit { get; }
+            public int? Offset { get; }
+            public bool IsFeed { get; set; }
+        }
+
+        public class QueryHandler : IAsyncRequestHandler<Query, ArticlesEnvelope>
+        {
+            private readonly ConduitContext _context;
+            private readonly ICurrentUserAccessor _currentUserAccessor;
+
+            public QueryHandler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
+            {
+                _context = context;
+                _currentUserAccessor = currentUserAccessor;
+            }
+
+            public async Task<ArticlesEnvelope> Handle(Query message)
+            {
+                IQueryable<Article> queryable = _context.Articles.GetAllData();
+
+                if (message.IsFeed && _currentUserAccessor.GetCurrentUsername() != null)
+                {
+                    var currentUser = await _context.Persons.Include(x => x.Following).FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername());
+                    queryable = queryable.Where(x => currentUser.Following.Select(y => y.TargetId).Contains(x.Author.PersonId));
+                }
+
+                if (!string.IsNullOrWhiteSpace(message.Tag))
+                {
+                    var tag = await _context.ArticleTags.FirstOrDefaultAsync(x => x.TagId == message.Tag);
+                    if (tag != null)
+                    {
+                        queryable = queryable.Where(x => x.ArticleTags.Select(y => y.TagId).Contains(tag.TagId));
+                    }
+                    else
+                    {
+                        return new ArticlesEnvelope();
+                    }
+                }
+                if (!string.IsNullOrWhiteSpace(message.Author))
+                {
+                    var author = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Author);
+                    if (author != null)
+                    {
+                        queryable = queryable.Where(x => x.Author == author);
+                    }
+                    else
+                    {
+                        return new ArticlesEnvelope();
+                    }
+                }
+                if (!string.IsNullOrWhiteSpace(message.FavoritedUsername))
+                {
+                    var author = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.FavoritedUsername);
+                    if (author != null)
+                    {
+                        queryable = queryable.Where(x => x.ArticleFavorites.Any(y => y.PersonId == author.PersonId));
+                    }
+                    else
+                    {
+                        return new ArticlesEnvelope();
+                    }
+                }
+
+                var articles = await queryable
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip(message.Offset ?? 0)
+                    .Take(message.Limit ?? 20)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                return new ArticlesEnvelope()
+                {
+                    Articles = articles
+                };
+            }
+        }
+    }
+}
