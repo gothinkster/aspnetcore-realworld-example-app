@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Conduit
 {
@@ -77,7 +78,7 @@ namespace Conduit
                 .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
                 //just for local debug
-                .WriteTo.LiterateConsole(outputTemplate: "{Timestamp:HH:mm:ss} [{Level}] {SourceContext} {Message}{NewLine}{Exception}")
+                .WriteTo.Console(outputTemplate: "{Timestamp:HH:mm:ss} [{Level}] {SourceContext} {Message}{NewLine}{Exception}", theme: AnsiConsoleTheme.Code)
                 .CreateLogger();
 
             loggerFactory.AddSerilog(log);
