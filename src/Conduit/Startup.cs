@@ -76,8 +76,6 @@ namespace Conduit
                 .AllowAnyHeader()
                 .AllowAnyMethod());
 
-            app.UseJwt();
-
             app.UseMvc();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint

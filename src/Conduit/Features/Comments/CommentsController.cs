@@ -17,7 +17,7 @@ namespace Conduit.Features.Comments
         }
 
         [HttpPost("{slug}/comments")]
-        [Authorize(ActiveAuthenticationSchemes = JwtIssuerOptions.Scheme)]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Scheme)]
         public async Task<CommentEnvelope> Create(string slug, [FromBody]Create.Command command)
         {
             command.Slug = slug;
@@ -31,7 +31,7 @@ namespace Conduit.Features.Comments
         }
 
         [HttpDelete("{slug}/comments/{id}")]
-        [Authorize(ActiveAuthenticationSchemes = JwtIssuerOptions.Scheme)]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Scheme)]
         public async Task Delete(string slug, int id)
         {
             await _mediator.Send(new Delete.Command(slug, id));

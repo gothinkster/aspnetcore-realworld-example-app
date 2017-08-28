@@ -20,42 +20,43 @@ namespace Conduit
             services.AddOptions();
 
             var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("somethinglongerforthisdumbalgorithmisrequired"));
+            var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+            var issuer = "issuer";
+            var audience = "audience";
+
             services.Configure<JwtIssuerOptions>(options =>
             {
-                options.Issuer = "issuer";
-                options.Audience = "Audience";
-                options.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+                options.Issuer = issuer;
+                options.Audience = audience;
+                options.SigningCredentials = signingCredentials;
             });
-        }
-
-        public static void UseJwt(this IApplicationBuilder app)
-        {
-            var options = app.ApplicationServices.GetRequiredService<IOptions<JwtIssuerOptions>>();
 
             var tokenValidationParameters = new TokenValidationParameters
             {
                 // The signing key must match!
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = options.Value.SigningCredentials.Key,
+                IssuerSigningKey = signingCredentials.Key,
                 // Validate the JWT Issuer (iss) claim
                 ValidateIssuer = true,
-                ValidIssuer = options.Value.Issuer,
+                ValidIssuer = issuer,
                 // Validate the JWT Audience (aud) claim
                 ValidateAudience = true,
-                ValidAudience = options.Value.Audience,
+                ValidAudience = audience,
                 // Validate the token expiry
                 ValidateLifetime = true,
                 // If you want to allow a certain amount of clock drift, set that here:
                 ClockSkew = TimeSpan.Zero
             };
 
-            app.UseJwtBearerAuthentication(new JwtBearerOptions
+            // This can be removed after https://github.com/aspnet/IISIntegration/issues/371
+            services.AddAuthentication(options =>
             {
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-                TokenValidationParameters = tokenValidationParameters,
-                AuthenticationScheme = JwtIssuerOptions.Scheme,
-                Events = new JwtBearerEvents()
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = tokenValidationParameters;
+                options.Events = new JwtBearerEvents()
                 {
                     OnMessageReceived = context =>
                     {
@@ -67,7 +68,7 @@ namespace Conduit
                         }
                         return Task.CompletedTask;
                     }
-                }
+                };
             });
         }
 
