@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -59,6 +59,7 @@ namespace Conduit.Features.Articles
                 article.Description = message.Article.Description ?? article.Description;
                 article.Body = message.Article.Body ?? article.Body;
                 article.Title = message.Article.Title ?? article.Title;
+                article.Slug = article.Title.GenerateSlug();
 
                 if (_db.ChangeTracker.Entries().First(x => x.Entity == article).State == EntityState.Modified)
                 {
@@ -68,9 +69,8 @@ namespace Conduit.Features.Articles
                 await _db.SaveChangesAsync();
 
                 return new ArticleEnvelope(await _db.Articles.GetAllData()
-                    .Where(x => x.Slug == message.Slug)
-                    .FirstOrDefaultAsync());
-            }
+                    .Where(x => x.Slug == article.Slug)
+                    .FirstOrDefaultAsync());            }
         }
     }
 }
