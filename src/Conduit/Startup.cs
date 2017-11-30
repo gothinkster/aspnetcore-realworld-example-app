@@ -59,8 +59,6 @@ namespace Conduit
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             
             services.AddJwt();
-
-            Mapper.AssertConfigurationIsValid();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

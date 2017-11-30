@@ -15,6 +15,7 @@ namespace Conduit.IntegrationTests
 
         public SliceFixture()
         {
+            AutoMapper.ServiceCollectionExtensions.UseStaticRegistration = false;
             var startup = new Startup();
             var services = new ServiceCollection();
 
@@ -49,7 +50,7 @@ namespace Conduit.IntegrationTests
                 return await action(scope.ServiceProvider);
             }
         }
-        
+
         public Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
         {
             return ExecuteScopeAsync(sp =>

@@ -43,12 +43,15 @@ namespace Conduit.Features.Users
             private readonly ConduitContext _db;
             private readonly IPasswordHasher _passwordHasher;
             private readonly ICurrentUserAccessor _currentUserAccessor;
+            private readonly IMapper _mapper;
 
-            public Handler(ConduitContext db, IPasswordHasher passwordHasher, ICurrentUserAccessor currentUserAccessor)
+            public Handler(ConduitContext db, IPasswordHasher passwordHasher, 
+                ICurrentUserAccessor currentUserAccessor, IMapper mapper)
             {
                 _db = db;
                 _passwordHasher = passwordHasher;
                 _currentUserAccessor = currentUserAccessor;
+                _mapper = mapper;
             }
 
             public async Task<UserEnvelope> Handle(Command message)
@@ -70,7 +73,7 @@ namespace Conduit.Features.Users
                 
                 await _db.SaveChangesAsync();
 
-                return new UserEnvelope(Mapper.Map<Domain.Person, User>(person));
+                return new UserEnvelope(_mapper.Map<Domain.Person, User>(person));
             }
         }
     }
