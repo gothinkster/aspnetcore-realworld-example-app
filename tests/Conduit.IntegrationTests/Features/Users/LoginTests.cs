@@ -35,7 +35,7 @@ namespace Conduit.IntegrationTests.Features.Users
 
             Assert.NotNull(user?.User);
             Assert.Equal(user.User.Email, command.User.Email);
-            Assert.Equal(user.User.Username, "username");
+            Assert.Equal("username", user.User.Username);
             Assert.NotNull(user.User.Token);
         }
     }

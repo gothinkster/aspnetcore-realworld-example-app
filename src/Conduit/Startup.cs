@@ -50,7 +50,7 @@ namespace Conduit
                 })
                 .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); });
 
-            services.AddAutoMapper();
+            services.AddAutoMapper(GetType().Assembly);
 
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
@@ -59,8 +59,6 @@ namespace Conduit
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             
             services.AddJwt();
-
-            Mapper.AssertConfigurationIsValid();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,8 +73,6 @@ namespace Conduit
                 .AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod());
-
-            app.UseJwt();
 
             app.UseMvc();
 

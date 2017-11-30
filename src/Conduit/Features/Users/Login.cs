@@ -47,12 +47,14 @@ namespace Conduit.Features.Users
             private readonly ConduitContext _db;
             private readonly IPasswordHasher _passwordHasher;
             private readonly IJwtTokenGenerator _jwtTokenGenerator;
+            private readonly IMapper _mapper;
 
-            public Handler(ConduitContext db, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator)
+            public Handler(ConduitContext db, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
             {
                 _db = db;
                 _passwordHasher = passwordHasher;
                 _jwtTokenGenerator = jwtTokenGenerator;
+                _mapper = mapper;
             }
 
             public async Task<UserEnvelope> Handle(Command message)
@@ -68,7 +70,7 @@ namespace Conduit.Features.Users
                     throw new RestException(HttpStatusCode.Unauthorized);
                 }
              
-                var user  = Mapper.Map<Domain.Person, User>(person); ;
+                var user  = _mapper.Map<Domain.Person, User>(person); ;
                 user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
                 return new UserEnvelope(user);
             }

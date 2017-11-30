@@ -27,10 +27,12 @@ namespace Conduit.Features.Users
         public class QueryHandler : IAsyncRequestHandler<Query, UserEnvelope>
         {
             private readonly ConduitContext _context;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(ConduitContext context)
+            public QueryHandler(ConduitContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
 
             public async Task<UserEnvelope> Handle(Query message)
@@ -42,7 +44,7 @@ namespace Conduit.Features.Users
                 {
                     throw new RestException(HttpStatusCode.NotFound);
                 }
-                return new UserEnvelope(Mapper.Map<Domain.Person, User>(person));
+                return new UserEnvelope(_mapper.Map<Domain.Person, User>(person));
             }
         }
     }

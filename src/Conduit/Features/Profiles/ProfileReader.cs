@@ -12,11 +12,13 @@ namespace Conduit.Features.Profiles
     {
         private readonly ConduitContext _context;
         private readonly ICurrentUserAccessor _currentUserAccessor;
+        private readonly IMapper _mapper;
 
-        public ProfileReader(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
+        public ProfileReader(ConduitContext context, ICurrentUserAccessor currentUserAccessor, IMapper mapper)
         {
             _context = context;
             _currentUserAccessor = currentUserAccessor;
+            _mapper = mapper;
         }
 
         public async Task<ProfileEnvelope> ReadProfile(string username)
@@ -30,7 +32,7 @@ namespace Conduit.Features.Profiles
             {
                 throw new RestException(HttpStatusCode.NotFound);
             }
-            var profile = Mapper.Map<Domain.Person, Profile>(person);
+            var profile = _mapper.Map<Domain.Person, Profile>(person);
 
             if (currentUserName != null)
             {

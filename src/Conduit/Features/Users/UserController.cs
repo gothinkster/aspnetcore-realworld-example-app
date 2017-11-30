@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Conduit.Features.Users
 {
     [Route("user")]
-    [Authorize(ActiveAuthenticationSchemes = JwtIssuerOptions.Scheme)]
+    [Authorize(AuthenticationSchemes = JwtIssuerOptions.Scheme)]
     public class UserController
     {
         private readonly IMediator _mediator;
