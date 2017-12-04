@@ -40,7 +40,7 @@ namespace Conduit.Features.Users
             {
                 var person = await _context.Persons
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Username == message.Username);
+                    .FirstOrDefaultAsync(x => x.Username == message.Username, cancellationToken);
                 if (person == null)
                 {
                     throw new RestException(HttpStatusCode.NotFound);

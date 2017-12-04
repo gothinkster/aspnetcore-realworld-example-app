@@ -60,7 +60,7 @@ namespace Conduit.Features.Users
 
             public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
-                var person = await _db.Persons.Where(x => x.Email == message.User.Email).SingleOrDefaultAsync();
+                var person = await _db.Persons.Where(x => x.Email == message.User.Email).SingleOrDefaultAsync(cancellationToken);
                 if (person == null)
                 {
                     throw new RestException(HttpStatusCode.Unauthorized);

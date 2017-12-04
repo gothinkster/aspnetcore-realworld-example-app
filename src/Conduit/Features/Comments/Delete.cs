@@ -45,7 +45,7 @@ namespace Conduit.Features.Comments
             {
                 var article = await _context.Articles
                     .Include(x => x.Comments)
-                    .FirstOrDefaultAsync(x => x.Slug == message.Slug);
+                    .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
 
                 if (article == null)
                 {
@@ -59,7 +59,7 @@ namespace Conduit.Features.Comments
                 }
                 
                 _context.Comments.Remove(comment);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(cancellationToken);
             }
         }
     }

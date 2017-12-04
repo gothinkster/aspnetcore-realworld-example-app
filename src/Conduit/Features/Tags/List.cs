@@ -24,7 +24,7 @@ namespace Conduit.Features.Tags
 
             public async Task<TagsEnvelope> Handle(Query message, CancellationToken cancellationToken)
             {
-                var tags = await _context.Tags.OrderBy(x => x.TagId).AsNoTracking().ToListAsync();
+                var tags = await _context.Tags.OrderBy(x => x.TagId).AsNoTracking().ToListAsync(cancellationToken);
                 return new TagsEnvelope()
                 {
                     Tags = tags.Select(x => x.TagId).ToList()

@@ -41,7 +41,7 @@ namespace Conduit.Features.Articles
             public async Task<ArticleEnvelope> Handle(Query message, CancellationToken cancellationToken)
             {
                 var article = await _context.Articles.GetAllData()
-                    .FirstOrDefaultAsync(x => x.Slug == message.Slug);
+                    .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
 
                 if (article == null)
                 {

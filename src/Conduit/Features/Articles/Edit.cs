@@ -49,7 +49,7 @@ namespace Conduit.Features.Articles
             {
                 var article = await _db.Articles
                     .Where(x => x.Slug == message.Slug)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(cancellationToken);
 
                 if (article == null)
                 {
@@ -67,11 +67,11 @@ namespace Conduit.Features.Articles
                     article.UpdatedAt = DateTime.UtcNow;
                 }
                 
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync(cancellationToken);
 
                 return new ArticleEnvelope(await _db.Articles.GetAllData()
                     .Where(x => x.Slug == article.Slug)
-                    .FirstOrDefaultAsync());            }
+                    .FirstOrDefaultAsync(cancellationToken));            }
         }
     }
 }

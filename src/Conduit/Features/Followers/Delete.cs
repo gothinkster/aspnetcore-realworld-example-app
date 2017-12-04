@@ -45,21 +45,21 @@ namespace Conduit.Features.Followers
 
             public async Task<ProfileEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
-                var target = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Username);
+                var target = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Username, cancellationToken);
 
                 if (target == null)
                 {
                     throw new RestException(HttpStatusCode.NotFound);
                 }
 
-                var observer = await _context.Persons.FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername());
+                var observer = await _context.Persons.FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
 
-                var followedPeople = await _context.FollowedPeople.FirstOrDefaultAsync(x => x.ObserverId == observer.PersonId && x.TargetId == target.PersonId);
+                var followedPeople = await _context.FollowedPeople.FirstOrDefaultAsync(x => x.ObserverId == observer.PersonId && x.TargetId == target.PersonId, cancellationToken);
 
                 if (followedPeople != null)
                 {
                     _context.FollowedPeople.Remove(followedPeople);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(cancellationToken);
                 }
 
                 return await _profileReader.ReadProfile(message.Username);

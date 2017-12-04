@@ -58,7 +58,7 @@ namespace Conduit.Features.Users
             public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
                 var currentUsername = _currentUserAccessor.GetCurrentUsername();
-                var person = await _db.Persons.Where(x => x.Username == currentUsername).FirstOrDefaultAsync();
+                var person = await _db.Persons.Where(x => x.Username == currentUsername).FirstOrDefaultAsync(cancellationToken);
 
                 person.Username = message.User.Username ?? person.Username;
                 person.Email = message.User.Email ?? person.Email;
@@ -72,7 +72,7 @@ namespace Conduit.Features.Users
                     person.Salt = salt;
                 }
                 
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync(cancellationToken);
 
                 return new UserEnvelope(_mapper.Map<Domain.Person, User>(person));
             }
