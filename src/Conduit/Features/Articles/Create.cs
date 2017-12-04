@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Domain;
 using Conduit.Infrastructure;
@@ -46,7 +47,7 @@ namespace Conduit.Features.Articles
             }
         }
 
-        public class Handler : IAsyncRequestHandler<Command, ArticleEnvelope>
+        public class Handler : IRequestHandler<Command, ArticleEnvelope>
         {
             private readonly ConduitContext _db;
             private readonly ICurrentUserAccessor _currentUserAccessor;
@@ -57,7 +58,7 @@ namespace Conduit.Features.Articles
                 _currentUserAccessor = currentUserAccessor;
             }
 
-            public async Task<ArticleEnvelope> Handle(Command message)
+            public async Task<ArticleEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
                 var author = await _db.Persons.FirstAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername());
                 var tags = new List<Tag>();

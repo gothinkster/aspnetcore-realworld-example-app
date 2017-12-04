@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Domain;
 using Conduit.Infrastructure;
@@ -28,7 +29,7 @@ namespace Conduit.Features.Articles
             public bool IsFeed { get; set; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, ArticlesEnvelope>
+        public class QueryHandler : IRequestHandler<Query, ArticlesEnvelope>
         {
             private readonly ConduitContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
@@ -39,7 +40,7 @@ namespace Conduit.Features.Articles
                 _currentUserAccessor = currentUserAccessor;
             }
 
-            public async Task<ArticlesEnvelope> Handle(Query message)
+            public async Task<ArticlesEnvelope> Handle(Query message, CancellationToken cancellationToken)
             {
                 IQueryable<Article> queryable = _context.Articles.GetAllData();
 

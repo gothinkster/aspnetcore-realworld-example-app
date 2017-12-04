@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Conduit.Domain;
@@ -47,7 +48,7 @@ namespace Conduit.Features.Users
             }
         }
 
-        public class Handler : IAsyncRequestHandler<Command, UserEnvelope>
+        public class Handler : IRequestHandler<Command, UserEnvelope>
         {
             private readonly ConduitContext _db;
             private readonly IPasswordHasher _passwordHasher;
@@ -60,7 +61,7 @@ namespace Conduit.Features.Users
                 _mapper = mapper;
             }
 
-            public async Task<UserEnvelope> Handle(Command message)
+            public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
                 if (await _db.Persons.Where(x => x.Username == message.User.Username).AnyAsync())
                 {

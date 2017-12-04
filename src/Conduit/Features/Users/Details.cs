@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Conduit.Infrastructure;
@@ -24,7 +25,7 @@ namespace Conduit.Features.Users
             }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, UserEnvelope>
+        public class QueryHandler : IRequestHandler<Query, UserEnvelope>
         {
             private readonly ConduitContext _context;
             private readonly IMapper _mapper;
@@ -35,7 +36,7 @@ namespace Conduit.Features.Users
                 _mapper = mapper;
             }
 
-            public async Task<UserEnvelope> Handle(Query message)
+            public async Task<UserEnvelope> Handle(Query message, CancellationToken cancellationToken)
             {
                 var person = await _context.Persons
                     .AsNoTracking()

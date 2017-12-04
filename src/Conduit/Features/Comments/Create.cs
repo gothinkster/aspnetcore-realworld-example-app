@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Domain;
 using Conduit.Infrastructure;
@@ -40,7 +41,7 @@ namespace Conduit.Features.Comments
             }
         }
 
-        public class Handler : IAsyncRequestHandler<Command, CommentEnvelope>
+        public class Handler : IRequestHandler<Command, CommentEnvelope>
         {
             private readonly ConduitContext _db;
             private readonly ICurrentUserAccessor _currentUserAccessor;
@@ -51,7 +52,7 @@ namespace Conduit.Features.Comments
                 _currentUserAccessor = currentUserAccessor;
             }
 
-            public async Task<CommentEnvelope> Handle(Command message)
+            public async Task<CommentEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
                 var article = await _db.Articles
                     .Include(x => x.Comments)

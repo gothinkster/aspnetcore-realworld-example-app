@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
@@ -28,7 +29,7 @@ namespace Conduit.Features.Articles
             }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Command>
+        public class QueryHandler : IRequestHandler<Command>
         {
             private readonly ConduitContext _context;
 
@@ -37,7 +38,7 @@ namespace Conduit.Features.Articles
                 _context = context;
             }
 
-            public async Task Handle(Command message)
+            public async Task Handle(Command message, CancellationToken cancellationToken)
             {
                 var article = await _context.Articles
                     .FirstOrDefaultAsync(x => x.Slug == message.Slug);

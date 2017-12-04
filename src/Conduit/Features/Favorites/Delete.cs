@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Features.Articles;
 using Conduit.Infrastructure;
@@ -29,7 +30,7 @@ namespace Conduit.Features.Favorites
             }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Command, ArticleEnvelope>
+        public class QueryHandler : IRequestHandler<Command, ArticleEnvelope>
         {
             private readonly ConduitContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
@@ -40,7 +41,7 @@ namespace Conduit.Features.Favorites
                 _currentUserAccessor = currentUserAccessor;
             }
 
-            public async Task<ArticleEnvelope> Handle(Command message)
+            public async Task<ArticleEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
                 var article = await _context.Articles.FirstOrDefaultAsync(x => x.Slug == message.Slug);
 

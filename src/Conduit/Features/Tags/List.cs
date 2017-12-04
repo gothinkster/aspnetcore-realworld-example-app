@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Infrastructure;
 using MediatR;
@@ -12,7 +13,7 @@ namespace Conduit.Features.Tags
         {
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, TagsEnvelope>
+        public class QueryHandler : IRequestHandler<Query, TagsEnvelope>
         {
             private readonly ConduitContext _context;
 
@@ -21,7 +22,7 @@ namespace Conduit.Features.Tags
                 _context = context;
             }
 
-            public async Task<TagsEnvelope> Handle(Query message)
+            public async Task<TagsEnvelope> Handle(Query message, CancellationToken cancellationToken)
             {
                 var tags = await _context.Tags.OrderBy(x => x.TagId).AsNoTracking().ToListAsync();
                 return new TagsEnvelope()

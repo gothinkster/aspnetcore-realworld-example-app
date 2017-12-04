@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Domain;
 using Conduit.Features.Profiles;
@@ -30,7 +31,7 @@ namespace Conduit.Features.Followers
             }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Command, ProfileEnvelope>
+        public class QueryHandler : IRequestHandler<Command, ProfileEnvelope>
         {
             private readonly ConduitContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
@@ -43,7 +44,7 @@ namespace Conduit.Features.Followers
                 _profileReader = profileReader;
             }
 
-            public async Task<ProfileEnvelope> Handle(Command message)
+            public async Task<ProfileEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
                 var target = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Username);
 
