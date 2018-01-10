@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: adamhathcock/cake-build:latest
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build
+          command: ./build.sh
+      - deploy:
+          name: Make Docker Container
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker build -t conduit:latest .
+            fi
+      
