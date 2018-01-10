@@ -31,6 +31,7 @@ Task("Publish")
         Framework = "netcoreapp2.0",
         Configuration = "Release",
         OutputDirectory = "./publish",
+        Runtime = "linux-x64",
         VersionSuffix = tag
     };
                 
