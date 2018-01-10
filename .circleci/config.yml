@@ -5,7 +5,8 @@ jobs:
       - image: adamhathcock/cake-build:latest
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: Build
           command: ./build.sh
