@@ -9,7 +9,7 @@ jobs:
       - run:
           name: Build
           command: ./build.sh
-      - deploy:
+      - run:
           name: Make Docker Container
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
