@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
@@ -31,7 +32,7 @@ namespace Conduit.Features.Comments
             }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Command>
+        public class QueryHandler : IRequestHandler<Command>
         {
             private readonly ConduitContext _context;
 
@@ -40,11 +41,11 @@ namespace Conduit.Features.Comments
                 _context = context;
             }
 
-            public async Task Handle(Command message)
+            public async Task Handle(Command message, CancellationToken cancellationToken)
             {
                 var article = await _context.Articles
                     .Include(x => x.Comments)
-                    .FirstOrDefaultAsync(x => x.Slug == message.Slug);
+                    .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
 
                 if (article == null)
                 {
@@ -58,7 +59,7 @@ namespace Conduit.Features.Comments
                 }
                 
                 _context.Comments.Remove(comment);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(cancellationToken);
             }
         }
     }

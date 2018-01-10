@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Domain;
 using Conduit.Infrastructure;
@@ -28,7 +29,7 @@ namespace Conduit.Features.Articles
             public bool IsFeed { get; set; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, ArticlesEnvelope>
+        public class QueryHandler : IRequestHandler<Query, ArticlesEnvelope>
         {
             private readonly ConduitContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
@@ -39,19 +40,19 @@ namespace Conduit.Features.Articles
                 _currentUserAccessor = currentUserAccessor;
             }
 
-            public async Task<ArticlesEnvelope> Handle(Query message)
+            public async Task<ArticlesEnvelope> Handle(Query message, CancellationToken cancellationToken)
             {
                 IQueryable<Article> queryable = _context.Articles.GetAllData();
 
                 if (message.IsFeed && _currentUserAccessor.GetCurrentUsername() != null)
                 {
-                    var currentUser = await _context.Persons.Include(x => x.Following).FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername());
+                    var currentUser = await _context.Persons.Include(x => x.Following).FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
                     queryable = queryable.Where(x => currentUser.Following.Select(y => y.TargetId).Contains(x.Author.PersonId));
                 }
 
                 if (!string.IsNullOrWhiteSpace(message.Tag))
                 {
-                    var tag = await _context.ArticleTags.FirstOrDefaultAsync(x => x.TagId == message.Tag);
+                    var tag = await _context.ArticleTags.FirstOrDefaultAsync(x => x.TagId == message.Tag, cancellationToken);
                     if (tag != null)
                     {
                         queryable = queryable.Where(x => x.ArticleTags.Select(y => y.TagId).Contains(tag.TagId));
@@ -63,7 +64,7 @@ namespace Conduit.Features.Articles
                 }
                 if (!string.IsNullOrWhiteSpace(message.Author))
                 {
-                    var author = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Author);
+                    var author = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Author, cancellationToken);
                     if (author != null)
                     {
                         queryable = queryable.Where(x => x.Author == author);
@@ -75,7 +76,7 @@ namespace Conduit.Features.Articles
                 }
                 if (!string.IsNullOrWhiteSpace(message.FavoritedUsername))
                 {
-                    var author = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.FavoritedUsername);
+                    var author = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.FavoritedUsername, cancellationToken);
                     if (author != null)
                     {
                         queryable = queryable.Where(x => x.ArticleFavorites.Any(y => y.PersonId == author.PersonId));
@@ -91,7 +92,7 @@ namespace Conduit.Features.Articles
                     .Skip(message.Offset ?? 0)
                     .Take(message.Limit ?? 20)
                     .AsNoTracking()
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
 
                 return new ArticlesEnvelope()
                 {

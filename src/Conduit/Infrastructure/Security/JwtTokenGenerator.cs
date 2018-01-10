@@ -29,12 +29,12 @@ namespace Conduit.Infrastructure.Security
                     ClaimValueTypes.Integer64)
             };
             var jwt = new JwtSecurityToken(
-                issuer: _jwtOptions.Issuer,
-                audience: _jwtOptions.Audience,
-                claims: claims,
-                notBefore: _jwtOptions.NotBefore,
-                expires: _jwtOptions.Expiration,
-                signingCredentials: _jwtOptions.SigningCredentials);
+                _jwtOptions.Issuer,
+                _jwtOptions.Audience,
+                claims,
+                _jwtOptions.NotBefore,
+                _jwtOptions.Expiration,
+                _jwtOptions.SigningCredentials);
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
             return encodedJwt;

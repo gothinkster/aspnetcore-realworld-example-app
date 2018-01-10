@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
@@ -19,7 +20,7 @@ namespace Conduit.Features.Comments
             public string Slug { get; }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Query, CommentsEnvelope>
+        public class QueryHandler : IRequestHandler<Query, CommentsEnvelope>
         {
             private readonly ConduitContext _context;
 
@@ -28,11 +29,11 @@ namespace Conduit.Features.Comments
                 _context = context;
             }
 
-            public async Task<CommentsEnvelope> Handle(Query message)
+            public async Task<CommentsEnvelope> Handle(Query message, CancellationToken cancellationToken)
             {
                 var article = await _context.Articles
                     .Include(x => x.Comments)
-                    .FirstOrDefaultAsync(x => x.Slug == message.Slug);
+                    .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
 
                 if (article == null)
                 {

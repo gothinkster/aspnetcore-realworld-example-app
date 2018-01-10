@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Domain;
 using Conduit.Features.Articles;
@@ -30,7 +31,7 @@ namespace Conduit.Features.Favorites
             }
         }
 
-        public class QueryHandler : IAsyncRequestHandler<Command, ArticleEnvelope>
+        public class QueryHandler : IRequestHandler<Command, ArticleEnvelope>
         {
             private readonly ConduitContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
@@ -41,18 +42,18 @@ namespace Conduit.Features.Favorites
                 _currentUserAccessor = currentUserAccessor;
             }
 
-            public async Task<ArticleEnvelope> Handle(Command message)
+            public async Task<ArticleEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
-                var article = await _context.Articles.FirstOrDefaultAsync(x => x.Slug == message.Slug);
+                var article = await _context.Articles.FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
 
                 if (article == null)
                 {
                     throw new RestException(HttpStatusCode.NotFound);
                 }
                 
-                var person = await _context.Persons.FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername());
+                var person = await _context.Persons.FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
 
-                var favorite = await _context.ArticleFavorites.FirstOrDefaultAsync(x => x.ArticleId == article.ArticleId && x.PersonId == person.PersonId);
+                var favorite = await _context.ArticleFavorites.FirstOrDefaultAsync(x => x.ArticleId == article.ArticleId && x.PersonId == person.PersonId, cancellationToken);
 
                 if (favorite == null)
                 {
@@ -63,12 +64,12 @@ namespace Conduit.Features.Favorites
                         Person = person,
                         PersonId = person.PersonId
                     };
-                    await _context.ArticleFavorites.AddAsync(favorite);
-                    await _context.SaveChangesAsync();
+                    await _context.ArticleFavorites.AddAsync(favorite, cancellationToken);
+                    await _context.SaveChangesAsync(cancellationToken);
                 }
 
                 return new ArticleEnvelope(await _context.Articles.GetAllData()
-                    .FirstOrDefaultAsync(x => x.ArticleId == article.ArticleId));
+                    .FirstOrDefaultAsync(x => x.ArticleId == article.ArticleId, cancellationToken));
             }
         }
     }

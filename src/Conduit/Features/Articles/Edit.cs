@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
@@ -35,7 +36,7 @@ namespace Conduit.Features.Articles
             }
         }
 
-        public class Handler : IAsyncRequestHandler<Command, ArticleEnvelope>
+        public class Handler : IRequestHandler<Command, ArticleEnvelope>
         {
             private readonly ConduitContext _db;
 
@@ -44,11 +45,11 @@ namespace Conduit.Features.Articles
                 _db = db;
             }
 
-            public async Task<ArticleEnvelope> Handle(Command message)
+            public async Task<ArticleEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
                 var article = await _db.Articles
                     .Where(x => x.Slug == message.Slug)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(cancellationToken);
 
                 if (article == null)
                 {
@@ -66,11 +67,11 @@ namespace Conduit.Features.Articles
                     article.UpdatedAt = DateTime.UtcNow;
                 }
                 
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync(cancellationToken);
 
                 return new ArticleEnvelope(await _db.Articles.GetAllData()
                     .Where(x => x.Slug == article.Slug)
-                    .FirstOrDefaultAsync());            }
+                    .FirstOrDefaultAsync(cancellationToken));            }
         }
     }
 }
