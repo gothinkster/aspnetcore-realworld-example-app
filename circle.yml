@@ -11,7 +11,7 @@ dependencies:
       - sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-trusty-prod trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
       - sudo apt-get update
       - sudo apt-get install dotnet-dev-1.1.5
-      - sudo apt-get install dotnet-sdk-2.0.5
+      - sudo apt-get install dotnet-sdk-2.0.2
   override:
     - ./build.sh build.cake --target=restore
   cache_directories:
