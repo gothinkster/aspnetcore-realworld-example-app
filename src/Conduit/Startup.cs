@@ -24,6 +24,7 @@ namespace Conduit
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMediatR();
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
             services
                 .AddEntityFrameworkSqlite()
