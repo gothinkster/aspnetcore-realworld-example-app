@@ -17,7 +17,8 @@ namespace Conduit.IntegrationTests.Features.Users
                 User = new Create.UserData()
                 {
                     Email = "email",
-                    Password = "password"
+                    Password = "password",
+                    Username = "username"
                 }
             };
 
