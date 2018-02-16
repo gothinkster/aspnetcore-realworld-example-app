@@ -53,7 +53,7 @@ namespace Conduit.Features.Articles
 
                 if (article == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound, new { Error = ErrorHelpers.NotFound("Article")});
+                    throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
                 }
 
 
@@ -66,12 +66,13 @@ namespace Conduit.Features.Articles
                 {
                     article.UpdatedAt = DateTime.UtcNow;
                 }
-                
+
                 await _db.SaveChangesAsync(cancellationToken);
 
                 return new ArticleEnvelope(await _db.Articles.GetAllData()
                     .Where(x => x.Slug == article.Slug)
-                    .FirstOrDefaultAsync(cancellationToken));            }
+                    .FirstOrDefaultAsync(cancellationToken));
+            }
         }
     }
 }

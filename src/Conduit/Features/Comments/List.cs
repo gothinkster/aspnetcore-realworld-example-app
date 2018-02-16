@@ -38,7 +38,7 @@ namespace Conduit.Features.Comments
 
                 if (article == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound, new { Error = ErrorHelpers.NotFound("Article")});
+                    throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
                 }
 
                 return new CommentsEnvelope(article.Comments);
