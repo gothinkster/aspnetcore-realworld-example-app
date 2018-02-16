@@ -18,14 +18,14 @@ namespace Conduit.Features.Favorites
         }
         
         [HttpPost("{slug}/favorite")]
-        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Scheme)]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<ArticleEnvelope> FavoriteAdd(string slug)
         {
             return await _mediator.Send(new Add.Command(slug));
         }
 
         [HttpDelete("{slug}/favorite")]
-        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Scheme)]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task FavoriteDelete(string slug)
         {
             await _mediator.Send(new Delete.Command(slug));

@@ -46,28 +46,9 @@ namespace Conduit
                 ClockSkew = TimeSpan.Zero
             };
 
-            // This can be removed after https://github.com/aspnet/IISIntegration/issues/371
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = tokenValidationParameters;
-                options.Events = new JwtBearerEvents()
-                {
-                    OnMessageReceived = context =>
-                    {
-                        //Have to modify request since the standard for this project uses Token instead of Bearer
-                        string auth = context.Request.Headers["Authorization"];
-                        if (auth?.StartsWith("Token ", StringComparison.OrdinalIgnoreCase) ?? false)
-                        {
-                            context.Request.Headers["Authorization"] = "Bearer " + auth.Substring("Token ".Length).Trim();
-                        }
-                        return Task.CompletedTask;
-                    }
-                };
-            });
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => { options.TokenValidationParameters = tokenValidationParameters; })
+                .AddJwtBearer("Token", options => { options.TokenValidationParameters = tokenValidationParameters; });
         }
 
         public static void AddSerilogLogging(this ILoggerFactory loggerFactory)
