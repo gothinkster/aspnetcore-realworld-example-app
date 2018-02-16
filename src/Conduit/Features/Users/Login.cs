@@ -63,12 +63,12 @@ namespace Conduit.Features.Users
                 var person = await _db.Persons.Where(x => x.Email == message.User.Email).SingleOrDefaultAsync(cancellationToken);
                 if (person == null)
                 {
-                    throw new RestException(HttpStatusCode.Unauthorized);
+                    throw new RestException(HttpStatusCode.Unauthorized, new { Error = "Invalid email / password." });
                 }
 
                 if (!person.Hash.SequenceEqual(_passwordHasher.Hash(message.User.Password, person.Salt)))
                 {
-                    throw new RestException(HttpStatusCode.Unauthorized);
+                    throw new RestException(HttpStatusCode.Unauthorized, new { Error = "Invalid email / password." });
                 }
              
                 var user  = _mapper.Map<Domain.Person, User>(person); ;

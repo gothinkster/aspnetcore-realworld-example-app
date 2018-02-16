@@ -29,23 +29,28 @@ namespace Conduit.Infrastructure.Errors
 
         private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            if (exception is RestException re)
+            object errors = null;
+
+            switch (exception)
             {
-                context.Response.StatusCode = (int)re.Code;
+                case RestException re:
+                    errors = re.Errors;
+                    context.Response.StatusCode = (int) re.Code;
+                    break;
+                case Exception e:
+                    errors = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
+                    context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                    break;
             }
-            else
+            
+            context.Response.ContentType = "application/json";
+
+            var result = JsonConvert.SerializeObject(new
             {
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                if (!string.IsNullOrWhiteSpace(exception.Message))
-                {
-                    context.Response.ContentType = "application/json";
-                    var result = JsonConvert.SerializeObject(new
-                    {
-                        errors = exception.Message
-                    });
-                    await context.Response.WriteAsync(result);
-                }
-            }
+                errors
+            });
+
+            await context.Response.WriteAsync(result);
 
         }
     }

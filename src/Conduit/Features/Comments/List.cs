@@ -33,11 +33,12 @@ namespace Conduit.Features.Comments
             {
                 var article = await _context.Articles
                     .Include(x => x.Comments)
+                        .ThenInclude(x => x.Author)
                     .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
 
                 if (article == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound);
+                    throw new RestException(HttpStatusCode.NotFound, new { Error = ErrorHelpers.NotFound("Article")});
                 }
 
                 return new CommentsEnvelope(article.Comments);

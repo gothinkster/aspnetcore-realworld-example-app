@@ -43,7 +43,7 @@ namespace Conduit.Features.Users
                     .FirstOrDefaultAsync(x => x.Username == message.Username, cancellationToken);
                 if (person == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound);
+                    throw new RestException(HttpStatusCode.NotFound, new { Error = ErrorHelpers.NotFound("User")});
                 }
                 return new UserEnvelope(_mapper.Map<Domain.Person, User>(person));
             }

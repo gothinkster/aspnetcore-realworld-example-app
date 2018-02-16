@@ -60,7 +60,7 @@ namespace Conduit.Features.Comments
 
                 if (article == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound);
+                    throw new RestException(HttpStatusCode.NotFound, new { Error = ErrorHelpers.NotFound("Article")});
                 }
 
                 var author = await _db.Persons.FirstAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);

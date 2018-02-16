@@ -53,7 +53,7 @@ namespace Conduit.Features.Articles
 
                 if (article == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound);
+                    throw new RestException(HttpStatusCode.NotFound, new { Error = ErrorHelpers.NotFound("Article")});
                 }
 
 
