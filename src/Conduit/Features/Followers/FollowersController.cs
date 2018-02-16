@@ -18,14 +18,14 @@ namespace Conduit.Features.Followers
         }
 
         [HttpPost("{username}/follow")]
-        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Scheme)]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<ProfileEnvelope> Follow(string username)
         {
             return await _mediator.Send(new Add.Command(username));
         }
 
         [HttpDelete("{username}/follow")]
-        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Scheme)]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<ProfileEnvelope> Unfollow(string username)
         {
             return await _mediator.Send(new Delete.Command(username));

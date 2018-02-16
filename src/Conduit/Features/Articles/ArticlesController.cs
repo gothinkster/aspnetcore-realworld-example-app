@@ -38,14 +38,14 @@ namespace Conduit.Features.Articles
         }
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Scheme)]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<ArticleEnvelope> Create([FromBody]Create.Command command)
         {
             return await _mediator.Send(command);
         }
 
         [HttpPut("{slug}")]
-        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Scheme)]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<ArticleEnvelope> Edit(string slug, [FromBody]Edit.Command command)
         {
             command.Slug = slug;
@@ -53,7 +53,7 @@ namespace Conduit.Features.Articles
         }
 
         [HttpDelete("{slug}")]
-        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Scheme)]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task Delete(string slug)
         {
             await _mediator.Send(new Delete.Command(slug));
