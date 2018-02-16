@@ -26,9 +26,9 @@ namespace Conduit.Features.Favorites
 
         [HttpDelete("{slug}/favorite")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Scheme)]
-        public async Task FavoriteDelete(string slug)
+        public async Task<ArticleEnvelope> FavoriteDelete(string slug)
         {
-            await _mediator.Send(new Delete.Command(slug));
+            return await _mediator.Send(new Delete.Command(slug));
         }
     }
 }
