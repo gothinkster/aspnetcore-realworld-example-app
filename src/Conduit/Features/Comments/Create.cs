@@ -43,18 +43,18 @@ namespace Conduit.Features.Comments
 
         public class Handler : IRequestHandler<Command, CommentEnvelope>
         {
-            private readonly ConduitContext _db;
+            private readonly ConduitContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
 
-            public Handler(ConduitContext db, ICurrentUserAccessor currentUserAccessor)
+            public Handler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
             {
-                _db = db;
+                _context = context;
                 _currentUserAccessor = currentUserAccessor;
             }
 
             public async Task<CommentEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
-                var article = await _db.Articles
+                var article = await _context.Articles
                     .Include(x => x.Comments)
                     .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
 
@@ -63,7 +63,7 @@ namespace Conduit.Features.Comments
                     throw new RestException(HttpStatusCode.NotFound);
                 }
 
-                var author = await _db.Persons.FirstAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
+                var author = await _context.Persons.FirstAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
                 
                 var comment = new Comment()
                 {
@@ -72,11 +72,11 @@ namespace Conduit.Features.Comments
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
-                await _db.Comments.AddAsync(comment, cancellationToken);
+                await _context.Comments.AddAsync(comment, cancellationToken);
 
                 article.Comments.Add(comment);
 
-                await _db.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
 
                 return new CommentEnvelope(comment);
             }
