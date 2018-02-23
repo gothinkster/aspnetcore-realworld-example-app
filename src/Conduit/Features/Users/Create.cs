@@ -50,25 +50,25 @@ namespace Conduit.Features.Users
 
         public class Handler : IRequestHandler<Command, UserEnvelope>
         {
-            private readonly ConduitContext _db;
+            private readonly ConduitContext _context;
             private readonly IPasswordHasher _passwordHasher;
             private readonly IMapper _mapper;
 
-            public Handler(ConduitContext db, IPasswordHasher passwordHasher, IMapper mapper)
+            public Handler(ConduitContext context, IPasswordHasher passwordHasher, IMapper mapper)
             {
-                _db = db;
+                _context = context;
                 _passwordHasher = passwordHasher;
                 _mapper = mapper;
             }
 
             public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
-                if (await _db.Persons.Where(x => x.Username == message.User.Username).AnyAsync(cancellationToken))
+                if (await _context.Persons.Where(x => x.Username == message.User.Username).AnyAsync(cancellationToken))
                 {
                     throw new RestException(HttpStatusCode.BadRequest);
                 }
 
-                if (await _db.Persons.Where(x => x.Email == message.User.Email).AnyAsync(cancellationToken))
+                if (await _context.Persons.Where(x => x.Email == message.User.Email).AnyAsync(cancellationToken))
                 {
                     throw new RestException(HttpStatusCode.BadRequest);
                 }
@@ -82,8 +82,8 @@ namespace Conduit.Features.Users
                     Salt = salt
                 };
 
-                _db.Persons.Add(person);
-                await _db.SaveChangesAsync(cancellationToken);
+                _context.Persons.Add(person);
+                await _context.SaveChangesAsync(cancellationToken);
 
                 return new UserEnvelope(_mapper.Map<Domain.Person, User>(person));
             }
