@@ -6,6 +6,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install unzip
+          command: |
+            apt-get update
+            apt-get install -y unzip
+      - run:
           name: Build
           command: ./build.sh
       
