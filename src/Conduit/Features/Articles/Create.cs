@@ -49,31 +49,31 @@ namespace Conduit.Features.Articles
 
         public class Handler : IRequestHandler<Command, ArticleEnvelope>
         {
-            private readonly ConduitContext _db;
+            private readonly ConduitContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
 
-            public Handler(ConduitContext db, ICurrentUserAccessor currentUserAccessor)
+            public Handler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
             {
-                _db = db;
+                _context = context;
                 _currentUserAccessor = currentUserAccessor;
             }
 
             public async Task<ArticleEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
-                var author = await _db.Persons.FirstAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
+                var author = await _context.Persons.FirstAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
                 var tags = new List<Tag>();
                 foreach(var tag in (message.Article.TagList ?? Enumerable.Empty<string>()))
                 {
-                    var t = await _db.Tags.FindAsync(tag);
+                    var t = await _context.Tags.FindAsync(tag);
                     if (t == null)
                     {
                         t = new Tag()
                         {
                             TagId = tag
                         };
-                        await _db.Tags.AddAsync(t, cancellationToken);
+                        await _context.Tags.AddAsync(t, cancellationToken);
                         //save immediately for reuse
-                        await _db.SaveChangesAsync(cancellationToken);
+                        await _context.SaveChangesAsync(cancellationToken);
                     }
                     tags.Add(t);
                 }
@@ -88,15 +88,15 @@ namespace Conduit.Features.Articles
                     Title = message.Article.Title,
                     Slug = message.Article.Title.GenerateSlug()
                 };
-                await _db.Articles.AddAsync(article, cancellationToken);
+                await _context.Articles.AddAsync(article, cancellationToken);
 
-                await _db.ArticleTags.AddRangeAsync(tags.Select(x => new ArticleTag()
+                await _context.ArticleTags.AddRangeAsync(tags.Select(x => new ArticleTag()
                 {
                     Article = article,
                     Tag = x
                 }), cancellationToken);
 
-                await _db.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
 
                 return new ArticleEnvelope(article);
             }

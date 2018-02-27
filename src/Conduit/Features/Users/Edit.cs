@@ -41,15 +41,15 @@ namespace Conduit.Features.Users
 
         public class Handler : IRequestHandler<Command, UserEnvelope>
         {
-            private readonly ConduitContext _db;
+            private readonly ConduitContext _context;
             private readonly IPasswordHasher _passwordHasher;
             private readonly ICurrentUserAccessor _currentUserAccessor;
             private readonly IMapper _mapper;
 
-            public Handler(ConduitContext db, IPasswordHasher passwordHasher, 
+            public Handler(ConduitContext context, IPasswordHasher passwordHasher, 
                 ICurrentUserAccessor currentUserAccessor, IMapper mapper)
             {
-                _db = db;
+                _context = context;
                 _passwordHasher = passwordHasher;
                 _currentUserAccessor = currentUserAccessor;
                 _mapper = mapper;
@@ -58,7 +58,7 @@ namespace Conduit.Features.Users
             public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
                 var currentUsername = _currentUserAccessor.GetCurrentUsername();
-                var person = await _db.Persons.Where(x => x.Username == currentUsername).FirstOrDefaultAsync(cancellationToken);
+                var person = await _context.Persons.Where(x => x.Username == currentUsername).FirstOrDefaultAsync(cancellationToken);
 
                 person.Username = message.User.Username ?? person.Username;
                 person.Email = message.User.Email ?? person.Email;
@@ -72,7 +72,7 @@ namespace Conduit.Features.Users
                     person.Salt = salt;
                 }
                 
-                await _db.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
 
                 return new UserEnvelope(_mapper.Map<Domain.Person, User>(person));
             }
