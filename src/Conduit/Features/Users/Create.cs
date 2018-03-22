@@ -52,12 +52,14 @@ namespace Conduit.Features.Users
         {
             private readonly ConduitContext _context;
             private readonly IPasswordHasher _passwordHasher;
+            private readonly IJwtTokenGenerator _jwtTokenGenerator;
             private readonly IMapper _mapper;
 
-            public Handler(ConduitContext context, IPasswordHasher passwordHasher, IMapper mapper)
+            public Handler(ConduitContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
             {
                 _context = context;
                 _passwordHasher = passwordHasher;
+                _jwtTokenGenerator = jwtTokenGenerator;
                 _mapper = mapper;
             }
 
@@ -84,8 +86,9 @@ namespace Conduit.Features.Users
 
                 _context.Persons.Add(person);
                 await _context.SaveChangesAsync(cancellationToken);
-
-                return new UserEnvelope(_mapper.Map<Domain.Person, User>(person));
+                var user = _mapper.Map<Domain.Person, User>(person);
+                user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
+                return new UserEnvelope(user);
             }
         }
     }

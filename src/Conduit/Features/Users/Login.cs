@@ -71,7 +71,7 @@ namespace Conduit.Features.Users
                     throw new RestException(HttpStatusCode.Unauthorized);
                 }
              
-                var user  = _mapper.Map<Domain.Person, User>(person); ;
+                var user  = _mapper.Map<Domain.Person, User>(person);
                 user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
                 return new UserEnvelope(user);
             }
