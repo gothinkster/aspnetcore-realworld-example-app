@@ -7,6 +7,6 @@ namespace Conduit.Features.Articles
     {
         public List<Article> Articles { get; set; }
 
-        public int ArticlesCount => Articles?.Count ?? 0;
+        public int ArticlesCount { get; set; }
     }
 }
