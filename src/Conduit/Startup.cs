@@ -29,7 +29,9 @@ namespace Conduit
             services
                 .AddEntityFrameworkSqlite()
                 .AddDbContext<ConduitContext>();
-            
+
+            services.AddLocalization(x => x.ResourcesPath = "Resources");
+
             // Inject an implementation of ISwaggerProvider with defaulted settings applied
             services.AddSwaggerGen(x =>
             {
