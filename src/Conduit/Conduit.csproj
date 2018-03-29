@@ -20,4 +20,17 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\Infrastructure.Errors.ErrorHandlingMiddleware.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Infrastructure.Errors.ErrorHandlingMiddleware.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Infrastructure.Errors.ErrorHandlingMiddleware.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Infrastructure.Errors.ErrorHandlingMiddleware.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>
