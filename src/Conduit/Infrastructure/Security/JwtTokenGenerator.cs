@@ -15,17 +15,14 @@ namespace Conduit.Infrastructure.Security
             _jwtOptions = jwtOptions.Value;
         }
 
-        //TODO: use something not custom
-        private static long ToUnixEpochDate(DateTime date) => (long) Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
-
         public async Task<string> CreateToken(string username)
         {
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
-                new Claim(JwtRegisteredClaimNames.Iat,
-                    ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(),
+                new Claim(JwtRegisteredClaimNames.Iat, 
+                    new DateTimeOffset(_jwtOptions.IssuedAt).ToUnixTimeSeconds().ToString(),
                     ClaimValueTypes.Integer64)
             };
             var jwt = new JwtSecurityToken(
