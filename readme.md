@@ -36,23 +36,26 @@ Install the .NET Core SDK and lots of documentation: [https://www.microsoft.com/
 
 Documentation for ASP.NET Core: [https://docs.microsoft.com/en-us/aspnet/core/](https://docs.microsoft.com/en-us/aspnet/core/)
 
-Build on OS X and Linux:
+## Docker Build
 
-- `./build.sh build.cake`
+There is a 'Makefile' for OS X and Linux:
 
-Build on Windows:
+- `make build` executes `docker-compose build`
+- `make run` executes `docker-compose run`
+
+The above might work for Docker on Windows
+
+## OS X and Linux
+
+Building:
+
+- `./build.sh`
+
+## Windows
+
+Building:
 
 - `./build.ps1`
-
-Build Docker and run:
-
-- `docker build -t conduit:latest .`
-- `docker run -p 5000:5000 conduit:latest`
-
-Or run the published
-
-- `cd publish/`
-- `dotnet Conduit.dll`
 
 Swagger URL:
 `http://localhost:5000/swagger`
