@@ -49,13 +49,13 @@ namespace Conduit.Features.Comments
 
                 if (article == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound);
+                    throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
                 }
 
                 var comment = article.Comments.FirstOrDefault(x => x.CommentId == message.Id);
                 if (comment == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound);
+                    throw new RestException(HttpStatusCode.NotFound, new { Comment = Constants.NOT_FOUND });
                 }
                 
                 _context.Comments.Remove(comment);

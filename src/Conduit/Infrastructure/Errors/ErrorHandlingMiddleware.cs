@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -42,26 +42,28 @@ namespace Conduit.Infrastructure.Errors
             ILogger<ErrorHandlingMiddleware> logger,
             IStringLocalizer<ErrorHandlingMiddleware> localizer)
         {
-            if (exception is RestException re)
-            {
-                context.Response.StatusCode = (int)re.Code;
-            }
-            else
-            {
-                if (!string.IsNullOrWhiteSpace(exception.Message))
-                {
-                    logger.LogError("", exception.Message);
-                }
+            object errors = null;
 
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                context.Response.ContentType = "application/json";
-                var result = JsonConvert.SerializeObject(new
-                {
-                    errors = localizer[Constants.ErrorHandlingMiddleware.InternalServerError].Value
-                });
-                await context.Response.WriteAsync(result);
+            switch (exception)
+            {
+                case RestException re:
+                    errors = re.Errors;
+                    context.Response.StatusCode = (int) re.Code;
+                    break;
+                case Exception e:
+                    errors = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
+                    context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                    break;
             }
+            
+            context.Response.ContentType = "application/json";
 
+            var result = JsonConvert.SerializeObject(new
+            {
+                errors
+            });
+                
+            await context.Response.WriteAsync(result);
         }
     }
 }

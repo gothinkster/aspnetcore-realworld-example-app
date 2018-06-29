@@ -67,12 +67,12 @@ namespace Conduit.Features.Users
             {
                 if (await _context.Persons.Where(x => x.Username == message.User.Username).AnyAsync(cancellationToken))
                 {
-                    throw new RestException(HttpStatusCode.BadRequest);
+                    throw new RestException(HttpStatusCode.BadRequest, new { Username = Constants.IN_USE});
                 }
 
                 if (await _context.Persons.Where(x => x.Email == message.User.Email).AnyAsync(cancellationToken))
                 {
-                    throw new RestException(HttpStatusCode.BadRequest);
+                    throw new RestException(HttpStatusCode.BadRequest, new { Email = Constants.IN_USE });
                 }
 
                 var salt = Guid.NewGuid().ToByteArray();
