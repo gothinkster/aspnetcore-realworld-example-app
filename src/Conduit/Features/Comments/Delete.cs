@@ -41,7 +41,7 @@ namespace Conduit.Features.Comments
                 _context = context;
             }
 
-            public async Task Handle(Command message, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command message, CancellationToken cancellationToken)
             {
                 var article = await _context.Articles
                     .Include(x => x.Comments)
@@ -60,6 +60,7 @@ namespace Conduit.Features.Comments
                 
                 _context.Comments.Remove(comment);
                 await _context.SaveChangesAsync(cancellationToken);
+                return Unit.Value;
             }
         }
     }

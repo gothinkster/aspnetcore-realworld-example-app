@@ -28,7 +28,7 @@ Task("Publish")
 {
     var settings = new DotNetCorePublishSettings
     {
-        Framework = "netcoreapp2.0",
+        Framework = "netcoreapp2.1",
         Configuration = "Release",
         OutputDirectory = "./publish",
         Runtime = "linux-x64",

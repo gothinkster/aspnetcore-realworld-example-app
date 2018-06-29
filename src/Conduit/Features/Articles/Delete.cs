@@ -38,7 +38,7 @@ namespace Conduit.Features.Articles
                 _context = context;
             }
 
-            public async Task Handle(Command message, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command message, CancellationToken cancellationToken)
             {
                 var article = await _context.Articles
                     .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
@@ -50,6 +50,7 @@ namespace Conduit.Features.Articles
 
                 _context.Articles.Remove(article);
                 await _context.SaveChangesAsync(cancellationToken);
+                return Unit.Value;
             }
         }
     }
