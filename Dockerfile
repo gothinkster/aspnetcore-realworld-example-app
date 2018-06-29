@@ -10,7 +10,7 @@ COPY . .
 RUN ./build.sh
 
 #runtime container
-FROM microsoft/dotnet:2.1.1-runtime-alpine
+FROM microsoft/dotnet:2.1.1-runtime
 
 COPY --from=build /build/publish /app
 WORKDIR /app
