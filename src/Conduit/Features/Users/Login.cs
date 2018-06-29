@@ -45,14 +45,14 @@ namespace Conduit.Features.Users
 
         public class Handler : IRequestHandler<Command, UserEnvelope>
         {
-            private readonly ConduitContext _db;
+            private readonly ConduitContext _context;
             private readonly IPasswordHasher _passwordHasher;
             private readonly IJwtTokenGenerator _jwtTokenGenerator;
             private readonly IMapper _mapper;
 
-            public Handler(ConduitContext db, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
+            public Handler(ConduitContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
             {
-                _db = db;
+                _context = context;
                 _passwordHasher = passwordHasher;
                 _jwtTokenGenerator = jwtTokenGenerator;
                 _mapper = mapper;
@@ -60,7 +60,7 @@ namespace Conduit.Features.Users
 
             public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
-                var person = await _db.Persons.Where(x => x.Email == message.User.Email).SingleOrDefaultAsync(cancellationToken);
+                var person = await _context.Persons.Where(x => x.Email == message.User.Email).SingleOrDefaultAsync(cancellationToken);
                 if (person == null)
                 {
                     throw new RestException(HttpStatusCode.Unauthorized, new { Error = "Invalid email / password." });
@@ -71,7 +71,7 @@ namespace Conduit.Features.Users
                     throw new RestException(HttpStatusCode.Unauthorized, new { Error = "Invalid email / password." });
                 }
              
-                var user  = _mapper.Map<Domain.Person, User>(person); ;
+                var user  = _mapper.Map<Domain.Person, User>(person);
                 user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
                 return new UserEnvelope(user);
             }

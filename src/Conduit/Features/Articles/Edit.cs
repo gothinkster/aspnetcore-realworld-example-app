@@ -38,16 +38,16 @@ namespace Conduit.Features.Articles
 
         public class Handler : IRequestHandler<Command, ArticleEnvelope>
         {
-            private readonly ConduitContext _db;
+            private readonly ConduitContext _context;
 
-            public Handler(ConduitContext db)
+            public Handler(ConduitContext context)
             {
-                _db = db;
+                _context = context;
             }
 
             public async Task<ArticleEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
-                var article = await _db.Articles
+                var article = await _context.Articles
                     .Where(x => x.Slug == message.Slug)
                     .FirstOrDefaultAsync(cancellationToken);
 
@@ -62,14 +62,14 @@ namespace Conduit.Features.Articles
                 article.Title = message.Article.Title ?? article.Title;
                 article.Slug = article.Title.GenerateSlug();
 
-                if (_db.ChangeTracker.Entries().First(x => x.Entity == article).State == EntityState.Modified)
+                if (_context.ChangeTracker.Entries().First(x => x.Entity == article).State == EntityState.Modified)
                 {
                     article.UpdatedAt = DateTime.UtcNow;
                 }
 
-                await _db.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
 
-                return new ArticleEnvelope(await _db.Articles.GetAllData()
+                return new ArticleEnvelope(await _context.Articles.GetAllData()
                     .Where(x => x.Slug == article.Slug)
                     .FirstOrDefaultAsync(cancellationToken));
             }

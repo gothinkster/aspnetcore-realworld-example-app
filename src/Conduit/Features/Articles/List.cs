@@ -96,7 +96,8 @@ namespace Conduit.Features.Articles
 
                 return new ArticlesEnvelope()
                 {
-                    Articles = articles
+                    Articles = articles,
+                    ArticlesCount = queryable.Count()
                 };
             }
         }

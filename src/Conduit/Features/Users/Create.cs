@@ -50,25 +50,27 @@ namespace Conduit.Features.Users
 
         public class Handler : IRequestHandler<Command, UserEnvelope>
         {
-            private readonly ConduitContext _db;
+            private readonly ConduitContext _context;
             private readonly IPasswordHasher _passwordHasher;
+            private readonly IJwtTokenGenerator _jwtTokenGenerator;
             private readonly IMapper _mapper;
 
-            public Handler(ConduitContext db, IPasswordHasher passwordHasher, IMapper mapper)
+            public Handler(ConduitContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
             {
-                _db = db;
+                _context = context;
                 _passwordHasher = passwordHasher;
+                _jwtTokenGenerator = jwtTokenGenerator;
                 _mapper = mapper;
             }
 
             public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
-                if (await _db.Persons.Where(x => x.Username == message.User.Username).AnyAsync(cancellationToken))
+                if (await _context.Persons.Where(x => x.Username == message.User.Username).AnyAsync(cancellationToken))
                 {
                     throw new RestException(HttpStatusCode.BadRequest, new { Username = Constants.IN_USE});
                 }
 
-                if (await _db.Persons.Where(x => x.Email == message.User.Email).AnyAsync(cancellationToken))
+                if (await _context.Persons.Where(x => x.Email == message.User.Email).AnyAsync(cancellationToken))
                 {
                     throw new RestException(HttpStatusCode.BadRequest, new { Email = Constants.IN_USE });
                 }
@@ -82,10 +84,11 @@ namespace Conduit.Features.Users
                     Salt = salt
                 };
 
-                _db.Persons.Add(person);
-                await _db.SaveChangesAsync(cancellationToken);
-
-                return new UserEnvelope(_mapper.Map<Domain.Person, User>(person));
+                _context.Persons.Add(person);
+                await _context.SaveChangesAsync(cancellationToken);
+                var user = _mapper.Map<Domain.Person, User>(person);
+                user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
+                return new UserEnvelope(user);
             }
         }
     }
