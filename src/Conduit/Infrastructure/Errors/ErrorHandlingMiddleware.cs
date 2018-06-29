@@ -60,17 +60,10 @@ namespace Conduit.Infrastructure.Errors
 
             var result = JsonConvert.SerializeObject(new
             {
-                    logger.LogError("", exception.Message);
-
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                context.Response.ContentType = "application/json";
-                var result = JsonConvert.SerializeObject(new
-                {
-                    errors = localizer[Constants.ErrorHandlingMiddleware.InternalServerError].Value
-                });
-                await context.Response.WriteAsync(result);
-            }
-
+                errors
+            });
+                
+            await context.Response.WriteAsync(result);
         }
     }
 }
