@@ -50,7 +50,7 @@ namespace Conduit.Features.Followers
 
                 if (target == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound);
+                    throw new RestException(HttpStatusCode.NotFound, new { User = Constants.NOT_FOUND});
                 }
                 
                 var observer = await _context.Persons.FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
