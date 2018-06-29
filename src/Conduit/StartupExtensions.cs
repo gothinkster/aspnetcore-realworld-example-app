@@ -45,10 +45,25 @@ namespace Conduit
                 // If you want to allow a certain amount of clock drift, set that here:
                 ClockSkew = TimeSpan.Zero
             };
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options => { options.TokenValidationParameters = tokenValidationParameters; })
-                .AddJwtBearer("Token", options => { options.TokenValidationParameters = tokenValidationParameters; });
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = tokenValidationParameters;
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = (context) =>
+                        {
+                            var token = context.HttpContext.Request.Headers["Authorization"];
+                            if (token.Count > 0 && token[0].StartsWith("Token ", StringComparison.OrdinalIgnoreCase))
+                            {
+                                context.Token = token[0].Substring("Token ".Length).Trim();
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    };
+
+                });
         }
 
         public static void AddSerilogLogging(this ILoggerFactory loggerFactory)

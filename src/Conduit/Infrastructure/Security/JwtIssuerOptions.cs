@@ -6,7 +6,7 @@ namespace Conduit.Infrastructure.Security
 {
     public class JwtIssuerOptions
     {
-        public const string Schemes = "Token,Bearer";
+        public const string Schemes = "Bearer";
 
         /// <summary>
         /// "iss" (Issuer) Claim
