@@ -15,7 +15,6 @@ namespace Conduit.IntegrationTests
 
         public SliceFixture()
         {
-            AutoMapper.ServiceCollectionExtensions.UseStaticRegistration = false;
             var startup = new Startup();
             var services = new ServiceCollection();
 
