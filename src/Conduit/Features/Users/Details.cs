@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
+using Conduit.Infrastructure.Security;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
