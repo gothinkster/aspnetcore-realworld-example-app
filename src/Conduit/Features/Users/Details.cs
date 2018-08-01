@@ -28,11 +28,13 @@ namespace Conduit.Features.Users
         public class QueryHandler : IRequestHandler<Query, UserEnvelope>
         {
             private readonly ConduitContext _context;
+            private readonly IJwtTokenGenerator _jwtTokenGenerator;
             private readonly IMapper _mapper;
 
-            public QueryHandler(ConduitContext context, IMapper mapper)
+            public QueryHandler(ConduitContext context, IJwtTokenGenerator jwtTokenGenerator, IMapper mapper)
             {
                 _context = context;
+                _jwtTokenGenerator = jwtTokenGenerator;
                 _mapper = mapper;
             }
 
@@ -45,7 +47,9 @@ namespace Conduit.Features.Users
                 {
                     throw new RestException(HttpStatusCode.NotFound, new { User = Constants.NOT_FOUND});
                 }
-                return new UserEnvelope(_mapper.Map<Domain.Person, User>(person));
+                var user = _mapper.Map<Domain.Person, User>(person);
+                user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
+                return new UserEnvelope(user);
             }
         }
     }
