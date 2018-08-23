@@ -2,9 +2,7 @@
 
 > ### ASP.NET Core codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
 
-
 ### [RealWorld](https://github.com/gothinkster/realworld)
-
 
 This codebase was created to demonstrate a fully fledged fullstack application built with ASP.NET Core (with Feature orientation) including CRUD operations, authentication, routing, pagination, and more.
 
@@ -17,13 +15,13 @@ For more information on how to this works with other frontends/backends, head ov
 This is using ASP.NET Core with:
 
 - CQRS and [MediatR](https://github.com/jbogard/MediatR)
-    - [Simplifying Development and Separating Concerns with MediatR](https://blogs.msdn.microsoft.com/cdndevs/2016/01/26/simplifying-development-and-separating-concerns-with-mediatr/)
-    - [CQRS with MediatR and AutoMapper](https://lostechies.com/jimmybogard/2015/05/05/cqrs-with-mediatr-and-automapper/)
-    - [Thin Controllers with CQRS and MediatR](https://codeopinion.com/thin-controllers-cqrs-mediatr/)
+  - [Simplifying Development and Separating Concerns with MediatR](https://blogs.msdn.microsoft.com/cdndevs/2016/01/26/simplifying-development-and-separating-concerns-with-mediatr/)
+  - [CQRS with MediatR and AutoMapper](https://lostechies.com/jimmybogard/2015/05/05/cqrs-with-mediatr-and-automapper/)
+  - [Thin Controllers with CQRS and MediatR](https://codeopinion.com/thin-controllers-cqrs-mediatr/)
 - [AutoMapper](http://automapper.org)
 - [Fluent Validation](https://github.com/JeremySkinner/FluentValidation)
 - Feature folders and vertical slices
-- [Entity Framework Core](https://docs.microsoft.com/en-us/ef/) on SQLite for demo purposes.  Can easily be anything else EF Core supports.  Open to porting to other ORMs/DBs.
+- [Entity Framework Core](https://docs.microsoft.com/en-us/ef/) on SQLite for demo purposes. Can easily be anything else EF Core supports. Open to porting to other ORMs/DBs.
 - Built-in Swagger via [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
 - [Cake](http://cakebuild.net/) for building!
 - JWT authentication using [ASP.NET Core JWT Bearer Authentication](https://github.com/aspnet/Security/tree/dev/src/Microsoft.AspNetCore.Authentication.JwtBearer).
@@ -45,21 +43,14 @@ There is a 'Makefile' for OS X and Linux:
 
 The above might work for Docker on Windows
 
-## OS X and Linux
+## Local building
 
-Building:
-
-- `./build.sh`
-
-## Windows
-
-Building:
-
-- `./build.ps1`
+- Install Cake as a global tool: `dotnet tool install -g Cake.Tool`
+- Run Cake: `dotnet cake build.cake`
 
 Swagger URL:
 `http://localhost:5000/swagger`
 
-# Circle CI 
+# Circle CI
 
 [![CircleCI](https://circleci.com/gh/gothinkster/aspnetcore-realworld-example-app.svg?style=svg)](https://circleci.com/gh/gothinkster/aspnetcore-realworld-example-app)
