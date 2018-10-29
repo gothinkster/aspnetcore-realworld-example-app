@@ -1,5 +1,5 @@
 #build container
-FROM microsoft/dotnet:2.1.401-sdk as build
+FROM microsoft/dotnet:2.1.403-sdk as build
 
 WORKDIR /build
 COPY . .
@@ -8,7 +8,7 @@ ENV PATH="${PATH}:/root/.dotnet/tools"
 RUN dotnet cake build.cake 
 
 #runtime container
-FROM microsoft/dotnet:2.1.3-runtime
+FROM microsoft/dotnet:2.1.5-runtime
 
 COPY --from=build /build/publish /app
 WORKDIR /app
