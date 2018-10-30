@@ -278,3 +278,4 @@ tools/Cake.CoreCLR
 .vscode
 tools
 .dotnet
+Dockerfile

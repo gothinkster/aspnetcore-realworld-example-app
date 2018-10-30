@@ -47,10 +47,12 @@ The above might work for Docker on Windows
 
 - Install Cake as a global tool: `dotnet tool install -g Cake.Tool`
 - Run Cake: `dotnet cake build.cake`
+  - Note: this publishes as an OS X runtime by default.  Use the Cake argument `runtime` passing an RID explained here: https://docs.microsoft.com/en-us/dotnet/core/rid-catalog
+  - The `Dockerfile` uses this to publish to Alpine
 
-Swagger URL:
-`http://localhost:5000/swagger`
+## Swagger URL
+- `http://localhost:5000/swagger`
 
-# Circle CI
+## Circle CI
 
 [![CircleCI](https://circleci.com/gh/gothinkster/aspnetcore-realworld-example-app.svg?style=svg)](https://circleci.com/gh/gothinkster/aspnetcore-realworld-example-app)

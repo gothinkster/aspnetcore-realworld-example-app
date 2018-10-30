@@ -1,18 +1,19 @@
 #build container
-FROM microsoft/dotnet:2.1.403-sdk as build
+FROM microsoft/dotnet:2.1.403-sdk-alpine as build
 
 WORKDIR /build
 COPY . .
 RUN dotnet tool install -g Cake.Tool
 ENV PATH="${PATH}:/root/.dotnet/tools"
-RUN dotnet cake build.cake 
+RUN dotnet cake build.cake --runtime=alpine-x64
 
 #runtime container
-FROM microsoft/dotnet:2.1.5-runtime
+FROM microsoft/dotnet:2.1.5-runtime-alpine
 
 COPY --from=build /build/publish /app
 WORKDIR /app
 
 EXPOSE 5000
 
+RUN dotnet --list-runtimes
 ENTRYPOINT ["dotnet", "Conduit.dll"]
