@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Conduit.Infrastructure;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Conduit.IntegrationTests
@@ -10,7 +11,7 @@ namespace Conduit.IntegrationTests
     public class SliceFixture : IDisposable
     {
         private readonly IServiceScopeFactory _scopeFactory;
-
+        private readonly ServiceProvider _provider;
         private readonly string DbName = Guid.NewGuid() + ".db";
 
         public SliceFixture()
@@ -22,11 +23,15 @@ namespace Conduit.IntegrationTests
 
             startup.ConfigureServices(services);
 
-            var provider = services.BuildServiceProvider();
+            _provider = services.BuildServiceProvider();
 
+            GetDbContext().Database.EnsureCreated();
+            _scopeFactory = _provider.GetService<IServiceScopeFactory>();
+        }
 
-            provider.GetRequiredService<ConduitContext>().Database.EnsureCreated();
-            _scopeFactory = provider.GetService<IServiceScopeFactory>();
+        public ConduitContext GetDbContext()
+        {
+            return _provider.GetRequiredService<ConduitContext>();
         }
 
         public void Dispose()
