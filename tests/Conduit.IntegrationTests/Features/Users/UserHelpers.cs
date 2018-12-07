@@ -8,6 +8,8 @@ namespace Conduit.IntegrationTests.Features.Users
 {
     public static class UserHelpers
     {
+        public static readonly string DefaultUserName = "username";
+  
         /// <summary>
         /// creates a default user to be used in different tests
         /// </summary>
@@ -21,7 +23,7 @@ namespace Conduit.IntegrationTests.Features.Users
                 {
                     Email = "email",
                     Password = "password",
-                    Username = "username"
+                    Username = DefaultUserName
                 }
             };
 
