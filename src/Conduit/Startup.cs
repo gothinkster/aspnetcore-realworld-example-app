@@ -26,6 +26,7 @@ namespace Conduit
         {
             services.AddMediatR();
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DBContextTransactionPipelineBehavior<,>));
 
             services
                 .AddEntityFrameworkSqlite()
