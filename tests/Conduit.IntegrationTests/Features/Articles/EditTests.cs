@@ -46,8 +46,9 @@ namespace Conduit.IntegrationTests.Features.Articles
             Assert.NotNull(edited);
             Assert.Equal(edited.Article.Title, command.Article.Title);
             Assert.Equal(edited.Article.TagList.Count(), command.Article.TagList.Count());
-            Assert.Equal(edited.Article.TagList[0], command.Article.TagList[0]);
-            Assert.Equal(edited.Article.TagList[1], command.Article.TagList[1]);
+            // use assert Contains because we do not know the order in which the tags are saved/retrieved
+            Assert.Contains(edited.Article.TagList[0], command.Article.TagList);
+            Assert.Contains(edited.Article.TagList[1], command.Article.TagList);
         }
     }
 }
