@@ -1,11 +1,15 @@
 ﻿using Conduit.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace Conduit.Infrastructure
 {
     public class ConduitContext : DbContext
     {
         private readonly string _databaseName = Startup.DATABASE_FILE;
+        private IDbContextTransaction _currentTransaction;
 
         public ConduitContext(DbContextOptions options) 
             : base(options)
@@ -71,5 +75,54 @@ namespace Conduit.Infrastructure
                     .HasForeignKey(pt => pt.TargetId);
             });
         }
+
+        #region Transaction Handling
+        public void BeginTransaction()
+        {
+            if (_currentTransaction != null)
+            {
+                return;
+            }
+
+            _currentTransaction = Database.BeginTransaction(IsolationLevel.ReadCommitted);
+        }
+
+        public void CommitTransaction()
+        {
+            try
+            {
+                _currentTransaction?.Commit();
+            }
+            catch
+            {
+                RollbackTransaction();
+                throw;
+            }
+            finally
+            {
+                if (_currentTransaction != null)
+                {
+                    _currentTransaction.Dispose();
+                    _currentTransaction = null;
+                }
+            }
+        }
+
+        public void RollbackTransaction()
+        {
+            try
+            {
+                _currentTransaction?.Rollback();
+            }
+            finally
+            {
+                if (_currentTransaction != null)
+                {
+                    _currentTransaction.Dispose();
+                    _currentTransaction = null;
+                }
+            }
+        }
+        #endregion
     }
 }
