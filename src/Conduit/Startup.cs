@@ -50,9 +50,10 @@ namespace Conduit
                 if (databaseProvider.ToLower().Trim().Equals("sqlite"))
                     options.UseSqlite(connectionString);
                 else if (databaseProvider.ToLower().Trim().Equals("sqlserver"))
+                {
+                    // only works in windows container
                     options.UseSqlServer(connectionString);
-                else if (databaseProvider.ToLower().Trim().Equals("inmemorydatabase"))
-                    options.UseInMemoryDatabase(connectionString);
+                }
                 else
                     throw new Exception("Database provider unknown. Please check configuration");
             });
