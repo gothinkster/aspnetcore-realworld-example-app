@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Conduit.Domain
 {
-   public class Comment
+    public class Comment
     {
         [JsonProperty("id")]
         public int CommentId { get; set; }

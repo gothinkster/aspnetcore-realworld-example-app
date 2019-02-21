@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Conduit
 {
@@ -52,7 +53,10 @@ namespace Conduit
                 x.SwaggerDoc("v1", new Info { Title = "RealWorld API", Version = "v1" });
                 x.CustomSchemaIds(y => y.FullName);
                 x.DocInclusionPredicate((version, apiDescription) => true);
-                x.TagActionsBy(y => y.GroupName);
+                x.TagActionsBy(y => new List<string>()
+                {
+                    y.GroupName
+                });
             });
 
             services.AddCors();
@@ -74,7 +78,7 @@ namespace Conduit
             services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
             services.AddScoped<IProfileReader, ProfileReader>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            
+
             services.AddJwt();
         }
 
@@ -104,7 +108,7 @@ namespace Conduit
             {
                 x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld API V1");
             });
-            
+
             app.ApplicationServices.GetRequiredService<ConduitContext>().Database.EnsureCreated();
         }
     }

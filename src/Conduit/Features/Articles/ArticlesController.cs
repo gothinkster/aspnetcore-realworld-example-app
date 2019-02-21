@@ -19,7 +19,7 @@ namespace Conduit.Features.Articles
         [HttpGet]
         public async Task<ArticlesEnvelope> Get([FromQuery] string tag, [FromQuery] string author, [FromQuery] string favorited, [FromQuery] int? limit, [FromQuery] int? offset)
         {
-            return await _mediator.Send(new List.Query(tag, author,favorited,limit, offset));
+            return await _mediator.Send(new List.Query(tag, author, favorited, limit, offset));
         }
 
         [HttpGet("feed")]
