@@ -8,10 +8,13 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,7 +22,15 @@ namespace Conduit
 {
     public class Startup
     {
-        public const string DATABASE_FILE = "realworld.db";
+        public const string DEFAULT_DATABASE_FILE = "realworld.db";
+        public const string DEFAULT_DATABASE_PROVIDER = "sqlite";
+
+        private readonly IConfiguration _config;
+
+        public Startup(IConfiguration config)
+        {
+            _config = config;
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -29,9 +40,25 @@ namespace Conduit
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DBContextTransactionPipelineBehavior<,>));
 
-            services
-                .AddEntityFrameworkSqlite()
-                .AddDbContext<ConduitContext>();
+            // take the connection string from the environment variable or use hard-coded database name
+            var connectionString = _config.GetValue<string>("ASPNETCORE_Conduit_ConnectionString") ?? $"Filename={DEFAULT_DATABASE_FILE}";
+            // take the database provider from the environment variable or use hard-coded database provider
+            var databaseProvider = _config.GetValue<string>("ASPNETCORE_Conduit_DatabaseProvider");
+            if (string.IsNullOrWhiteSpace(databaseProvider))
+                databaseProvider = DEFAULT_DATABASE_PROVIDER;
+
+            services.AddDbContext<ConduitContext>(options =>
+            {
+                if (databaseProvider.ToLower().Trim().Equals("sqlite"))
+                    options.UseSqlite(connectionString);
+                else if (databaseProvider.ToLower().Trim().Equals("sqlserver"))
+                {
+                    // only works in windows container
+                    options.UseSqlServer(connectionString);
+                }
+                else
+                    throw new Exception("Database provider unknown. Please check configuration");
+            });
 
             services.AddLocalization(x => x.ResourcesPath = "Resources");
 

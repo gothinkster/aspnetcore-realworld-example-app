@@ -16,11 +16,6 @@ namespace Conduit.Infrastructure
         {
         }
 
-        public ConduitContext(string databaseName)
-        {
-            _databaseName = databaseName;
-        }
-
         public DbSet<Article> Articles { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Person> Persons { get; set; }
@@ -28,11 +23,6 @@ namespace Conduit.Infrastructure
         public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<ArticleFavorite> ArticleFavorites { get; set; }
         public DbSet<FollowedPeople> FollowedPeople { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite($"Filename={_databaseName}");
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -66,13 +56,27 @@ namespace Conduit.Infrastructure
             {
                 b.HasKey(t => new { t.ObserverId, t.TargetId });
 
+                // we need to add OnDelete RESTRICT otherwise for the SqlServer database provider, 
+                // app.ApplicationServices.GetRequiredService<ConduitContext>().Database.EnsureCreated(); throws the following error:
+                // System.Data.SqlClient.SqlException
+                // HResult = 0x80131904
+                // Message = Introducing FOREIGN KEY constraint 'FK_FollowedPeople_Persons_TargetId' on table 'FollowedPeople' may cause cycles or multiple cascade paths.Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
+                // Could not create constraint or index. See previous errors.
                 b.HasOne(pt => pt.Observer)
                     .WithMany(p => p.Followers)
-                    .HasForeignKey(pt => pt.ObserverId);
+                    .HasForeignKey(pt => pt.ObserverId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
+                // we need to add OnDelete RESTRICT otherwise for the SqlServer database provider, 
+                // app.ApplicationServices.GetRequiredService<ConduitContext>().Database.EnsureCreated(); throws the following error:
+                // System.Data.SqlClient.SqlException
+                // HResult = 0x80131904
+                // Message = Introducing FOREIGN KEY constraint 'FK_FollowingPeople_Persons_TargetId' on table 'FollowedPeople' may cause cycles or multiple cascade paths.Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
+                // Could not create constraint or index. See previous errors.
                 b.HasOne(pt => pt.Target)
                     .WithMany(t => t.Following)
-                    .HasForeignKey(pt => pt.TargetId);
+                    .HasForeignKey(pt => pt.TargetId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
         }
 

@@ -2,5 +2,8 @@ version: '3'
 services:
   conduit:
     build: .
+    environment:
+     - ASPNETCORE_Conduit_DatabaseProvider=${ASPNETCORE_Conduit_DatabaseProvider}
+     - ASPNETCORE_Conduit_ConnectionString=${ASPNETCORE_Conduit_ConnectionString}
     ports:
      - "5000:5000"
