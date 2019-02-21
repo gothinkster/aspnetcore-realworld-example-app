@@ -78,7 +78,7 @@ namespace Conduit
             services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
             services.AddScoped<IProfileReader, ProfileReader>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            
+
             services.AddJwt();
         }
 
@@ -108,7 +108,7 @@ namespace Conduit
             {
                 x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld API V1");
             });
-            
+
             app.ApplicationServices.GetRequiredService<ConduitContext>().Database.EnsureCreated();
         }
     }

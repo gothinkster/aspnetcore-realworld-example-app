@@ -16,7 +16,7 @@ namespace Conduit.Features.Favorites
         {
             _mediator = mediator;
         }
-        
+
         [HttpPost("{slug}/favorite")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<ArticleEnvelope> FavoriteAdd(string slug)

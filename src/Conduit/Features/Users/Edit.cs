@@ -46,7 +46,7 @@ namespace Conduit.Features.Users
             private readonly ICurrentUserAccessor _currentUserAccessor;
             private readonly IMapper _mapper;
 
-            public Handler(ConduitContext context, IPasswordHasher passwordHasher, 
+            public Handler(ConduitContext context, IPasswordHasher passwordHasher,
                 ICurrentUserAccessor currentUserAccessor, IMapper mapper)
             {
                 _context = context;
@@ -71,7 +71,7 @@ namespace Conduit.Features.Users
                     person.Hash = _passwordHasher.Hash(message.User.Password, salt);
                     person.Salt = salt;
                 }
-                
+
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return new UserEnvelope(_mapper.Map<Domain.Person, User>(person));

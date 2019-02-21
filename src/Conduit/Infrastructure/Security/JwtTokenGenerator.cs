@@ -21,7 +21,7 @@ namespace Conduit.Infrastructure.Security
             {
                 new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
-                new Claim(JwtRegisteredClaimNames.Iat, 
+                new Claim(JwtRegisteredClaimNames.Iat,
                     new DateTimeOffset(_jwtOptions.IssuedAt).ToUnixTimeSeconds().ToString(),
                     ClaimValueTypes.Integer64)
             };

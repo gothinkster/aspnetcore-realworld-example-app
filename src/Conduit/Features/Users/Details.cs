@@ -46,7 +46,7 @@ namespace Conduit.Features.Users
                     .FirstOrDefaultAsync(x => x.Username == message.Username, cancellationToken);
                 if (person == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound, new { User = Constants.NOT_FOUND});
+                    throw new RestException(HttpStatusCode.NotFound, new { User = Constants.NOT_FOUND });
                 }
                 var user = _mapper.Map<Domain.Person, User>(person);
                 user.Token = await _jwtTokenGenerator.CreateToken(person.Username);

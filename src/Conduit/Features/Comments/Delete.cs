@@ -57,7 +57,7 @@ namespace Conduit.Features.Comments
                 {
                     throw new RestException(HttpStatusCode.NotFound, new { Comment = Constants.NOT_FOUND });
                 }
-                
+
                 _context.Comments.Remove(comment);
                 await _context.SaveChangesAsync(cancellationToken);
                 return Unit.Value;

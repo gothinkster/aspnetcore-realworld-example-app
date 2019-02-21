@@ -79,7 +79,7 @@ namespace Conduit.IntegrationTests.Features.Articles
                     Title = "Test article dsergiu77",
                     Description = "Description of the test article",
                     Body = "Body of the test article",
-                }                
+                }
             };
 
             var article = await ArticleHelpers.CreateArticle(this, createArticleCmd);

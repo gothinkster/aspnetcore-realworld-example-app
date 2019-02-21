@@ -11,7 +11,7 @@ namespace Conduit.Infrastructure
         private readonly string _databaseName = Startup.DATABASE_FILE;
         private IDbContextTransaction _currentTransaction;
 
-        public ConduitContext(DbContextOptions options) 
+        public ConduitContext(DbContextOptions options)
             : base(options)
         {
         }
