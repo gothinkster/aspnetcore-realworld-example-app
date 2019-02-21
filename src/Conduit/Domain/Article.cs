@@ -21,7 +21,7 @@ namespace Conduit.Domain
 
         public Person Author { get; set; }
 
-        public List<Comment> Comments {get;set; }
+        public List<Comment> Comments { get; set; }
 
         [NotMapped]
         public bool Favorited => ArticleFavorites?.Any() ?? false;

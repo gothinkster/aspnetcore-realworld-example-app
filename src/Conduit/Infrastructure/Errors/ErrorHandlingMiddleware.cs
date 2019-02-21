@@ -48,21 +48,21 @@ namespace Conduit.Infrastructure.Errors
             {
                 case RestException re:
                     errors = re.Errors;
-                    context.Response.StatusCode = (int) re.Code;
+                    context.Response.StatusCode = (int)re.Code;
                     break;
                 case Exception e:
                     errors = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
-                    context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     break;
             }
-            
+
             context.Response.ContentType = "application/json";
 
             var result = JsonConvert.SerializeObject(new
             {
                 errors
             });
-                
+
             await context.Response.WriteAsync(result);
         }
     }
