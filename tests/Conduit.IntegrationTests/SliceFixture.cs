@@ -19,9 +19,9 @@ namespace Conduit.IntegrationTests
 
         static SliceFixture()
         {
-             Config = new ConfigurationBuilder()
-                .AddEnvironmentVariables()
-                .Build();
+            Config = new ConfigurationBuilder()
+               .AddEnvironmentVariables()
+               .Build();
         }
 
         public SliceFixture()

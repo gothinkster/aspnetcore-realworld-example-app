@@ -41,7 +41,8 @@ namespace Conduit
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DBContextTransactionPipelineBehavior<,>));
 
             // take the connection string from the environment variable or use hard-coded database name
-            var connectionString = _config.GetValue<string>("ASPNETCORE_Conduit_ConnectionString") ?? $"Filename={DEFAULT_DATABASE_FILE}";
+            var connectionString = _config.GetValue<string>("ASPNETCORE_Conduit_ConnectionString") ??
+                                   $"Filename={DEFAULT_DATABASE_FILE}";
             // take the database provider from the environment variable or use hard-coded database provider
             var databaseProvider = _config.GetValue<string>("ASPNETCORE_Conduit_DatabaseProvider");
             if (string.IsNullOrWhiteSpace(databaseProvider))
@@ -75,7 +76,7 @@ namespace Conduit
 
                 x.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
                 {
-                    { "Bearer", new string[] { } }
+                    {"Bearer", new string[] { }}
                 });
                 x.SwaggerDoc("v1", new Info { Title = "RealWorld API", Version = "v1" });
                 x.CustomSchemaIds(y => y.FullName);
@@ -96,7 +97,10 @@ namespace Conduit
                 {
                     opt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 })
-                .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Startup>(); });
+                .AddFluentValidation(cfg =>
+                {
+                    cfg.RegisterValidatorsFromAssemblyContaining<Startup>();
+                });
 
             services.AddAutoMapper(GetType().Assembly);
 
@@ -118,9 +122,9 @@ namespace Conduit
 
             app.UseCors(builder =>
                 builder
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod());
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
 
             app.UseMvc();
 

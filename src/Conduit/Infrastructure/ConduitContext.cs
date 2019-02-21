@@ -8,7 +8,6 @@ namespace Conduit.Infrastructure
 {
     public class ConduitContext : DbContext
     {
-        private readonly string _databaseName = Startup.DATABASE_FILE;
         private IDbContextTransaction _currentTransaction;
 
         public ConduitContext(DbContextOptions options)
@@ -88,7 +87,10 @@ namespace Conduit.Infrastructure
                 return;
             }
 
-            _currentTransaction = Database.BeginTransaction(IsolationLevel.ReadCommitted);
+            if (!Database.IsInMemory())
+            {
+                _currentTransaction = Database.BeginTransaction(IsolationLevel.ReadCommitted);
+            }
         }
 
         public void CommitTransaction()
