@@ -22,7 +22,7 @@ namespace Conduit
 {
     public class Startup
     {
-        public const string DEFAULT_DATABASE_FILE = "realworld.db";
+        public const string DEFAULT_DATABASE_CONNECTIONSTRING = "Filename=realworld.db";
         public const string DEFAULT_DATABASE_PROVIDER = "sqlite";
 
         private readonly IConfiguration _config;
@@ -42,7 +42,7 @@ namespace Conduit
 
             // take the connection string from the environment variable or use hard-coded database name
             var connectionString = _config.GetValue<string>("ASPNETCORE_Conduit_ConnectionString") ??
-                                   $"Filename={DEFAULT_DATABASE_FILE}";
+                                   DEFAULT_DATABASE_CONNECTIONSTRING;
             // take the database provider from the environment variable or use hard-coded database provider
             var databaseProvider = _config.GetValue<string>("ASPNETCORE_Conduit_DatabaseProvider");
             if (string.IsNullOrWhiteSpace(databaseProvider))
