@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
 using Conduit.Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Conduit.Features.Articles
 {

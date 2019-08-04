@@ -1,11 +1,11 @@
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Conduit.Features.Articles
 {

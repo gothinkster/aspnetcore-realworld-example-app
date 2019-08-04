@@ -1,13 +1,13 @@
-using System;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using Conduit.Domain;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Conduit.Features.Comments
 {
@@ -18,7 +18,7 @@ namespace Conduit.Features.Comments
             public string Body { get; set; }
         }
 
-        public class CommentDataValidator : AbstractValidator<CommentData>
+        private class CommentDataValidator : AbstractValidator<CommentData>
         {
             public CommentDataValidator()
             {
@@ -65,7 +65,7 @@ namespace Conduit.Features.Comments
 
                 var author = await _context.Persons.FirstAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
 
-                var comment = new Comment()
+                var comment = new Comment
                 {
                     Author = author,
                     Body = message.Comment.Body,

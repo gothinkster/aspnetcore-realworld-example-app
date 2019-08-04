@@ -1,15 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using Conduit.Domain;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Conduit.Features.Articles
 {
@@ -79,7 +79,7 @@ namespace Conduit.Features.Articles
                 var articleTagsToDelete = GetArticleTagsToDelete(article, articleTagList);
 
                 if (_context.ChangeTracker.Entries().First(x => x.Entity == article).State == EntityState.Modified
-                    || articleTagsToCreate.Count() > 0 || articleTagsToDelete.Count() > 0)
+                    || articleTagsToCreate.Any() || articleTagsToDelete.Any())
                 {
                     article.UpdatedAt = DateTime.UtcNow;
                 }
@@ -107,14 +107,17 @@ namespace Conduit.Features.Articles
                 foreach (var tag in articleTagList)
                 {
                     var t = await _context.Tags.FindAsync(tag);
-                    if (t == null)
+                    if (t != null)
                     {
-                        t = new Tag()
-                        {
-                            TagId = tag
-                        };
-                        tagsToCreate.Add(t);
+                        continue;
                     }
+
+                    t = new Tag
+                    {
+                        TagId = tag
+                    };
+
+                    tagsToCreate.Add(t);
                 }
 
                 return tagsToCreate;
@@ -123,7 +126,7 @@ namespace Conduit.Features.Articles
             /// <summary>
             /// check which article tags need to be added
             /// </summary>
-            static List<ArticleTag> GetArticleTagsToCreate(Article article, IEnumerable<string> articleTagList)
+            private static List<ArticleTag> GetArticleTagsToCreate(Article article, IEnumerable<string> articleTagList)
             {
                 var articleTagsToCreate = new List<ArticleTag>();
                 foreach (var tag in articleTagList)
@@ -131,11 +134,11 @@ namespace Conduit.Features.Articles
                     var at = article.ArticleTags.FirstOrDefault(t => t.TagId == tag);
                     if (at == null)
                     {
-                        at = new ArticleTag()
+                        at = new ArticleTag
                         {
                             Article = article,
                             ArticleId = article.ArticleId,
-                            Tag = new Tag() { TagId = tag },
+                            Tag = new Tag { TagId = tag },
                             TagId = tag
                         };
                         articleTagsToCreate.Add(at);

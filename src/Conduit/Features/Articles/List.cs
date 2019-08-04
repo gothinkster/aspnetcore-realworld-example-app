@@ -1,10 +1,10 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Conduit.Domain;
 using Conduit.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Conduit.Features.Articles
 {
@@ -22,10 +22,15 @@ namespace Conduit.Features.Articles
             }
 
             public string Tag { get; }
+
             public string Author { get; }
+
             public string FavoritedUsername { get; }
+
             public int? Limit { get; }
+
             public int? Offset { get; }
+
             public bool IsFeed { get; set; }
         }
 

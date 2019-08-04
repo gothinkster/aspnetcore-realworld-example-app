@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Conduit.Features.Profiles
 {
@@ -17,7 +17,7 @@ namespace Conduit.Features.Profiles
         [HttpGet("{username}")]
         public async Task<ProfileEnvelope> Get(string username)
         {
-            return await _mediator.Send(new Profiles.Details.Query()
+            return await _mediator.Send(new Details.Query
             {
                 Username = username
             });

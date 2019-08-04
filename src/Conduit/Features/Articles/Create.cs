@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Conduit.Domain;
+﻿using Conduit.Domain;
 using Conduit.Infrastructure;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Conduit.Features.Articles
 {
@@ -24,7 +24,7 @@ namespace Conduit.Features.Articles
             public string[] TagList { get; set; }
         }
 
-        public class ArticleDataValidator : AbstractValidator<ArticleData>
+        private class ArticleDataValidator : AbstractValidator<ArticleData>
         {
             public ArticleDataValidator()
             {
@@ -67,7 +67,7 @@ namespace Conduit.Features.Articles
                     var t = await _context.Tags.FindAsync(tag);
                     if (t == null)
                     {
-                        t = new Tag()
+                        t = new Tag
                         {
                             TagId = tag
                         };
@@ -78,7 +78,7 @@ namespace Conduit.Features.Articles
                     tags.Add(t);
                 }
 
-                var article = new Article()
+                var article = new Article
                 {
                     Author = author,
                     Body = message.Article.Body,

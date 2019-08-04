@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
-using System.Threading.Tasks;
 
 namespace Conduit.Infrastructure
 {
@@ -16,11 +15,17 @@ namespace Conduit.Infrastructure
         }
 
         public DbSet<Article> Articles { get; set; }
+
         public DbSet<Comment> Comments { get; set; }
+
         public DbSet<Person> Persons { get; set; }
+
         public DbSet<Tag> Tags { get; set; }
+
         public DbSet<ArticleTag> ArticleTags { get; set; }
+
         public DbSet<ArticleFavorite> ArticleFavorites { get; set; }
+
         public DbSet<FollowedPeople> FollowedPeople { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

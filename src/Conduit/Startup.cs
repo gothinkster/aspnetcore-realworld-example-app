@@ -16,14 +16,13 @@ using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Conduit
 {
     public class Startup
     {
-        public const string DEFAULT_DATABASE_CONNECTIONSTRING = "Filename=realworld.db";
-        public const string DEFAULT_DATABASE_PROVIDER = "sqlite";
+        private const string DEFAULT_DATABASE_CONNECTIONSTRING = "Filename=realworld.db";
+        private const string DEFAULT_DATABASE_PROVIDER = "sqlite";
 
         private readonly IConfiguration _config;
 

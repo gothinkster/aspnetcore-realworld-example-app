@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Conduit.Features.Users;
+﻿using Conduit.Features.Users;
 using Conduit.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Conduit.IntegrationTests.Features.Users
@@ -12,9 +12,9 @@ namespace Conduit.IntegrationTests.Features.Users
         [Fact]
         public async Task Expect_Create_User()
         {
-            var command = new Conduit.Features.Users.Create.Command()
+            var command = new Create.Command
             {
-                User = new Create.UserData()
+                User = new Create.UserData
                 {
                     Email = "email",
                     Password = "password",

@@ -1,10 +1,10 @@
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using AutoMapper;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Conduit.Features.Profiles
 {

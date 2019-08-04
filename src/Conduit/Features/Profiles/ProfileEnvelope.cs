@@ -7,6 +7,6 @@ namespace Conduit.Features.Profiles
             Profile = profile;
         }
 
-        public Profile Profile { get; set; }
+        public Profile Profile { get; }
     }
 }

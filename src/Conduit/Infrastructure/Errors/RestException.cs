@@ -11,7 +11,7 @@ namespace Conduit.Infrastructure.Errors
             Errors = errors;
         }
 
-        public object Errors { get; set; }
+        public object Errors { get; }
 
         public HttpStatusCode Code { get; }
     }

@@ -1,6 +1,6 @@
-using System.Linq;
 using Conduit.Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Conduit.Features.Articles
 {

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Conduit.Infrastructure
 {
@@ -12,8 +10,8 @@ namespace Conduit.Infrastructure
     {
         public static string GenerateSlug(this string phrase)
         {
-            IdnMapping idn = new IdnMapping();
-            string punyCode = idn.GetAscii(phrase);
+            var idn = new IdnMapping();
+            var punyCode = idn.GetAscii(phrase);
             return punyCode;
         }
 

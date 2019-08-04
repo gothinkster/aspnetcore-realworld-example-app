@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Conduit.Domain;
+using System.Collections.Generic;
 
 namespace Conduit.Features.Articles
 {

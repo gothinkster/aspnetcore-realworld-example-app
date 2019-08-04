@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Conduit.Domain;
+﻿using Conduit.Domain;
 using Conduit.Features.Users;
 using Conduit.Infrastructure.Security;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Conduit.IntegrationTests.Features.Users
@@ -22,9 +22,9 @@ namespace Conduit.IntegrationTests.Features.Users
             };
             await InsertAsync(person);
 
-            var command = new Conduit.Features.Users.Login.Command()
+            var command = new Login.Command
             {
-                User = new Login.UserData()
+                User = new Login.UserData
                 {
                     Email = "email",
                     Password = "password"

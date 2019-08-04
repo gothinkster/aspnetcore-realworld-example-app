@@ -1,13 +1,13 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
-using Conduit.Infrastructure.Security;
+﻿using Conduit.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
+using System;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Conduit
 {
@@ -19,8 +19,8 @@ namespace Conduit
 
             var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("somethinglongerforthisdumbalgorithmisrequired"));
             var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
-            var issuer = "issuer";
-            var audience = "audience";
+            const string issuer = "issuer";
+            const string audience = "audience";
 
             services.Configure<JwtIssuerOptions>(options =>
             {
@@ -62,7 +62,6 @@ namespace Conduit
                             return Task.CompletedTask;
                         }
                     };
-
                 });
         }
 
@@ -72,6 +71,7 @@ namespace Conduit
             var log = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .Enrich.FromLogContext()
+
                 //just for local debug
                 .WriteTo.Console(outputTemplate: "{Timestamp:HH:mm:ss} [{Level}] {SourceContext} {Message}{NewLine}{Exception}", theme: AnsiConsoleTheme.Code)
                 .CreateLogger();

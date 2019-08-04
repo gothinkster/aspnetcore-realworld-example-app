@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Conduit.Domain;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
@@ -11,6 +6,11 @@ using Conduit.Infrastructure.Security;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Conduit.Features.Users
 {
@@ -25,7 +25,7 @@ namespace Conduit.Features.Users
             public string Password { get; set; }
         }
 
-        public class UserDataValidator : AbstractValidator<UserData>
+        private class UserDataValidator : AbstractValidator<UserData>
         {
             public UserDataValidator()
             {
@@ -86,7 +86,7 @@ namespace Conduit.Features.Users
 
                 _context.Persons.Add(person);
                 await _context.SaveChangesAsync(cancellationToken);
-                var user = _mapper.Map<Domain.Person, User>(person);
+                var user = _mapper.Map<Person, User>(person);
                 user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
                 return new UserEnvelope(user);
             }

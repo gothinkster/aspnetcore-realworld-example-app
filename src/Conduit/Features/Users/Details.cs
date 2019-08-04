@@ -1,6 +1,3 @@
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
@@ -8,6 +5,9 @@ using Conduit.Infrastructure.Security;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Conduit.Features.Users
 {

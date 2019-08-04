@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Conduit.Features.Comments;
+﻿using Conduit.Features.Comments;
 using Conduit.IntegrationTests.Features.Users;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Conduit.IntegrationTests.Features.Comments
 {

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Conduit.Features.Users;
 using System.Threading.Tasks;
-using Conduit.Features.Users;
 
 namespace Conduit.IntegrationTests.Features.Users
 {
     public static class UserHelpers
     {
-        public static readonly string DefaultUserName = "username";
+        public const string DefaultUserName = "username";
 
         /// <summary>
         /// creates a default user to be used in different tests
@@ -17,9 +14,9 @@ namespace Conduit.IntegrationTests.Features.Users
         /// <returns></returns>
         public static async Task<User> CreateDefaultUser(SliceFixture fixture)
         {
-            var command = new Create.Command()
+            var command = new Create.Command
             {
-                User = new Create.UserData()
+                User = new Create.UserData
                 {
                     Email = "email",
                     Password = "password",
