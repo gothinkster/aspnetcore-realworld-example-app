@@ -33,9 +33,10 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+
 - task: RichCodeNavIndexer@0
   continueOnError:true
   inputs:
     serviceConnection: 'rich-nav'
-    githubServiceConnection: 'vsls-contrib'
+    githubServiceConnection: 'acangialosi'
     languages: 'typescript,csharp'
