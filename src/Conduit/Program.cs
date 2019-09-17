@@ -7,7 +7,6 @@ namespace Conduit
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello, world!");
             // read database configuration (database provider + database connection) from environment variables
             var config = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
