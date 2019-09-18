@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'windows-2019'
+  vmImage: 'vs2017-win2016'
 
 variables:
   solution: '**/*.sln'
@@ -35,6 +35,6 @@ steps:
 
 - task: RichCodeNavIndexer@0
   inputs:
-    serviceConnection: 'rich-nav'
+    serviceConnection: 'jess-rich-nav'
     githubServiceConnection: 'acangialosi'
     languages: 'typescript,csharp'
