@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29313.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit", "src\Conduit\Conduit.csproj", "{BFC1306F-9EBF-414C-8656-C50E3E5AFADA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Conduit", "src\Conduit\Conduit.csproj", "{BFC1306F-9EBF-414C-8656-C50E3E5AFADA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7C288D93-2148-4679-9890-DBFCA0C59BCC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9F832627-4D82-4B5B-84A7-244E8480845E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.IntegrationTests", "tests\Conduit.IntegrationTests\Conduit.IntegrationTests.csproj", "{CFFDDBF0-5CDD-4D88-A82B-68CBF2432999}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Conduit.IntegrationTests", "tests\Conduit.IntegrationTests\Conduit.IntegrationTests.csproj", "{CFFDDBF0-5CDD-4D88-A82B-68CBF2432999}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "conduit-client", "conduit-client\conduit-client.csproj", "{E295ED5D-585C-481C-8202-67BE5C098C44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,10 @@ Global
 		{CFFDDBF0-5CDD-4D88-A82B-68CBF2432999}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFFDDBF0-5CDD-4D88-A82B-68CBF2432999}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFFDDBF0-5CDD-4D88-A82B-68CBF2432999}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E295ED5D-585C-481C-8202-67BE5C098C44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E295ED5D-585C-481C-8202-67BE5C098C44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E295ED5D-585C-481C-8202-67BE5C098C44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E295ED5D-585C-481C-8202-67BE5C098C44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,5 +38,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BFC1306F-9EBF-414C-8656-C50E3E5AFADA} = {7C288D93-2148-4679-9890-DBFCA0C59BCC}
 		{CFFDDBF0-5CDD-4D88-A82B-68CBF2432999} = {9F832627-4D82-4B5B-84A7-244E8480845E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E697FA0A-3E7A-474E-8467-6296DFFD87F2}
 	EndGlobalSection
 EndGlobal
