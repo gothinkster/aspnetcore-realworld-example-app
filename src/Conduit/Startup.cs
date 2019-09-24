@@ -93,10 +93,11 @@ namespace Conduit
                 {
                     opt.Conventions.Add(new GroupByApiRootConvention());
                     opt.Filters.Add(typeof(ValidatorActionFilter));
+                    opt.EnableEndpointRouting = false;
                 })
                 .AddJsonOptions(opt =>
                 {
-                    opt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    opt.JsonSerializerOptions.IgnoreNullValues = true;
                 })
                 .AddFluentValidation(cfg =>
                 {
@@ -115,7 +116,7 @@ namespace Conduit
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddSerilogLogging();
 
