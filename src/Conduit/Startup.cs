@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.OpenApi.Models;
 
 namespace Conduit
 {
@@ -67,19 +68,24 @@ namespace Conduit
             // Inject an implementation of ISwaggerProvider with defaulted settings applied
             services.AddSwaggerGen(x =>
             {
-                x.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    In = "header",
+                    In = ParameterLocation.Header,
                     Description = "Please insert JWT with Bearer into field",
                     Name = "Authorization",
-                    Type = "apiKey"
+                    Type = SecuritySchemeType.ApiKey,
+                    BearerFormat = "JWT"
                 });
 
-                x.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                x.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
-                    {"Bearer", new string[] { }}
+                    {   new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                    },
+                    new string[] {}}
                 });
-                x.SwaggerDoc("v1", new Info { Title = "RealWorld API", Version = "v1" });
+                x.SwaggerDoc("v1", new OpenApiInfo { Title = "RealWorld API", Version = "v1" });
                 x.CustomSchemaIds(y => y.FullName);
                 x.DocInclusionPredicate((version, apiDescription) => true);
                 x.TagActionsBy(y => new List<string>()
@@ -93,10 +99,11 @@ namespace Conduit
                 {
                     opt.Conventions.Add(new GroupByApiRootConvention());
                     opt.Filters.Add(typeof(ValidatorActionFilter));
+                    opt.EnableEndpointRouting = false;
                 })
                 .AddJsonOptions(opt =>
                 {
-                    opt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    opt.JsonSerializerOptions.IgnoreNullValues = true;
                 })
                 .AddFluentValidation(cfg =>
                 {
@@ -115,7 +122,7 @@ namespace Conduit
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddSerilogLogging();
 

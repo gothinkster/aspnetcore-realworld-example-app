@@ -68,18 +68,12 @@ namespace Conduit.Features.Articles
 
                 // list of currently saved article tags for the given article
                 var articleTagList = (message.Article.TagList ?? Enumerable.Empty<string>());
-
-                var tagsToCreate = await GetTagsToCreate(articleTagList);
-
-                await _context.Tags.AddRangeAsync(tagsToCreate, cancellationToken);
-                //save immediately for reuse
-                await _context.SaveChangesAsync(cancellationToken);
-
+                
                 var articleTagsToCreate = GetArticleTagsToCreate(article, articleTagList);
                 var articleTagsToDelete = GetArticleTagsToDelete(article, articleTagList);
 
                 if (_context.ChangeTracker.Entries().First(x => x.Entity == article).State == EntityState.Modified
-                    || articleTagsToCreate.Count() > 0 || articleTagsToDelete.Count() > 0)
+                    || articleTagsToCreate.Any() || articleTagsToDelete.Any())
                 {
                     article.UpdatedAt = DateTime.UtcNow;
                 }
