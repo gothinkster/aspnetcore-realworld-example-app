@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:3.0
+      - image: mcr.microsoft.com/dotnet/core/sdk:3.1
     environment:
       DOTNET_ROLL_FORWARD_ON_NO_CANDIDATE_FX: 2
     steps:
