@@ -6,17 +6,13 @@ using Conduit.Infrastructure.Security;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 
@@ -48,19 +44,25 @@ namespace Conduit
             // take the database provider from the environment variable or use hard-coded database provider
             var databaseProvider = _config.GetValue<string>("ASPNETCORE_Conduit_DatabaseProvider");
             if (string.IsNullOrWhiteSpace(databaseProvider))
+            {
                 databaseProvider = DEFAULT_DATABASE_PROVIDER;
+            }
 
             services.AddDbContext<ConduitContext>(options =>
             {
                 if (databaseProvider.ToLower().Trim().Equals("sqlite"))
+                {
                     options.UseSqlite(connectionString);
+                }
                 else if (databaseProvider.ToLower().Trim().Equals("sqlserver"))
                 {
                     // only works in windows container
                     options.UseSqlServer(connectionString);
                 }
                 else
+                {
                     throw new Exception("Database provider unknown. Please check configuration");
+                }
             });
 
             services.AddLocalization(x => x.ResourcesPath = "Resources");
@@ -134,6 +136,7 @@ namespace Conduit
                     .AllowAnyHeader()
                     .AllowAnyMethod());
 
+            app.UseAuthentication();
             app.UseMvc();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Conduit.Infrastructure.Errors
+﻿namespace Conduit.Infrastructure.Errors
 {
     public static class Constants
     {
