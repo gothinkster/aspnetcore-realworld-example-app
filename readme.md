@@ -51,6 +51,6 @@ The above might work for Docker on Windows
 
 - `http://localhost:5000/swagger`
 
-## Circle CI
+## GitHub Actions build
 
-[![CircleCI](https://circleci.com/gh/gothinkster/aspnetcore-realworld-example-app.svg?style=svg)](https://circleci.com/gh/gothinkster/aspnetcore-realworld-example-app)
+![Build and Test CaseFunnel](https://github.com/gothinkster/aspnetcore-realworld-example-app/workflows/Build%20and%20Test%20CaseFunnel/badge.svg)
