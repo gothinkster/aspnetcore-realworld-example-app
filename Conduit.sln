@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9F832627
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conduit.IntegrationTests", "tests\Conduit.IntegrationTests\Conduit.IntegrationTests.csproj", "{CFFDDBF0-5CDD-4D88-A82B-68CBF2432999}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "build", "build\build.csproj", "{1A67215E-3B6F-4FDA-AB9B-D2ECDC676A29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{CFFDDBF0-5CDD-4D88-A82B-68CBF2432999}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFFDDBF0-5CDD-4D88-A82B-68CBF2432999}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFFDDBF0-5CDD-4D88-A82B-68CBF2432999}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A67215E-3B6F-4FDA-AB9B-D2ECDC676A29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A67215E-3B6F-4FDA-AB9B-D2ECDC676A29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A67215E-3B6F-4FDA-AB9B-D2ECDC676A29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A67215E-3B6F-4FDA-AB9B-D2ECDC676A29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
