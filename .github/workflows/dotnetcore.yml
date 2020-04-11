@@ -1,4 +1,4 @@
-name: Build and Test CaseFunnel
+name: Build and Test
 
 on: [push]
 
