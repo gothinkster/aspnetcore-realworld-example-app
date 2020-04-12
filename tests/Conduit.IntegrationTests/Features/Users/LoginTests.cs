@@ -22,7 +22,7 @@ namespace Conduit.IntegrationTests.Features.Users
             };
             await InsertAsync(person);
 
-            var command = new Conduit.Features.Users.Login.Command()
+            var command = new Login.Command()
             {
                 User = new Login.UserData()
                 {

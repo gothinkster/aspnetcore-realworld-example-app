@@ -12,7 +12,7 @@ namespace Conduit.IntegrationTests.Features.Users
         [Fact]
         public async Task Expect_Create_User()
         {
-            var command = new Conduit.Features.Users.Create.Command()
+            var command = new Create.Command()
             {
                 User = new Create.UserData()
                 {

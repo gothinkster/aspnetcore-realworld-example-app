@@ -10,7 +10,7 @@ namespace Conduit.Infrastructure.Errors
 {
     public class ErrorHandlingMiddleware
     {
-        private readonly RequestDelegate next;
+        private readonly RequestDelegate _next;
         private readonly ILogger<ErrorHandlingMiddleware> _logger;
         private readonly IStringLocalizer<ErrorHandlingMiddleware> _localizer;
 
@@ -19,16 +19,16 @@ namespace Conduit.Infrastructure.Errors
             IStringLocalizer<ErrorHandlingMiddleware> localizer,
             ILogger<ErrorHandlingMiddleware> logger)
         {
-            this.next = next;
-            this._logger = logger;
-            this._localizer = localizer;
+            _next = next;
+            _logger = logger;
+            _localizer = localizer;
         }
 
         public async Task Invoke(HttpContext context)
         {
             try
             {
-                await next(context);
+                await _next(context);
             }
             catch (Exception ex)
             {
@@ -42,28 +42,28 @@ namespace Conduit.Infrastructure.Errors
             ILogger<ErrorHandlingMiddleware> logger,
             IStringLocalizer<ErrorHandlingMiddleware> localizer)
         {
-            object errors = null;
-
+            string result = null;
             switch (exception)
             {
                 case RestException re:
-                    errors = re.Errors;
                     context.Response.StatusCode = (int)re.Code;
+                    result = JsonConvert.SerializeObject(new
+                    {
+                        errors = re.Errors
+                    });
                     break;
                 case Exception e:
-                    errors = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    logger.LogError(e, "Unhandled Exception");
+                     result = JsonConvert.SerializeObject(new
+                    {
+                        errors = localizer[Constants.InternalServerError].Value
+                    });
                     break;
             }
 
             context.Response.ContentType = "application/json";
-
-            var result = JsonConvert.SerializeObject(new
-            {
-                errors
-            });
-
-            await context.Response.WriteAsync(result);
+            await context.Response.WriteAsync(result ?? "{}");
         }
     }
 }

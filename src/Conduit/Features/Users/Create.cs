@@ -86,7 +86,7 @@ namespace Conduit.Features.Users
 
                 _context.Persons.Add(person);
                 await _context.SaveChangesAsync(cancellationToken);
-                var user = _mapper.Map<Domain.Person, User>(person);
+                var user = _mapper.Map<Person, User>(person);
                 user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
                 return new UserEnvelope(user);
             }
