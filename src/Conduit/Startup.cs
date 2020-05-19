@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 namespace Conduit
 {
@@ -95,7 +96,7 @@ namespace Conduit
                     y.GroupName
                 });
             });
-
+            
             services.AddCors();
             services.AddMvc(opt =>
                 {
@@ -103,10 +104,12 @@ namespace Conduit
                     opt.Filters.Add(typeof(ValidatorActionFilter));
                     opt.EnableEndpointRouting = false;
                 })
-                .AddJsonOptions(opt =>
-                {
-                    opt.JsonSerializerOptions.IgnoreNullValues = true;
-                })
+                .AddNewtonsoftJson(options =>
+                    {
+                        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                        options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    }
+                )
                 .AddFluentValidation(cfg =>
                 {
                     cfg.RegisterValidatorsFromAssemblyContaining<Startup>();
