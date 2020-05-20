@@ -131,6 +131,8 @@ namespace Conduit
         {
             loggerFactory.AddSerilogLogging();
 
+            app.UseStaticFiles();
+
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseCors(builder =>

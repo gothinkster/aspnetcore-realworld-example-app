@@ -35,4 +35,13 @@
       <LastGenOutput>Infrastructure.Errors.ErrorHandlingMiddleware.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Content Update="Pages\Home\Index.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="js" />
+  </ItemGroup>
 </Project>
