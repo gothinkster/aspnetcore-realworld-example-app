@@ -21,8 +21,8 @@ namespace Conduit
 {
     public class Startup
     {
-        public const string DEFAULT_DATABASE_CONNECTIONSTRING = "Filename=realworld.db";
-        public const string DEFAULT_DATABASE_PROVIDER = "sqlite";
+        public const string DEFAULT_DATABASE_CONNECTIONSTRING = "server=tcp:sqlserver;User ID=SA;Password=StrongPassword(!);";
+        public const string DEFAULT_DATABASE_PROVIDER = "sqlserver";
 
         private readonly IConfiguration _config;
 
