@@ -27,6 +27,14 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: GitHub Deployment
+        uses: chrnorm/deployment-action@releases/v1
+        id: deployment
+        with:
+          token: "${{ github.token }}"
+          target_url: "https://${{ secrets.AZURE_WEBAPP_NAME }}.azurewebsites.net"
+          environment: demo
+
       - name: yarn build
         run: |
           yarn
@@ -46,3 +54,21 @@ jobs:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/publish'
+
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target_url: "https://${{ secrets.AZURE_WEBAPP_NAME }}.azurewebsites.net"
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+  
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target_url: "https://${{ secrets.AZURE_WEBAPP_NAME }}.azurewebsites.net"
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
