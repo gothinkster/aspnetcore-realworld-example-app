@@ -1,0 +1,47 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  AZURE_WEBAPP_NAME: realworld-demo
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+  DOTNET_VERSION: '3.1.201'
+  NODE_VERSION: '12.16.3'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@master
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: yarn build
+        run: |
+          yarn
+          yarn build
+          cp ./dist/Index.cshtml ./src/Conduit/Pages/Shared/Index.cshtml
+          cp ./dist/static ./src/Conduit/wwwroot/static
+
+      - name: dotnet build and publish
+        run: |
+          dotnet run -p build/build.csproj
+
+      - name: 'Run Azure webapp deploy action using publish profile credentials'
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/publish'
