@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Conduit.Domain
 {

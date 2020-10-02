@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Conduit.Infrastructure
 {
@@ -28,7 +28,7 @@ namespace Conduit.Infrastructure
                     errors.Add(valuePair.Key, valuePair.Value.Errors.Select(x => x.ErrorMessage).ToArray());
                 }
 
-                string content = JsonConvert.SerializeObject(new { errors });
+                string content = JsonSerializer.Serialize(new { errors });
                 result.Content = content;
                 result.ContentType = "application/json";
 
