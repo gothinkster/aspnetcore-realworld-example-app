@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Conduit.Features.Profiles
 {
@@ -10,7 +10,7 @@ namespace Conduit.Features.Profiles
 
         public string Image { get; set; }
 
-        [JsonProperty("following")]
+        [JsonPropertyName("following")]
         public bool IsFollowed { get; set; }
     }
 }

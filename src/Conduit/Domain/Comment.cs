@@ -1,11 +1,11 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Conduit.Domain
 {
     public class Comment
     {
-        [JsonProperty("id")]
+        [JsonPropertyName("id")]
         public int CommentId { get; set; }
 
         public string Body { get; set; }
