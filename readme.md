@@ -39,7 +39,7 @@ Documentation for ASP.NET Core: [https://docs.microsoft.com/en-us/aspnet/core/](
 There is a 'Makefile' for OS X and Linux:
 
 - `make build` executes `docker-compose build`
-- `make run` executes `docker-compose run`
+- `make run` executes `docker-compose up`
 
 The above might work for Docker on Windows
 
