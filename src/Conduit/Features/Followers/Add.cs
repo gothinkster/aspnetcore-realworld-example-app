@@ -70,7 +70,7 @@ namespace Conduit.Features.Followers
                     await _context.SaveChangesAsync(cancellationToken);
                 }
 
-                return await _profileReader.ReadProfile(message.Username);
+                return await _profileReader.ReadProfile(message.Username, cancellationToken);
             }
         }
     }

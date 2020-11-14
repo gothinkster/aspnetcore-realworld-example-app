@@ -72,7 +72,7 @@ namespace Conduit.Features.Users
                 }
 
                 var user = _mapper.Map<Domain.Person, User>(person);
-                user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
+                user.Token = _jwtTokenGenerator.CreateToken(person.Username);
                 return new UserEnvelope(user);
             }
         }

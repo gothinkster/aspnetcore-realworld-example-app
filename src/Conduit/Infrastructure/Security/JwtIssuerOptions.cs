@@ -94,7 +94,7 @@ namespace Conduit.Infrastructure.Security
         ///   produced by different issuers as well.  The "jti" claim can be used
         ///   to prevent the JWT from being replayed.  The "jti" value is a case-
         ///   sensitive string.  Use of this claim is OPTIONAL.</remarks>
-        public Func<Task<string>> JtiGenerator => () => Task.FromResult(Guid.NewGuid().ToString());
+        public Func<string> JtiGenerator => () => Guid.NewGuid().ToString();
 
         /// <summary>
         /// The signing key to use when generating tokens.

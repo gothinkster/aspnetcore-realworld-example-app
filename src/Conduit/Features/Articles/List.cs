@@ -62,6 +62,7 @@ namespace Conduit.Features.Articles
                         return new ArticlesEnvelope();
                     }
                 }
+
                 if (!string.IsNullOrWhiteSpace(message.Author))
                 {
                     var author = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Author, cancellationToken);
@@ -74,6 +75,7 @@ namespace Conduit.Features.Articles
                         return new ArticlesEnvelope();
                     }
                 }
+
                 if (!string.IsNullOrWhiteSpace(message.FavoritedUsername))
                 {
                     var author = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.FavoritedUsername, cancellationToken);

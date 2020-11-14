@@ -31,7 +31,7 @@ namespace Conduit.Features.Profiles
 
             public async Task<ProfileEnvelope> Handle(Query message, CancellationToken cancellationToken)
             {
-                return await _profileReader.ReadProfile(message.Username);
+                return await _profileReader.ReadProfile(message.Username, cancellationToken);
             }
         }
     }
