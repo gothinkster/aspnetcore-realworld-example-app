@@ -4,6 +4,7 @@ using System.IO;
 using static Bullseye.Targets;
 using static SimpleExec.Command;
 using GlobExpressions;
+using System.Threading.Tasks;
 
 public static class Program
 {
@@ -12,10 +13,10 @@ public static class Program
     private const string Test = "test";
     private const string Publish = "publish";
 
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         Target(Clean,
-            ForEach( "publish", "**/bin", "**/obj"),
+            ForEach("publish", "**/bin", "**/obj"),
             dir =>
             {
                 IEnumerable<string> GetDirectories(string d)
@@ -59,10 +60,10 @@ public static class Program
             project =>
             {
                 Run("dotnet",
-                    $"publish {project} -c Release -f netcoreapp3.1 -o ./publish --no-restore --no-build --verbosity=normal");
+                    $"publish {project} -c Release -f net5.0 -o ./publish --no-restore --no-build --verbosity=normal");
             });
 
         Target("default", DependsOn(Publish), () => Console.WriteLine("Done!"));
-        RunTargetsAndExit(args);
+        await RunTargetsAndExitAsync(args);
     }
 }
