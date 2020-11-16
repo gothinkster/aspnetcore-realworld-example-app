@@ -27,7 +27,7 @@ namespace Conduit.IntegrationTests.Features.Users
             var created = await ExecuteDbContextAsync(db => db.Persons.Where(d => d.Email == command.User.Email).SingleOrDefaultAsync());
 
             Assert.NotNull(created);
-            Assert.Equal(created.Hash, new PasswordHasher().Hash("password", created.Salt));
+            Assert.Equal(created.Hash, await new PasswordHasher().Hash("password", created.Salt));
         }
     }
 }

@@ -66,13 +66,13 @@ namespace Conduit.Features.Users
                     throw new RestException(HttpStatusCode.Unauthorized, new { Error = "Invalid email / password." });
                 }
 
-                if (!person.Hash.SequenceEqual(_passwordHasher.Hash(message.User.Password, person.Salt)))
+                if (!person.Hash.SequenceEqual(await _passwordHasher.Hash(message.User.Password, person.Salt)))
                 {
                     throw new RestException(HttpStatusCode.Unauthorized, new { Error = "Invalid email / password." });
                 }
 
                 var user = _mapper.Map<Domain.Person, User>(person);
-                user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
+                user.Token = _jwtTokenGenerator.CreateToken(person.Username);
                 return new UserEnvelope(user);
             }
         }

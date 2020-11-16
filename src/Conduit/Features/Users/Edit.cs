@@ -68,7 +68,7 @@ namespace Conduit.Features.Users
                 if (!string.IsNullOrWhiteSpace(message.User.Password))
                 {
                     var salt = Guid.NewGuid().ToByteArray();
-                    person.Hash = _passwordHasher.Hash(message.User.Password, salt);
+                    person.Hash = await _passwordHasher.Hash(message.User.Password, salt);
                     person.Salt = salt;
                 }
 

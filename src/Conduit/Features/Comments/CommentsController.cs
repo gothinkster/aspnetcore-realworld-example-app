@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Infrastructure.Security;
 using MediatR;
@@ -18,23 +19,23 @@ namespace Conduit.Features.Comments
 
         [HttpPost("{slug}/comments")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task<CommentEnvelope> Create(string slug, [FromBody]Create.Command command)
+        public Task<CommentEnvelope> Create(string slug, [FromBody]Create.Command command, CancellationToken cancellationToken)
         {
             command.Slug = slug;
-            return await _mediator.Send(command);
+            return _mediator.Send(command, cancellationToken);
         }
 
         [HttpGet("{slug}/comments")]
-        public async Task<CommentsEnvelope> Get(string slug)
+        public Task<CommentsEnvelope> Get(string slug, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new List.Query(slug));
+            return _mediator.Send(new List.Query(slug), cancellationToken);
         }
 
         [HttpDelete("{slug}/comments/{id}")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task Delete(string slug, int id)
+        public Task Delete(string slug, int id, CancellationToken cancellationToken)
         {
-            await _mediator.Send(new Delete.Command(slug, id));
+            return _mediator.Send(new Delete.Command(slug, id), cancellationToken);
         }
     }
 }

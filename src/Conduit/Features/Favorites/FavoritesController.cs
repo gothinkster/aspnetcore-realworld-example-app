@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Features.Articles;
 using Conduit.Infrastructure.Security;
@@ -19,16 +20,16 @@ namespace Conduit.Features.Favorites
 
         [HttpPost("{slug}/favorite")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task<ArticleEnvelope> FavoriteAdd(string slug)
+        public Task<ArticleEnvelope> FavoriteAdd(string slug, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new Add.Command(slug));
+            return _mediator.Send(new Add.Command(slug), cancellationToken);
         }
 
         [HttpDelete("{slug}/favorite")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task<ArticleEnvelope> FavoriteDelete(string slug)
+        public Task<ArticleEnvelope> FavoriteDelete(string slug, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new Delete.Command(slug));
+            return _mediator.Send(new Delete.Command(slug), cancellationToken);
         }
     }
 }

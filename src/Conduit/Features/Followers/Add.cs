@@ -13,15 +13,7 @@ namespace Conduit.Features.Followers
 {
     public class Add
     {
-        public class Command : IRequest<ProfileEnvelope>
-        {
-            public Command(string username)
-            {
-                Username = username;
-            }
-
-            public string Username { get; }
-        }
+        public record Command(string Username) : IRequest<ProfileEnvelope>;
 
         public class CommandValidator : AbstractValidator<Command>
         {
@@ -70,7 +62,7 @@ namespace Conduit.Features.Followers
                     await _context.SaveChangesAsync(cancellationToken);
                 }
 
-                return await _profileReader.ReadProfile(message.Username);
+                return await _profileReader.ReadProfile(message.Username, cancellationToken);
             }
         }
     }

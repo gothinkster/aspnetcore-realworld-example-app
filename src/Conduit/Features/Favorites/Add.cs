@@ -13,15 +13,7 @@ namespace Conduit.Features.Favorites
 {
     public class Add
     {
-        public class Command : IRequest<ArticleEnvelope>
-        {
-            public Command(string slug)
-            {
-                Slug = slug;
-            }
-
-            public string Slug { get; }
-        }
+        public record Command(string Slug) : IRequest<ArticleEnvelope>;
 
         public class CommandValidator : AbstractValidator<Command>
         {
