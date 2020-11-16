@@ -13,14 +13,5 @@ namespace Conduit.Features.Users
         public string Token { get; set; }
     }
 
-
-    public class UserEnvelope
-    {
-        public UserEnvelope(User user)
-        {
-            User = user;
-        }
-
-        public User User { get; set; }
-    }
+    public record UserEnvelope(User User);
 }

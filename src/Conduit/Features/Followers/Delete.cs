@@ -12,15 +12,7 @@ namespace Conduit.Features.Followers
 {
     public class Delete
     {
-        public class Command : IRequest<ProfileEnvelope>
-        {
-            public Command(string username)
-            {
-                Username = username;
-            }
-
-            public string Username { get; }
-        }
+        public record Command(string Username) : IRequest<ProfileEnvelope>;
 
         public class CommandValidator : AbstractValidator<Command>
         {

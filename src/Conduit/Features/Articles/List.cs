@@ -10,24 +10,7 @@ namespace Conduit.Features.Articles
 {
     public class List
     {
-        public class Query : IRequest<ArticlesEnvelope>
-        {
-            public Query(string tag, string author, string favorited, int? limit, int? offset)
-            {
-                Tag = tag;
-                Author = author;
-                FavoritedUsername = favorited;
-                Limit = limit;
-                Offset = offset;
-            }
-
-            public string Tag { get; }
-            public string Author { get; }
-            public string FavoritedUsername { get; }
-            public int? Limit { get; }
-            public int? Offset { get; }
-            public bool IsFeed { get; set; }
-        }
+        public record Query(string Tag, string Author, string FavoritedUsername, int? Limit, int? Offset, bool IsFeed = false) : IRequest<ArticlesEnvelope>;
 
         public class QueryHandler : IRequestHandler<Query, ArticlesEnvelope>
         {

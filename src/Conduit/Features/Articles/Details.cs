@@ -11,15 +11,7 @@ namespace Conduit.Features.Articles
 {
     public class Details
     {
-        public class Query : IRequest<ArticleEnvelope>
-        {
-            public Query(string slug)
-            {
-                Slug = slug;
-            }
-
-            public string Slug { get; set; }
-        }
+        public record Query(string Slug) : IRequest<ArticleEnvelope>;
 
         public class QueryValidator : AbstractValidator<Query>
         {

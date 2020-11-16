@@ -9,9 +9,7 @@ namespace Conduit.Features.Tags
 {
     public class List
     {
-        public class Query : IRequest<TagsEnvelope>
-        {
-        }
+        public record Query : IRequest<TagsEnvelope>;
 
         public class QueryHandler : IRequestHandler<Query, TagsEnvelope>
         {
