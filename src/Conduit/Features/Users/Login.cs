@@ -66,7 +66,7 @@ namespace Conduit.Features.Users
                     throw new RestException(HttpStatusCode.Unauthorized, new { Error = "Invalid email / password." });
                 }
 
-                if (!person.Hash.SequenceEqual(_passwordHasher.Hash(message.User.Password, person.Salt)))
+                if (!person.Hash.SequenceEqual(await _passwordHasher.Hash(message.User.Password, person.Salt)))
                 {
                     throw new RestException(HttpStatusCode.Unauthorized, new { Error = "Invalid email / password." });
                 }
