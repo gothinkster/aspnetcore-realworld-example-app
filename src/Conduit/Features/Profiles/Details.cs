@@ -29,9 +29,9 @@ namespace Conduit.Features.Profiles
                 _profileReader = profileReader;
             }
 
-            public async Task<ProfileEnvelope> Handle(Query message, CancellationToken cancellationToken)
+            public Task<ProfileEnvelope> Handle(Query message, CancellationToken cancellationToken)
             {
-                return await _profileReader.ReadProfile(message.Username, cancellationToken);
+                return _profileReader.ReadProfile(message.Username, cancellationToken);
             }
         }
     }

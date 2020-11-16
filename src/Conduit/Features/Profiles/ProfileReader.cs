@@ -47,6 +47,7 @@ namespace Conduit.Features.Profiles
                     profile.IsFollowed = true;
                 }
             }
+
             return new ProfileEnvelope(profile);
         }
     }

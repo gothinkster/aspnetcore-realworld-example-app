@@ -22,18 +22,18 @@ namespace Conduit.Features.Users
         }
 
         [HttpGet]
-        public async Task<UserEnvelope> GetCurrent(CancellationToken cancellationToken)
+        public Task<UserEnvelope> GetCurrent(CancellationToken cancellationToken)
         {
-            return await _mediator.Send(new Details.Query()
+            return _mediator.Send(new Details.Query()
             {
                 Username = _currentUserAccessor.GetCurrentUsername()
             }, cancellationToken);
         }
 
         [HttpPut]
-        public async Task<UserEnvelope> UpdateUser([FromBody]Edit.Command command, CancellationToken cancellationToken)
+        public Task<UserEnvelope> UpdateUser([FromBody]Edit.Command command, CancellationToken cancellationToken)
         {
-            return await _mediator.Send(command, cancellationToken);
+            return _mediator.Send(command, cancellationToken);
         }
     }
 }
