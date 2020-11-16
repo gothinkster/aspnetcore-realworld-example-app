@@ -91,30 +91,6 @@ namespace Conduit.Features.Articles
             }
 
             /// <summary>
-            /// get the list of Tags to be added
-            /// </summary>
-            /// <param name="articleTagList"></param>
-            /// <returns></returns>
-            private async Task<List<Tag>> GetTagsToCreate(IEnumerable<string> articleTagList)
-            {
-                var tagsToCreate = new List<Tag>();
-                foreach (var tag in articleTagList)
-                {
-                    var t = await _context.Tags.FindAsync(tag);
-                    if (t == null)
-                    {
-                        t = new Tag()
-                        {
-                            TagId = tag
-                        };
-                        tagsToCreate.Add(t);
-                    }
-                }
-
-                return tagsToCreate;
-            }
-
-            /// <summary>
             /// check which article tags need to be added
             /// </summary>
             static List<ArticleTag> GetArticleTagsToCreate(Article article, IEnumerable<string> articleTagList)
