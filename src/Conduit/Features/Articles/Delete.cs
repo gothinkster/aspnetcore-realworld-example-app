@@ -11,7 +11,15 @@ namespace Conduit.Features.Articles
 {
     public class Delete
     {
-        public record Command(string Slug) : IRequest;
+        public class Command : IRequest
+        {
+            public Command(string slug)
+            {
+                Slug = slug;
+            }
+
+            public string Slug { get; set; }
+        }
 
         public class CommandValidator : AbstractValidator<Command>
         {

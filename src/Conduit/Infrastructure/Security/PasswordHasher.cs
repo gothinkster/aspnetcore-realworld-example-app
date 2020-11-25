@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Conduit.Infrastructure.Security
 {
@@ -10,7 +8,7 @@ namespace Conduit.Infrastructure.Security
     {
         private readonly HMACSHA512 x = new HMACSHA512(Encoding.UTF8.GetBytes("realworld"));
 
-        public Task<byte[]> Hash(string password, byte[] salt)
+        public byte[] Hash(string password, byte[] salt)
         {
             var bytes = Encoding.UTF8.GetBytes(password);
 
@@ -18,7 +16,7 @@ namespace Conduit.Infrastructure.Security
             Buffer.BlockCopy(bytes, 0, allBytes, 0, bytes.Length);
             Buffer.BlockCopy(salt, 0, allBytes, bytes.Length, salt.Length);
 
-            return x.ComputeHashAsync(new MemoryStream(allBytes));
+            return x.ComputeHash(allBytes);
         }
     }
 }

@@ -2,5 +2,13 @@ using Conduit.Domain;
 
 namespace Conduit.Features.Comments
 {
-    public record CommentEnvelope(Comment Comment);
+    public class CommentEnvelope
+    {
+        public CommentEnvelope(Comment comment)
+        {
+            Comment = comment;
+        }
+
+        public Comment Comment { get; }
+    }
 }

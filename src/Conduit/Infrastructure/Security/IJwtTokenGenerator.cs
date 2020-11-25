@@ -1,7 +1,9 @@
-﻿namespace Conduit.Infrastructure.Security
+﻿using System.Threading.Tasks;
+
+namespace Conduit.Infrastructure.Security
 {
     public interface IJwtTokenGenerator
     {
-        string CreateToken(string username);
+        Task<string> CreateToken(string username);
     }
 }

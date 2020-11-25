@@ -85,7 +85,7 @@ namespace Conduit
                     {
                         Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
                     },
-                    Array.Empty<string>()}
+                    new string[] {}}
                 });
                 x.SwaggerDoc("v1", new OpenApiInfo { Title = "RealWorld API", Version = "v1" });
                 x.CustomSchemaIds(y => y.FullName);

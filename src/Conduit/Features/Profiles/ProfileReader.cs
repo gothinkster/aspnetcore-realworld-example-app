@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Conduit.Infrastructure;
@@ -22,12 +21,12 @@ namespace Conduit.Features.Profiles
             _mapper = mapper;
         }
 
-        public async Task<ProfileEnvelope> ReadProfile(string username, CancellationToken cancellationToken)
+        public async Task<ProfileEnvelope> ReadProfile(string username)
         {
             var currentUserName = _currentUserAccessor.GetCurrentUsername();
 
             var person = await _context.Persons.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Username == username, cancellationToken);
+                .FirstOrDefaultAsync(x => x.Username == username);
 
             if (person == null)
             {
@@ -40,14 +39,13 @@ namespace Conduit.Features.Profiles
                 var currentPerson = await _context.Persons
                     .Include(x => x.Following)
                     .Include(x => x.Followers)
-                    .FirstOrDefaultAsync(x => x.Username == currentUserName, cancellationToken);
+                    .FirstOrDefaultAsync(x => x.Username == currentUserName);
 
                 if (currentPerson.Followers.Any(x => x.TargetId == person.PersonId))
                 {
                     profile.IsFollowed = true;
                 }
             }
-
             return new ProfileEnvelope(profile);
         }
     }

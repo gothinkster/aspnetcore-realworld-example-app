@@ -17,7 +17,7 @@ namespace Conduit.IntegrationTests.Features.Users
             {
                 Username = "username",
                 Email = "email",
-                Hash = await new PasswordHasher().Hash("password", salt),
+                Hash = new PasswordHasher().Hash("password", salt),
                 Salt = salt
             };
             await InsertAsync(person);

@@ -10,7 +10,15 @@ namespace Conduit.Features.Comments
 {
     public class List
     {
-        public record Query(string Slug) : IRequest<CommentsEnvelope>;
+        public class Query : IRequest<CommentsEnvelope>
+        {
+            public Query(string slug)
+            {
+                Slug = slug;
+            }
+
+            public string Slug { get; }
+        }
 
         public class QueryHandler : IRequestHandler<Query, CommentsEnvelope>
         {

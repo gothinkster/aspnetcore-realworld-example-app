@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Infrastructure.Security;
 using MediatR;
@@ -18,46 +17,46 @@ namespace Conduit.Features.Articles
         }
 
         [HttpGet]
-        public Task<ArticlesEnvelope> Get([FromQuery] string tag, [FromQuery] string author, [FromQuery] string favorited, [FromQuery] int? limit, [FromQuery] int? offset, CancellationToken cancellationToken)
+        public async Task<ArticlesEnvelope> Get([FromQuery] string tag, [FromQuery] string author, [FromQuery] string favorited, [FromQuery] int? limit, [FromQuery] int? offset)
         {
-            return _mediator.Send(new List.Query(tag, author, favorited, limit, offset), cancellationToken);
+            return await _mediator.Send(new List.Query(tag, author, favorited, limit, offset));
         }
 
         [HttpGet("feed")]
-        public Task<ArticlesEnvelope> GetFeed([FromQuery] string tag, [FromQuery] string author, [FromQuery] string favorited, [FromQuery] int? limit, [FromQuery] int? offset, CancellationToken cancellationToken)
+        public async Task<ArticlesEnvelope> GetFeed([FromQuery] string tag, [FromQuery] string author, [FromQuery] string favorited, [FromQuery] int? limit, [FromQuery] int? offset)
         {
-            return _mediator.Send(new List.Query(tag, author, favorited, limit, offset)
+            return await _mediator.Send(new List.Query(tag, author, favorited, limit, offset)
             {
                 IsFeed = true
             });
         }
 
         [HttpGet("{slug}")]
-        public Task<ArticleEnvelope> Get(string slug, CancellationToken cancellationToken)
+        public async Task<ArticleEnvelope> Get(string slug)
         {
-            return _mediator.Send(new Details.Query(slug), cancellationToken);
+            return await _mediator.Send(new Details.Query(slug));
         }
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public Task<ArticleEnvelope> Create([FromBody]Create.Command command, CancellationToken cancellationToken)
+        public async Task<ArticleEnvelope> Create([FromBody]Create.Command command)
         {
-            return _mediator.Send(command, cancellationToken);
+            return await _mediator.Send(command);
         }
 
         [HttpPut("{slug}")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public Task<ArticleEnvelope> Edit(string slug, [FromBody]Edit.Command command, CancellationToken cancellationToken)
+        public async Task<ArticleEnvelope> Edit(string slug, [FromBody]Edit.Command command)
         {
             command.Slug = slug;
-            return _mediator.Send(command, cancellationToken);
+            return await _mediator.Send(command);
         }
 
         [HttpDelete("{slug}")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public Task Delete(string slug, CancellationToken cancellationToken)
+        public async Task Delete(string slug)
         {
-            return _mediator.Send(new Delete.Command(slug), cancellationToken);
+            await _mediator.Send(new Delete.Command(slug));
         }
     }
 }

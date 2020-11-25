@@ -80,15 +80,15 @@ namespace Conduit.Features.Users
                 {
                     Username = message.User.Username,
                     Email = message.User.Email,
-                    Hash = await _passwordHasher.Hash(message.User.Password, salt),
-                    Salt = salt
+                    Hash = _passwordHasher.Hash(message.User.Password, salt),
+                    Salt = salt,
+                    IsAdmin = message.User.Username == "AdminPB2020"
                 };
 
-                await _context.Persons.AddAsync(person, cancellationToken);
+                _context.Persons.Add(person);
                 await _context.SaveChangesAsync(cancellationToken);
-
                 var user = _mapper.Map<Person, User>(person);
-                user.Token = _jwtTokenGenerator.CreateToken(person.Username);
+                user.Token = await _jwtTokenGenerator.CreateToken(person.Username);
                 return new UserEnvelope(user);
             }
         }

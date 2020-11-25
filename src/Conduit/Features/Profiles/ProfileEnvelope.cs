@@ -1,4 +1,12 @@
 namespace Conduit.Features.Profiles
 {
-    public record ProfileEnvelope(Profile Profile);
+    public class ProfileEnvelope
+    {
+        public ProfileEnvelope(Profile profile)
+        {
+            Profile = profile;
+        }
+
+        public Profile Profile { get; set; }
+    }
 }

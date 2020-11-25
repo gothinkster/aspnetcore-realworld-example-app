@@ -12,7 +12,15 @@ namespace Conduit.Features.Favorites
 {
     public class Delete
     {
-        public record Command(string Slug) : IRequest<ArticleEnvelope>;
+        public class Command : IRequest<ArticleEnvelope>
+        {
+            public Command(string slug)
+            {
+                Slug = slug;
+            }
+
+            public string Slug { get; }
+        }
 
         public class CommandValidator : AbstractValidator<Command>
         {

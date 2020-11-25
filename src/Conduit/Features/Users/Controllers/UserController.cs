@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Security;
@@ -22,18 +21,18 @@ namespace Conduit.Features.Users
         }
 
         [HttpGet]
-        public Task<UserEnvelope> GetCurrent(CancellationToken cancellationToken)
+        public async Task<UserEnvelope> GetCurrent()
         {
-            return _mediator.Send(new Details.Query()
+            return await _mediator.Send(new Details.Query()
             {
                 Username = _currentUserAccessor.GetCurrentUsername()
-            }, cancellationToken);
+            });
         }
 
         [HttpPut]
-        public Task<UserEnvelope> UpdateUser([FromBody]Edit.Command command, CancellationToken cancellationToken)
+        public async Task<UserEnvelope> UpdateUser([FromBody]Edit.Command command)
         {
-            return _mediator.Send(command, cancellationToken);
+            return await _mediator.Send(command);
         }
     }
 }

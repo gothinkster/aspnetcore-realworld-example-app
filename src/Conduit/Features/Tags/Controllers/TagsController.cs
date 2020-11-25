@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +15,9 @@ namespace Conduit.Features.Tags
         }
 
         [HttpGet]
-        public Task<TagsEnvelope> Get(CancellationToken cancellationToken)
+        public async Task<TagsEnvelope> Get()
         {
-            return _mediator.Send(new List.Query(), cancellationToken);
+            return await _mediator.Send(new List.Query());
         }
     }
 }

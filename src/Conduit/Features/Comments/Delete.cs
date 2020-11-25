@@ -12,7 +12,17 @@ namespace Conduit.Features.Comments
 {
     public class Delete
     {
-        public record Command(string Slug, int Id) : IRequest;
+        public class Command : IRequest
+        {
+            public Command(string slug, int id)
+            {
+                Slug = slug;
+                Id = id;
+            }
+
+            public string Slug { get; }
+            public int Id { get; }
+        }
 
         public class CommandValidator : AbstractValidator<Command>
         {

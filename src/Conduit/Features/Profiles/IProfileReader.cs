@@ -1,10 +1,9 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Conduit.Features.Profiles
 {
     public interface IProfileReader
     {
-        Task<ProfileEnvelope> ReadProfile(string username, CancellationToken cancellationToken);
+        Task<ProfileEnvelope> ReadProfile(string username);
     }
 }
