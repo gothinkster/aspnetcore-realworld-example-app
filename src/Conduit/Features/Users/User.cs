@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Conduit.Features.Users
 {
     public class User
@@ -11,6 +13,12 @@ namespace Conduit.Features.Users
         public string Image { get; set; }
 
         public string Token { get; set; }
+
+
+
+        public int ArticleBan { get; set; } = 0;
+
+        public int CommentBan { get; set; } = 0;
     }
 
 
@@ -22,5 +30,16 @@ namespace Conduit.Features.Users
         }
 
         public User User { get; set; }
+    }
+
+    public class UsersEnvelope
+    {
+        public UsersEnvelope()
+        {
+        }
+
+        public List<User> Users{ get; set; }
+
+        public int UsersCount { get; set; }
     }
 }

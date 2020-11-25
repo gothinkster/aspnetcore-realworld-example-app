@@ -17,6 +17,7 @@ namespace Conduit.Domain
         public string Image { get; set; }
 
         public bool IsAdmin { get; set; } = false;
+        public bool IsBanned { get; set; } = false;
 
         [JsonIgnore]
         public List<ArticleFavorite> ArticleFavorites { get; set; }

@@ -24,6 +24,8 @@ namespace Conduit.Features.Users
             public string Bio { get; set; }
 
             public string Image { get; set; }
+
+            public bool Banned { get; set; } = false;
         }
 
         public class Command : IRequest<UserEnvelope>
@@ -64,6 +66,7 @@ namespace Conduit.Features.Users
                 person.Email = message.User.Email ?? person.Email;
                 person.Bio = message.User.Bio ?? person.Bio;
                 person.Image = message.User.Image ?? person.Image;
+                person.IsBanned = message.User.Banned;
 
                 if (!string.IsNullOrWhiteSpace(message.User.Password))
                 {
