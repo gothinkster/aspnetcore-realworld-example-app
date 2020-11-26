@@ -13,5 +13,10 @@ namespace Conduit.Features.Comments
                 .Include(x => x.Article)
                 .AsNoTracking();
         }
+
+        public static IQueryable<Comment> GetAllReportedComments(this DbSet<Comment> comments)
+        {
+            return comments.Include(x => x.IsReported == true).AsNoTracking();
+        }
     }
 }

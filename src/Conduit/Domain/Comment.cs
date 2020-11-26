@@ -26,6 +26,6 @@ namespace Conduit.Domain
 
         public DateTime UpdatedAt { get; set; }
 
-
+        public bool IsReported { get; set; } = false;
     }
 }

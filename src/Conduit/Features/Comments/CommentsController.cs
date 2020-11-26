@@ -36,5 +36,24 @@ namespace Conduit.Features.Comments
         {
             await _mediator.Send(new Delete.Command(slug, id));
         }
+
+        [HttpDelete("/comments/{id}")]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
+        public async Task RemoveAt(int id)
+        {
+            await _mediator.Send(new RemoveAt.Command(id));
+        }
+
+        [HttpGet("/reportedComments")]
+        public async Task<CommentsEnvelope> GetAllReportedComments()
+        {
+            return await _mediator.Send(new AllReportedComments.Query());
+        }
+
+        [HttpPut("/reportComment/{id}/{flag}")]
+        public async Task<Unit> ReportComment(int id, bool flag)
+        {
+            return await _mediator.Send(new ReportComment.Query(id, flag));
+        }
     }
 }
