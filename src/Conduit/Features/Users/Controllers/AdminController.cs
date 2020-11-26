@@ -1,4 +1,5 @@
 ﻿using Conduit.Features.Articles;
+using Conduit.Features.Comments;
 using Conduit.Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -18,9 +19,30 @@ namespace Conduit.Features.Users
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public async Task<ArticlesEnvelope> GetAllArticles([FromQuery] string title, [FromQuery] string author, [FromQuery] string createdDate, [FromQuery] string updatedDate, [FromQuery] int? limit, [FromQuery] int? offset)
+        public async Task<ArticlesEnvelope> GetAllBannedArticles([FromQuery] string title, [FromQuery] string author, [FromQuery] string createdDate, [FromQuery] string updatedDate, [FromQuery] int? limit, [FromQuery] int? offset)
         {
-            return await _mediator.Send(new Articles.AllList.Query(author, title, createdDate, updatedDate, limit, offset));
+            return await _mediator.Send(new Articles.AllList.Query(author, title, createdDate, updatedDate, limit, offset, false));
+        }
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
+        public async Task<CommentsEnvelope> GetAllBannedComments([FromQuery] int articleId, [FromQuery] string author, [FromQuery] string createdDate, [FromQuery] string updatedDate, [FromQuery] int? limit, [FromQuery] int? offset)
+        {
+            return await _mediator.Send(new Comments.AllList.Query(author, articleId, createdDate, updatedDate, limit, offset, false)) ;
+        }
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
+        public async Task<ArticlesEnvelope> GetNewBannedArticles([FromQuery] string title, [FromQuery] string author, [FromQuery] string createdDate, [FromQuery] string updatedDate, [FromQuery] int? limit, [FromQuery] int? offset)
+        {
+            return await _mediator.Send(new Articles.AllList.Query(author, title, createdDate, updatedDate, limit, offset, true));
+        }
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
+        public async Task<CommentsEnvelope> GetNewBannedComments([FromQuery] int articleId, [FromQuery] string author, [FromQuery] string createdDate, [FromQuery] string updatedDate, [FromQuery] int? limit, [FromQuery] int? offset)
+        {
+            return await _mediator.Send(new Comments.AllList.Query(author, articleId, createdDate, updatedDate, limit, offset, true));
         }
 
         [HttpGet]

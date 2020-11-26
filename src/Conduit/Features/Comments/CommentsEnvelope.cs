@@ -9,7 +9,10 @@ namespace Conduit.Features.Comments
         {
             Comments = comments;
         }
-
-        public List<Comment> Comments { get; }
+        public CommentsEnvelope()
+        {
+        }
+        public List<Comment> Comments { get; set; }
+        public int CommentsCount { get; set; }
     }
 }

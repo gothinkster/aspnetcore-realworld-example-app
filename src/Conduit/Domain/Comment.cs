@@ -14,6 +14,9 @@ namespace Conduit.Domain
         [JsonIgnore]
         public int AuthorId { get; set; }
 
+        public bool IsBanned { get; set; } = false;
+        public bool AfterAdminReview { get; set; } = false;
+
         [JsonIgnore]
         public Article Article { get; set; }
         [JsonIgnore]
@@ -22,5 +25,7 @@ namespace Conduit.Domain
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
+
+
     }
 }

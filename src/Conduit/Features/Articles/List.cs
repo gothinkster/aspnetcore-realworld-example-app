@@ -42,7 +42,7 @@ namespace Conduit.Features.Articles
 
             public async Task<ArticlesEnvelope> Handle(Query message, CancellationToken cancellationToken)
             {
-                IQueryable<Article> queryable = _context.Articles.GetAllData();
+                IQueryable<Article> queryable = _context.Articles.GetAllData().Where(x=>x.IsBanned == true);
 
                 if (message.IsFeed && _currentUserAccessor.GetCurrentUsername() != null)
                 {

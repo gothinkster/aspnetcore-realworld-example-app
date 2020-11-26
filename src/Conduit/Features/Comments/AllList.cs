@@ -7,16 +7,16 @@ using Conduit.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Conduit.Features.Articles
+namespace Conduit.Features.Comments
 {
     public class AllList
     {
-        public class Query : IRequest<ArticlesEnvelope>
+        public class Query : IRequest<CommentsEnvelope>
         {
-            public Query( string author, string title, string createdAt, string updatedAt, int? limit, int? offset, bool afterAdminReview)
+            public Query( string author, int articleId, string createdAt, string updatedAt, int? limit, int? offset, bool afterAdminReview)
             {
                 Author = author;
-                Title = title;
+                ArticleId = articleId;
                 CreatedAt = createdAt;
                 UpdatedAt = updatedAt;
                 Limit = limit;
@@ -25,7 +25,7 @@ namespace Conduit.Features.Articles
             }
 
             public string Author { get; }
-            public string Title { get; }
+            public int? ArticleId { get; }
             public string CreatedAt { get;  }
             public string UpdatedAt { get;  }
             public int? Limit { get; }
@@ -33,7 +33,7 @@ namespace Conduit.Features.Articles
             public bool AfterAdminReview { get; }
         }
 
-        public class QueryHandler : IRequestHandler<Query, ArticlesEnvelope>
+        public class QueryHandler : IRequestHandler<Query, CommentsEnvelope>
         {
             private readonly ConduitContext _context;
             private readonly ICurrentUserAccessor _currentUserAccessor;
@@ -44,15 +44,15 @@ namespace Conduit.Features.Articles
                 _currentUserAccessor = currentUserAccessor;
             }
 
-            public async Task<ArticlesEnvelope> Handle(Query message, CancellationToken cancellationToken)
+            public async Task<CommentsEnvelope> Handle(Query message, CancellationToken cancellationToken)
             {
-                IQueryable<Article> queryable = _context.Articles.GetAllData();
+                IQueryable<Comment> queryable = _context.Comments.GetAllData().Where(x=>x.IsBanned == true);
 
                 if (message.AfterAdminReview)
                 {
                     queryable = queryable.Where(x => x.AfterAdminReview == message.AfterAdminReview);
                 }
-
+               
                 if (!string.IsNullOrWhiteSpace(message.Author))
                 {
                     var author = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Author, cancellationToken);
@@ -62,13 +62,13 @@ namespace Conduit.Features.Articles
                     }
                     else
                     {
-                        return new ArticlesEnvelope();
+                        return new CommentsEnvelope();
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(message.Title))
+                if (message.ArticleId != null)
                 {                  
-                    queryable = queryable.Where(x => x.Title == message.Title);                  
+                    queryable = queryable.Where(x => x.ArticleId == message.ArticleId);                  
                 }
 
                 if (message.CreatedAt != null)
@@ -81,17 +81,17 @@ namespace Conduit.Features.Articles
                     queryable = queryable.Where(x => x.UpdatedAt == DateTime.Parse(message.UpdatedAt));
                 }
 
-                var articles = await queryable
+                var comments = await queryable                    
                     .OrderByDescending(x => x.CreatedAt)
                     .Skip(message.Offset ?? 0)
                     .Take(message.Limit ?? 20)
                     .AsNoTracking()
                     .ToListAsync(cancellationToken);
 
-                return new ArticlesEnvelope()
+                return new CommentsEnvelope()
                 {
-                    Articles = articles,
-                    ArticlesCount = queryable.Count()
+                    Comments = comments,
+                    CommentsCount = queryable.Count()
                 };
             }
         }

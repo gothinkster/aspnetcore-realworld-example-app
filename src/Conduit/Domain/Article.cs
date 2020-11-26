@@ -23,6 +23,10 @@ namespace Conduit.Domain
 
         public List<Comment> Comments { get; set; }
 
+        public bool IsBanned { get; set; } = false;
+
+        public bool AfterAdminReview { get; set; } = false;
+
         [NotMapped]
         public bool Favorited => ArticleFavorites?.Any() ?? false;
 
