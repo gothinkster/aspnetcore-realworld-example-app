@@ -17,57 +17,57 @@ namespace Conduit.Features.Users
             _mediator = mediator;
         }
 
-        [HttpGet]
+        [HttpGet("getAllBannedArticles")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<ArticlesEnvelope> GetAllBannedArticles([FromQuery] string title, [FromQuery] string author, [FromQuery] string createdDate, [FromQuery] string updatedDate, [FromQuery] int? limit, [FromQuery] int? offset)
         {
             return await _mediator.Send(new Articles.AllList.Query(author, title, createdDate, updatedDate, limit, offset, false));
         }
 
-        [HttpGet]
+        [HttpGet("getAllBannedComments")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<CommentsEnvelope> GetAllBannedComments([FromQuery] int articleId, [FromQuery] string author, [FromQuery] string createdDate, [FromQuery] string updatedDate, [FromQuery] int? limit, [FromQuery] int? offset)
         {
             return await _mediator.Send(new Comments.AllList.Query(author, articleId, createdDate, updatedDate, limit, offset, false)) ;
         }
 
-        [HttpGet]
+        [HttpGet("getNewBannedArticles")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<ArticlesEnvelope> GetNewBannedArticles([FromQuery] string title, [FromQuery] string author, [FromQuery] string createdDate, [FromQuery] string updatedDate, [FromQuery] int? limit, [FromQuery] int? offset)
         {
             return await _mediator.Send(new Articles.AllList.Query(author, title, createdDate, updatedDate, limit, offset, true));
         }
 
-        [HttpGet]
+        [HttpGet("getNewBannedComments")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<CommentsEnvelope> GetNewBannedComments([FromQuery] int articleId, [FromQuery] string author, [FromQuery] string createdDate, [FromQuery] string updatedDate, [FromQuery] int? limit, [FromQuery] int? offset)
         {
             return await _mediator.Send(new Comments.AllList.Query(author, articleId, createdDate, updatedDate, limit, offset, true));
         }
 
-        [HttpGet]
+        [HttpGet("getAllUser")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<UsersEnvelope> GetAllUser([FromQuery] string login, [FromQuery] string email,[FromQuery] int? limit, [FromQuery] int? offset)
         {
             return await _mediator.Send(new Users.AllList.Query(login, email, limit, offset));
         }
 
-        [HttpGet]
+        [HttpGet("getAllBanUsers")]        
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<UsersEnvelope> GetAllBanUsers([FromQuery] int? limit, [FromQuery] int? offset)
         {
             return await _mediator.Send(new Users.AllList.Query(null, null, limit, offset, true));
         }
-
-        [HttpPut]
+     
+        [HttpPut("banUser")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<UserEnvelope> BanUser([FromBody] Edit.Command command)
         {
             command.User.Banned = true;
             return await _mediator.Send(command);
         }
-
-        [HttpPut]
+     
+        [HttpPut("unbanedUser")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
         public async Task<UserEnvelope> UnbanedUser([FromBody] Edit.Command command)
         {
