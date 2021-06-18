@@ -78,8 +78,12 @@ namespace Conduit.Features.Articles
                     article.UpdatedAt = DateTime.UtcNow;
                 }
 
+                // ensure context is tracking any tags that are about to be created so that it won't attempt to insert a duplicate
+                _context.Tags.AttachRange(articleTagsToCreate.Select(a => a.Tag).ToArray());
+
                 // add the new article tags
                 await _context.ArticleTags.AddRangeAsync(articleTagsToCreate, cancellationToken);
+
                 // delete the tags that do not exist anymore
                 _context.ArticleTags.RemoveRange(articleTagsToDelete);
 
