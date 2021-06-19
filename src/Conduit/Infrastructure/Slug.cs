@@ -11,7 +11,7 @@ namespace Conduit.Infrastructure
             {
                 return null;
             }
-            string str = phrase.ToLower();
+            string str = phrase.ToLowerInvariant();
             // invalid chars
             str = Regex.Replace(str, @"[^a-z0-9\s-]", "");
             // convert multiple spaces into one space

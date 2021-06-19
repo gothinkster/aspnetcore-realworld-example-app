@@ -50,18 +50,18 @@ namespace Conduit
 
             services.AddDbContext<ConduitContext>(options =>
             {
-                if (databaseProvider.ToLower().Trim().Equals("sqlite"))
+                if (databaseProvider.ToLowerInvariant().Trim().Equals("sqlite", StringComparison.Ordinal))
                 {
                     options.UseSqlite(connectionString);
                 }
-                else if (databaseProvider.ToLower().Trim().Equals("sqlserver"))
+                else if (databaseProvider.ToLowerInvariant().Trim().Equals("sqlserver", StringComparison.Ordinal))
                 {
                     // only works in windows container
                     options.UseSqlServer(connectionString);
                 }
                 else
                 {
-                    throw new Exception("Database provider unknown. Please check configuration");
+                    throw new InvalidOperationException("Database provider unknown. Please check configuration");
                 }
             });
 
@@ -78,7 +78,7 @@ namespace Conduit
                     Type = SecuritySchemeType.ApiKey,
                     BearerFormat = "JWT"
                 });
-                
+
                 x.SupportNonNullableReferenceTypes();
 
                 x.AddSecurityRequirement(new OpenApiSecurityRequirement()
