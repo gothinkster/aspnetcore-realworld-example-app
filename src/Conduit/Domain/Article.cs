@@ -29,14 +29,14 @@ namespace Conduit.Domain
         [NotMapped]
         public int FavoritesCount => ArticleFavorites?.Count ?? 0;
 
-        [NotMapped] 
+        [NotMapped]
         public List<string> TagList => ArticleTags.Where(x => x.TagId is not null).Select(x => x.TagId!).ToList();
 
         [JsonIgnore]
-        public List<ArticleTag> ArticleTags { get; set; }= new();
+        public List<ArticleTag> ArticleTags { get; set; } = new();
 
         [JsonIgnore]
-        public List<ArticleFavorite> ArticleFavorites { get; set; }= new();
+        public List<ArticleFavorite> ArticleFavorites { get; set; } = new();
 
         public DateTime CreatedAt { get; set; }
 

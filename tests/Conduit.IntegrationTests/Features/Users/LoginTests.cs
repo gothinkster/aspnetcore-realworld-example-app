@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Conduit.Domain;
 using Conduit.Features.Users;
@@ -23,9 +23,9 @@ namespace Conduit.IntegrationTests.Features.Users
             await InsertAsync(person);
 
             var command = new Login.Command(new Login.UserData()
-                {
-                    Email = "email",
-                    Password = "password"
+            {
+                Email = "email",
+                Password = "password"
             });
 
             var user = await SendAsync(command);

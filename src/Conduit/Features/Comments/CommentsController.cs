@@ -19,7 +19,7 @@ namespace Conduit.Features.Comments
 
         [HttpPost("{slug}/comments")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public Task<CommentEnvelope> Create(string slug, [FromBody]Create.Model model, CancellationToken cancellationToken)
+        public Task<CommentEnvelope> Create(string slug, [FromBody] Create.Model model, CancellationToken cancellationToken)
         {
             return _mediator.Send(new Create.Command(model, slug), cancellationToken);
         }

@@ -1,10 +1,10 @@
 using System;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace Conduit.Infrastructure.Errors
 {
@@ -55,7 +55,7 @@ namespace Conduit.Infrastructure.Errors
                 case Exception e:
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     logger.LogError(e, "Unhandled Exception");
-                     result = JsonSerializer.Serialize(new
+                    result = JsonSerializer.Serialize(new
                     {
                         errors = localizer[Constants.InternalServerError].Value
                     });

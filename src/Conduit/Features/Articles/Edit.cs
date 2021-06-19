@@ -65,7 +65,7 @@ namespace Conduit.Features.Articles
 
                 // list of currently saved article tags for the given article
                 var articleTagList = (message.Model.Article.TagList ?? Enumerable.Empty<string>());
-                
+
                 var articleTagsToCreate = GetArticleTagsToCreate(article, articleTagList);
                 var articleTagsToDelete = GetArticleTagsToDelete(article, articleTagList);
 

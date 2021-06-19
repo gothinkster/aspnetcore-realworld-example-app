@@ -1,10 +1,10 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
-using Xunit;
-using Microsoft.EntityFrameworkCore;
 using Conduit.Features.Articles;
 using Conduit.IntegrationTests.Features.Comments;
 using Conduit.IntegrationTests.Features.Users;
+using Microsoft.EntityFrameworkCore;
+using Xunit;
 
 namespace Conduit.IntegrationTests.Features.Articles
 {
@@ -14,11 +14,11 @@ namespace Conduit.IntegrationTests.Features.Articles
         public async Task Expect_Delete_Article()
         {
             var createCmd = new Create.Command(new Create.ArticleData()
-                {
-                    Title = "Test article dsergiu77",
-                    Description = "Description of the test article",
-                    Body = "Body of the test article",
-                
+            {
+                Title = "Test article dsergiu77",
+                Description = "Description of the test article",
+                Body = "Body of the test article",
+
             });
 
             var article = await ArticleHelpers.CreateArticle(this, createCmd);
@@ -44,7 +44,7 @@ namespace Conduit.IntegrationTests.Features.Articles
                 Title = "Test article dsergiu77",
                 Description = "Description of the test article",
                 Body = "Body of the test article",
-                TagList = new string[] {"tag1", "tag2"}
+                TagList = new string[] { "tag1", "tag2" }
             });
 
             var article = await ArticleHelpers.CreateArticle(this, createCmd);

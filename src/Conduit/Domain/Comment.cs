@@ -11,13 +11,13 @@ namespace Conduit.Domain
         public string? Body { get; set; }
 
         public Person? Author { get; set; }
-        
+
         [JsonIgnore]
         public int AuthorId { get; set; }
 
         [JsonIgnore]
         public Article? Article { get; set; }
-        
+
         [JsonIgnore]
         public int ArticleId { get; set; }
 

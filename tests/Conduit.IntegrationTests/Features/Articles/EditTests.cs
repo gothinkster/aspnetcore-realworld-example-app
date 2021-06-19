@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Conduit.Features.Articles;
 using Xunit;
@@ -15,7 +15,7 @@ namespace Conduit.IntegrationTests.Features.Articles
                 Title = "Test article dsergiu77",
                 Description = "Description of the test article",
                 Body = "Body of the test article",
-                TagList = new string[] {"tag1", "tag2"}
+                TagList = new string[] { "tag1", "tag2" }
             });
 
             var createdArticle = await ArticleHelpers.CreateArticle(this, createCommand);

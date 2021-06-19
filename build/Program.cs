@@ -1,16 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+using GlobExpressions;
 using static Bullseye.Targets;
 using static SimpleExec.Command;
-using GlobExpressions;
-using System.Threading.Tasks;
 
 public static class Program
 {
     private const string Clean = "clean";
     private const string Build = "build";
     private const string Test = "test";
+    private const string Format = "format";
     private const string Publish = "publish";
 
     static async Task Main(string[] args)
@@ -39,7 +40,14 @@ public static class Program
                 }
             });
 
-        Target(Build, () => Run("dotnet", "build . -c Release"));
+
+        Target(Format, () =>
+        {
+            Run("dotnet", "tool restore");
+            Run("dotnet", "format --check");
+        });
+
+        Target(Build, DependsOn(Format), () => Run("dotnet", "build . -c Release"));
 
         Target(Test, DependsOn(Build),
             () =>

@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using AutoMapper;
 using Conduit.Features.Profiles;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
@@ -11,9 +14,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Microsoft.OpenApi.Models;
 
 namespace Conduit

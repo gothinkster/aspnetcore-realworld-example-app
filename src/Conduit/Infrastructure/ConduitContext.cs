@@ -1,7 +1,7 @@
-﻿using Conduit.Domain;
+using System.Data;
+using Conduit.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Data;
 
 namespace Conduit.Infrastructure
 {

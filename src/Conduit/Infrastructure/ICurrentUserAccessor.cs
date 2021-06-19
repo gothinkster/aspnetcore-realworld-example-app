@@ -1,4 +1,4 @@
-﻿namespace Conduit.Infrastructure
+namespace Conduit.Infrastructure
 {
     public interface ICurrentUserAccessor
     {

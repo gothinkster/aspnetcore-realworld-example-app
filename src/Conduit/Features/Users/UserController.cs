@@ -28,7 +28,7 @@ namespace Conduit.Features.Users
         }
 
         [HttpPut]
-        public Task<UserEnvelope> UpdateUser([FromBody]Edit.Command command, CancellationToken cancellationToken)
+        public Task<UserEnvelope> UpdateUser([FromBody] Edit.Command command, CancellationToken cancellationToken)
         {
             return _mediator.Send(command, cancellationToken);
         }

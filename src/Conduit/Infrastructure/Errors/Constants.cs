@@ -1,4 +1,4 @@
-﻿namespace Conduit.Infrastructure.Errors
+namespace Conduit.Infrastructure.Errors
 {
     public static class Constants
     {

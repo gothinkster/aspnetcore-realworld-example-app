@@ -26,7 +26,7 @@ namespace Conduit.Domain
         [JsonIgnore]
         public List<FollowedPeople> Followers { get; set; } = new();
 
-        [JsonIgnore] 
+        [JsonIgnore]
         public byte[] Hash { get; set; } = Array.Empty<byte>();
 
         [JsonIgnore]

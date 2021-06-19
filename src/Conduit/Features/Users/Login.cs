@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -21,7 +21,7 @@ namespace Conduit.Features.Users
 
             public string? Password { get; set; }
         }
-        
+
         public record Command(UserData User) : IRequest<UserEnvelope>;
 
         public class CommandValidator : AbstractValidator<Command>
