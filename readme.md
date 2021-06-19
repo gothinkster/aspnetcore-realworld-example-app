@@ -25,6 +25,8 @@ This is using ASP.NET Core with:
 - Built-in Swagger via [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
 - [Bullseye](https://github.com/adamralph/bullseye) for building!
 - JWT authentication using [ASP.NET Core JWT Bearer Authentication](https://github.com/aspnet/Security/tree/master/src/Microsoft.AspNetCore.Authentication.JwtBearer).
+- Use [dotnet-format](https://github.com/dotnet/format) for style checking
+- `.editorconfig` to enforce some usage patterns
 
 This basic architecture is based on this reference architecture: [https://github.com/jbogard/ContosoUniversityCore](https://github.com/jbogard/ContosoUniversityCore)
 
