@@ -6,7 +6,7 @@ COPY . .
 RUN dotnet run -p build/build.csproj
 
 #runtime container
-FROM mcr.microsoft.com/dotnet/core/aspnet:5.0.7-alpine3.12
+FROM mcr.microsoft.com/dotnet/aspnet:5.0.7-alpine3.12
 RUN apk add --no-cache tzdata
 
 COPY --from=build /build/publish /app
