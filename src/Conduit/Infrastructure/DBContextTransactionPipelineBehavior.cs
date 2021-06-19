@@ -1,7 +1,7 @@
-﻿using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace Conduit.Infrastructure
 {
@@ -11,6 +11,7 @@ namespace Conduit.Infrastructure
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
     public class DBContextTransactionPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : notnull
     {
         private readonly ConduitContext _context;
 
@@ -21,7 +22,7 @@ namespace Conduit.Infrastructure
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            TResponse result = default(TResponse);
+            TResponse? result = default(TResponse);
 
             try
             {

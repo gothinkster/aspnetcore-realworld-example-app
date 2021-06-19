@@ -1,7 +1,7 @@
-﻿namespace Conduit.Infrastructure
+namespace Conduit.Infrastructure
 {
     public interface ICurrentUserAccessor
     {
-        string GetCurrentUsername();
+        string? GetCurrentUsername();
     }
 }

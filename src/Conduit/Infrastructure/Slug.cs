@@ -5,9 +5,13 @@ namespace Conduit.Infrastructure
     // https://stackoverflow.com/questions/2920744/url-slugify-algorithm-in-c
     public static class Slug
     {
-        public static string GenerateSlug(this string phrase)
+        public static string? GenerateSlug(this string? phrase)
         {
-            string str = phrase.ToLower();
+            if (phrase is null)
+            {
+                return null;
+            }
+            string str = phrase.ToLowerInvariant();
             // invalid chars
             str = Regex.Replace(str, @"[^a-z0-9\s-]", "");
             // convert multiple spaces into one space

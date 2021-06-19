@@ -1,4 +1,4 @@
-﻿using Conduit;
+using Conduit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 

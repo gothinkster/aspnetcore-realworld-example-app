@@ -30,7 +30,7 @@ namespace Conduit.Features.Articles
                 if (message.IsFeed && _currentUserAccessor.GetCurrentUsername() != null)
                 {
                     var currentUser = await _context.Persons.Include(x => x.Following).FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
-                    queryable = queryable.Where(x => currentUser.Following.Select(y => y.TargetId).Contains(x.Author.PersonId));
+                    queryable = queryable.Where(x => currentUser.Following.Select(y => y.TargetId).Contains(x.Author!.PersonId));
                 }
 
                 if (!string.IsNullOrWhiteSpace(message.Tag))

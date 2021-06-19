@@ -1,8 +1,8 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Conduit.IntegrationTests.Features.Users;
 using Conduit.Features.Articles;
+using Conduit.IntegrationTests.Features.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.IntegrationTests.Features.Articles
 {

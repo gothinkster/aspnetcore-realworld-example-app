@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Conduit.Features.Users;
 using Conduit.Infrastructure.Security;
@@ -12,15 +12,12 @@ namespace Conduit.IntegrationTests.Features.Users
         [Fact]
         public async Task Expect_Create_User()
         {
-            var command = new Create.Command()
+            var command = new Create.Command(new Create.UserData()
             {
-                User = new Create.UserData()
-                {
-                    Email = "email",
-                    Password = "password",
-                    Username = "username"
-                }
-            };
+                Email = "email",
+                Password = "password",
+                Username = "username"
+            });
 
             await SendAsync(command);
 

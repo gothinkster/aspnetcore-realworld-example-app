@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -15,13 +15,13 @@ namespace Conduit.Features.Articles
     {
         public class ArticleData
         {
-            public string Title { get; set; }
+            public string? Title { get; set; }
 
-            public string Description { get; set; }
+            public string? Description { get; set; }
 
-            public string Body { get; set; }
+            public string? Body { get; set; }
 
-            public string[] TagList { get; set; }
+            public string[]? TagList { get; set; }
         }
 
         public class ArticleDataValidator : AbstractValidator<ArticleData>
@@ -34,10 +34,7 @@ namespace Conduit.Features.Articles
             }
         }
 
-        public class Command : IRequest<ArticleEnvelope>
-        {
-            public ArticleData Article { get; set; }
-        }
+        public record Command(ArticleData Article) : IRequest<ArticleEnvelope>;
 
         public class CommandValidator : AbstractValidator<Command>
         {

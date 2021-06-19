@@ -18,10 +18,7 @@ namespace Conduit.Features.Profiles
         [HttpGet("{username}")]
         public Task<ProfileEnvelope> Get(string username, CancellationToken cancellationToken)
         {
-            return _mediator.Send(new Details.Query()
-            {
-                Username = username
-            }, cancellationToken);
+            return _mediator.Send(new Details.Query(username), cancellationToken);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,30 +17,20 @@ namespace Conduit.Features.Users
     {
         public class UserData
         {
-            public string Email { get; set; }
+            public string? Email { get; set; }
 
-            public string Password { get; set; }
+            public string? Password { get; set; }
         }
 
-        public class UserDataValidator : AbstractValidator<UserData>
-        {
-            public UserDataValidator()
-            {
-                RuleFor(x => x.Email).NotNull().NotEmpty();
-                RuleFor(x => x.Password).NotNull().NotEmpty();
-            }
-        }
-
-        public class Command : IRequest<UserEnvelope>
-        {
-            public UserData User { get; set; }
-        }
+        public record Command(UserData User) : IRequest<UserEnvelope>;
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(x => x.User).NotNull().SetValidator(new UserDataValidator());
+                RuleFor(x => x.User).NotNull();
+                RuleFor(x => x.User.Email).NotNull().NotEmpty();
+                RuleFor(x => x.User.Password).NotNull().NotEmpty();
             }
         }
 
@@ -66,13 +57,13 @@ namespace Conduit.Features.Users
                     throw new RestException(HttpStatusCode.Unauthorized, new { Error = "Invalid email / password." });
                 }
 
-                if (!person.Hash.SequenceEqual(await _passwordHasher.Hash(message.User.Password, person.Salt)))
+                if (!person.Hash.SequenceEqual(await _passwordHasher.Hash(message.User.Password ?? throw new InvalidOperationException(), person.Salt)))
                 {
                     throw new RestException(HttpStatusCode.Unauthorized, new { Error = "Invalid email / password." });
                 }
 
                 var user = _mapper.Map<Domain.Person, User>(person);
-                user.Token = _jwtTokenGenerator.CreateToken(person.Username);
+                user.Token = _jwtTokenGenerator.CreateToken(person.Username ?? throw new InvalidOperationException());
                 return new UserEnvelope(user);
             }
         }

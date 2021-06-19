@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,10 +14,7 @@ namespace Conduit.Features.Users
 {
     public class Details
     {
-        public class Query : IRequest<UserEnvelope>
-        {
-            public string Username { get; set; }
-        }
+        public record Query(string Username) : IRequest<UserEnvelope>;
 
         public class QueryValidator : AbstractValidator<Query>
         {
@@ -51,7 +49,7 @@ namespace Conduit.Features.Users
                 }
 
                 var user = _mapper.Map<Domain.Person, User>(person);
-                user.Token = _jwtTokenGenerator.CreateToken(person.Username);
+                user.Token = _jwtTokenGenerator.CreateToken(person.Username ?? throw new InvalidOperationException());
                 return new UserEnvelope(user);
             }
         }

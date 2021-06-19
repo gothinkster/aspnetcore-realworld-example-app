@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using AutoMapper;
 using Conduit.Features.Profiles;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
@@ -11,9 +14,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Microsoft.OpenApi.Models;
 
 namespace Conduit
@@ -50,18 +50,18 @@ namespace Conduit
 
             services.AddDbContext<ConduitContext>(options =>
             {
-                if (databaseProvider.ToLower().Trim().Equals("sqlite"))
+                if (databaseProvider.ToLowerInvariant().Trim().Equals("sqlite", StringComparison.Ordinal))
                 {
                     options.UseSqlite(connectionString);
                 }
-                else if (databaseProvider.ToLower().Trim().Equals("sqlserver"))
+                else if (databaseProvider.ToLowerInvariant().Trim().Equals("sqlserver", StringComparison.Ordinal))
                 {
                     // only works in windows container
                     options.UseSqlServer(connectionString);
                 }
                 else
                 {
-                    throw new Exception("Database provider unknown. Please check configuration");
+                    throw new InvalidOperationException("Database provider unknown. Please check configuration");
                 }
             });
 
@@ -79,6 +79,8 @@ namespace Conduit
                     BearerFormat = "JWT"
                 });
 
+                x.SupportNonNullableReferenceTypes();
+
                 x.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
                     {   new OpenApiSecurityScheme
@@ -92,7 +94,7 @@ namespace Conduit
                 x.DocInclusionPredicate((version, apiDescription) => true);
                 x.TagActionsBy(y => new List<string>()
                 {
-                    y.GroupName
+                    y.GroupName ?? throw new InvalidOperationException()
                 });
             });
 

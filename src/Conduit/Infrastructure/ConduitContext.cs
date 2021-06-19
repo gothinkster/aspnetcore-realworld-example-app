@@ -1,26 +1,26 @@
-﻿using Conduit.Domain;
+using System.Data;
+using Conduit.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Data;
 
 namespace Conduit.Infrastructure
 {
     public class ConduitContext : DbContext
     {
-        private IDbContextTransaction _currentTransaction;
+        private IDbContextTransaction? _currentTransaction;
 
         public ConduitContext(DbContextOptions options)
             : base(options)
         {
         }
 
-        public DbSet<Article> Articles { get; set; }
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<Person> Persons { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<ArticleTag> ArticleTags { get; set; }
-        public DbSet<ArticleFavorite> ArticleFavorites { get; set; }
-        public DbSet<FollowedPeople> FollowedPeople { get; set; }
+        public DbSet<Article> Articles { get; set; } = null!;
+        public DbSet<Comment> Comments { get; set; } = null!;
+        public DbSet<Person> Persons { get; set; } = null!;
+        public DbSet<Tag> Tags { get; set; } = null!;
+        public DbSet<ArticleTag> ArticleTags { get; set; } = null!;
+        public DbSet<ArticleFavorite> ArticleFavorites { get; set; } = null!;
+        public DbSet<FollowedPeople> FollowedPeople { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,11 +29,11 @@ namespace Conduit.Infrastructure
                 b.HasKey(t => new { t.ArticleId, t.TagId });
 
                 b.HasOne(pt => pt.Article)
-                .WithMany(p => p.ArticleTags)
+                .WithMany(p => p!.ArticleTags)
                 .HasForeignKey(pt => pt.ArticleId);
 
                 b.HasOne(pt => pt.Tag)
-                .WithMany(t => t.ArticleTags)
+                .WithMany(t => t!.ArticleTags)
                 .HasForeignKey(pt => pt.TagId);
             });
 
@@ -42,11 +42,11 @@ namespace Conduit.Infrastructure
                 b.HasKey(t => new { t.ArticleId, t.PersonId });
 
                 b.HasOne(pt => pt.Article)
-                    .WithMany(p => p.ArticleFavorites)
+                    .WithMany(p => p!.ArticleFavorites)
                     .HasForeignKey(pt => pt.ArticleId);
 
                 b.HasOne(pt => pt.Person)
-                    .WithMany(t => t.ArticleFavorites)
+                    .WithMany(t => t!.ArticleFavorites)
                     .HasForeignKey(pt => pt.PersonId);
             });
 
@@ -61,7 +61,7 @@ namespace Conduit.Infrastructure
                 // Message = Introducing FOREIGN KEY constraint 'FK_FollowedPeople_Persons_TargetId' on table 'FollowedPeople' may cause cycles or multiple cascade paths.Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
                 // Could not create constraint or index. See previous errors.
                 b.HasOne(pt => pt.Observer)
-                    .WithMany(p => p.Followers)
+                    .WithMany(p => p!.Followers)
                     .HasForeignKey(pt => pt.ObserverId)
                     .OnDelete(DeleteBehavior.Restrict);
 
@@ -72,7 +72,7 @@ namespace Conduit.Infrastructure
                 // Message = Introducing FOREIGN KEY constraint 'FK_FollowingPeople_Persons_TargetId' on table 'FollowedPeople' may cause cycles or multiple cascade paths.Specify ON DELETE NO ACTION or ON UPDATE NO ACTION, or modify other FOREIGN KEY constraints.
                 // Could not create constraint or index. See previous errors.
                 b.HasOne(pt => pt.Target)
-                    .WithMany(t => t.Following)
+                    .WithMany(t => t!.Following)
                     .HasForeignKey(pt => pt.TargetId)
                     .OnDelete(DeleteBehavior.Restrict);
             });

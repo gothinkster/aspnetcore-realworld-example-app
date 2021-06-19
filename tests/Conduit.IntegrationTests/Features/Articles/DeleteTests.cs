@@ -1,10 +1,10 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
-using Xunit;
-using Microsoft.EntityFrameworkCore;
 using Conduit.Features.Articles;
 using Conduit.IntegrationTests.Features.Comments;
 using Conduit.IntegrationTests.Features.Users;
+using Microsoft.EntityFrameworkCore;
+using Xunit;
 
 namespace Conduit.IntegrationTests.Features.Articles
 {
@@ -13,15 +13,13 @@ namespace Conduit.IntegrationTests.Features.Articles
         [Fact]
         public async Task Expect_Delete_Article()
         {
-            var createCmd = new Create.Command()
+            var createCmd = new Create.Command(new Create.ArticleData()
             {
-                Article = new Create.ArticleData()
-                {
-                    Title = "Test article dsergiu77",
-                    Description = "Description of the test article",
-                    Body = "Body of the test article",
-                }
-            };
+                Title = "Test article dsergiu77",
+                Description = "Description of the test article",
+                Body = "Body of the test article",
+
+            });
 
             var article = await ArticleHelpers.CreateArticle(this, createCmd);
             var slug = article.Slug;
@@ -41,16 +39,13 @@ namespace Conduit.IntegrationTests.Features.Articles
         [Fact]
         public async Task Expect_Delete_Article_With_Tags()
         {
-            var createCmd = new Create.Command()
+            var createCmd = new Create.Command(new Create.ArticleData()
             {
-                Article = new Create.ArticleData()
-                {
-                    Title = "Test article dsergiu77",
-                    Description = "Description of the test article",
-                    Body = "Body of the test article",
-                    TagList = new string[] { "tag1", "tag2" }
-                }
-            };
+                Title = "Test article dsergiu77",
+                Description = "Description of the test article",
+                Body = "Body of the test article",
+                TagList = new string[] { "tag1", "tag2" }
+            });
 
             var article = await ArticleHelpers.CreateArticle(this, createCmd);
             var dbArticleWithTags = await ExecuteDbContextAsync(
@@ -72,15 +67,12 @@ namespace Conduit.IntegrationTests.Features.Articles
         [Fact]
         public async Task Expect_Delete_Article_With_Comments()
         {
-            var createArticleCmd = new Create.Command()
+            var createArticleCmd = new Create.Command(new Create.ArticleData()
             {
-                Article = new Create.ArticleData()
-                {
-                    Title = "Test article dsergiu77",
-                    Description = "Description of the test article",
-                    Body = "Body of the test article",
-                }
-            };
+                Title = "Test article dsergiu77",
+                Description = "Description of the test article",
+                Body = "Body of the test article",
+            });
 
             var article = await ArticleHelpers.CreateArticle(this, createArticleCmd);
             var dbArticle = await ExecuteDbContextAsync(
@@ -92,14 +84,9 @@ namespace Conduit.IntegrationTests.Features.Articles
             var slug = dbArticle.Slug;
 
             // create article comment
-            var createCommentCmd = new Conduit.Features.Comments.Create.Command()
-            {
-                Comment = new Conduit.Features.Comments.Create.CommentData()
-                {
-                    Body = "article comment"
-                },
-                Slug = slug
-            };
+            var createCommentCmd =
+                new Conduit.Features.Comments.Create.Command(
+                    new(new Conduit.Features.Comments.Create.CommentData("article comment")), slug);
 
             var comment = await CommentHelpers.CreateComment(this, createCommentCmd, UserHelpers.DefaultUserName);
 

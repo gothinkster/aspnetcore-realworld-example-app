@@ -13,31 +13,14 @@ namespace Conduit.Features.Comments
 {
     public class Create
     {
-        public class CommentData
-        {
-            public string Body { get; set; }
-        }
-
-        public class CommentDataValidator : AbstractValidator<CommentData>
-        {
-            public CommentDataValidator()
-            {
-                RuleFor(x => x.Body).NotNull().NotEmpty();
-            }
-        }
-
-        public class Command : IRequest<CommentEnvelope>
-        {
-            public CommentData Comment { get; set; }
-
-            public string Slug { get; set; }
-        }
-
+        public record CommentData(string? Body);
+        public record Command(Model Model, string Slug) : IRequest<CommentEnvelope>;
+        public record Model(CommentData Comment) : IRequest<CommentEnvelope>;
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Comment).NotNull().SetValidator(new CommentDataValidator());
+                RuleFor(x => x.Model.Comment.Body).NotEmpty();
             }
         }
 
@@ -68,7 +51,7 @@ namespace Conduit.Features.Comments
                 var comment = new Comment()
                 {
                     Author = author,
-                    Body = message.Comment.Body,
+                    Body = message.Model.Comment.Body ?? string.Empty,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };

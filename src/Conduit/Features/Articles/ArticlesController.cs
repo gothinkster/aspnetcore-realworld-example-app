@@ -40,17 +40,16 @@ namespace Conduit.Features.Articles
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public Task<ArticleEnvelope> Create([FromBody]Create.Command command, CancellationToken cancellationToken)
+        public Task<ArticleEnvelope> Create([FromBody] Create.Command command, CancellationToken cancellationToken)
         {
             return _mediator.Send(command, cancellationToken);
         }
 
         [HttpPut("{slug}")]
         [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-        public Task<ArticleEnvelope> Edit(string slug, [FromBody]Edit.Command command, CancellationToken cancellationToken)
+        public Task<ArticleEnvelope> Edit(string slug, [FromBody] Edit.Model model, CancellationToken cancellationToken)
         {
-            command.Slug = slug;
-            return _mediator.Send(command, cancellationToken);
+            return _mediator.Send(new Edit.Command(model, slug), cancellationToken);
         }
 
         [HttpDelete("{slug}")]

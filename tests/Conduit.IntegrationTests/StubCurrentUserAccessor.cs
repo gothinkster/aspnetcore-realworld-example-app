@@ -1,4 +1,4 @@
-﻿using Conduit.Infrastructure;
+using Conduit.Infrastructure;
 
 namespace Conduit.IntegrationTests
 {

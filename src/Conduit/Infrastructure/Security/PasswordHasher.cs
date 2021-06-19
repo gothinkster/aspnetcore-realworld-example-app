@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,7 +8,7 @@ namespace Conduit.Infrastructure.Security
 {
     public class PasswordHasher : IPasswordHasher
     {
-        private readonly HMACSHA512 x = new HMACSHA512(Encoding.UTF8.GetBytes("realworld"));
+        private readonly HMACSHA512 x = new(Encoding.UTF8.GetBytes("realworld"));
 
         public Task<byte[]> Hash(string password, byte[] salt)
         {
@@ -20,5 +20,7 @@ namespace Conduit.Infrastructure.Security
 
             return x.ComputeHashAsync(new MemoryStream(allBytes));
         }
+
+        public void Dispose() => x.Dispose();
     }
 }
