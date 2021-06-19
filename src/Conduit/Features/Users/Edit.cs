@@ -15,21 +15,18 @@ namespace Conduit.Features.Users
     {
         public class UserData
         {
-            public string Username { get; set; }
+            public string? Username { get; set; }
 
-            public string Email { get; set; }
+            public string? Email { get; set; }
 
-            public string Password { get; set; }
+            public string? Password { get; set; }
 
-            public string Bio { get; set; }
+            public string? Bio { get; set; }
 
-            public string Image { get; set; }
+            public string? Image { get; set; }
         }
 
-        public class Command : IRequest<UserEnvelope>
-        {
-            public UserData User { get; set; }
-        }
+        public record Command(UserData User) : IRequest<UserEnvelope>;
 
         public class CommandValidator : AbstractValidator<Command>
         {

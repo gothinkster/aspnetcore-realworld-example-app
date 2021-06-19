@@ -15,7 +15,7 @@ namespace Conduit.Infrastructure.Security
         ///   JWT.  The processing of this claim is generally application specific.
         ///   The "iss" value is a case-sensitive string containing a StringOrURI
         ///   value.  Use of this claim is OPTIONAL.</remarks>
-        public string Issuer { get; set; }
+        public string? Issuer { get; set; }
 
         /// <summary>
         /// "sub" (Subject) Claim
@@ -27,7 +27,7 @@ namespace Conduit.Infrastructure.Security
         ///   The processing of this claim is generally application specific.  The
         ///   "sub" value is a case-sensitive string containing a StringOrURI
         ///   value.  Use of this claim is OPTIONAL.</remarks>
-        public string Subject { get; set; }
+        public string? Subject { get; set; }
 
         /// <summary>
         /// "aud" (Audience) Claim
@@ -43,7 +43,7 @@ namespace Conduit.Infrastructure.Security
         ///   single case-sensitive string containing a StringOrURI value.  The
         ///   interpretation of audience values is generally application specific.
         ///   Use of this claim is OPTIONAL.</remarks>
-        public string Audience { get; set; }
+        public string? Audience { get; set; }
 
         /// <summary>
         /// "nbf" (Not Before) Claim (default is UTC NOW)
@@ -99,6 +99,6 @@ namespace Conduit.Infrastructure.Security
         /// <summary>
         /// The signing key to use when generating tokens.
         /// </summary>
-        public SigningCredentials SigningCredentials { get; set; }
+        public SigningCredentials? SigningCredentials { get; set; }
     }
 }

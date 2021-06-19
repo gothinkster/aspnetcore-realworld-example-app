@@ -11,17 +11,17 @@ namespace Conduit.Domain
         [JsonIgnore]
         public int ArticleId { get; set; }
 
-        public string Slug { get; set; }
+        public string? Slug { get; set; }
 
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public string Body { get; set; }
+        public string? Body { get; set; }
 
-        public Person Author { get; set; }
+        public Person? Author { get; set; }
 
-        public List<Comment> Comments { get; set; }
+        public List<Comment> Comments { get; set; } = new();
 
         [NotMapped]
         public bool Favorited => ArticleFavorites?.Any() ?? false;
@@ -29,14 +29,14 @@ namespace Conduit.Domain
         [NotMapped]
         public int FavoritesCount => ArticleFavorites?.Count ?? 0;
 
-        [NotMapped]
-        public List<string> TagList => (ArticleTags?.Select(x => x.TagId) ?? Enumerable.Empty<string>()).ToList();
+        [NotMapped] 
+        public List<string> TagList => ArticleTags.Where(x => x.TagId is not null).Select(x => x.TagId!).ToList();
 
         [JsonIgnore]
-        public List<ArticleTag> ArticleTags { get; set; }
+        public List<ArticleTag> ArticleTags { get; set; }= new();
 
         [JsonIgnore]
-        public List<ArticleFavorite> ArticleFavorites { get; set; }
+        public List<ArticleFavorite> ArticleFavorites { get; set; }= new();
 
         public DateTime CreatedAt { get; set; }
 

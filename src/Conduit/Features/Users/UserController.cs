@@ -24,10 +24,7 @@ namespace Conduit.Features.Users
         [HttpGet]
         public Task<UserEnvelope> GetCurrent(CancellationToken cancellationToken)
         {
-            return _mediator.Send(new Details.Query()
-            {
-                Username = _currentUserAccessor.GetCurrentUsername()
-            }, cancellationToken);
+            return _mediator.Send(new Details.Query(_currentUserAccessor.GetCurrentUsername() ?? "<unknown>"), cancellationToken);
         }
 
         [HttpPut]

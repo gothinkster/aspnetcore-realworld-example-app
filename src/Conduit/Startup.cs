@@ -78,6 +78,8 @@ namespace Conduit
                     Type = SecuritySchemeType.ApiKey,
                     BearerFormat = "JWT"
                 });
+                
+                x.SupportNonNullableReferenceTypes();
 
                 x.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
@@ -92,7 +94,7 @@ namespace Conduit
                 x.DocInclusionPredicate((version, apiDescription) => true);
                 x.TagActionsBy(y => new List<string>()
                 {
-                    y.GroupName
+                    y.GroupName ?? throw new InvalidOperationException()
                 });
             });
 

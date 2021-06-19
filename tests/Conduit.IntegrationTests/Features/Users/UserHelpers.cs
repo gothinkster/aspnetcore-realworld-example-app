@@ -14,15 +14,12 @@ namespace Conduit.IntegrationTests.Features.Users
         /// <returns></returns>
         public static async Task<User> CreateDefaultUser(SliceFixture fixture)
         {
-            var command = new Create.Command()
-            {
-                User = new Create.UserData()
+            var command = new Create.Command(new Create.UserData()
                 {
                     Email = "email",
                     Password = "password",
                     Username = DefaultUserName
-                }
-            };
+            });
 
             var commandResult = await fixture.SendAsync(command);
             return commandResult.User;

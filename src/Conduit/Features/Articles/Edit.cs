@@ -17,26 +17,23 @@ namespace Conduit.Features.Articles
     {
         public class ArticleData
         {
-            public string Title { get; set; }
+            public string? Title { get; set; }
 
-            public string Description { get; set; }
+            public string? Description { get; set; }
 
-            public string Body { get; set; }
+            public string? Body { get; set; }
 
-            public string[] TagList { get; set; }
+            public string[]? TagList { get; set; }
         }
 
-        public class Command : IRequest<ArticleEnvelope>
-        {
-            public ArticleData Article { get; set; }
-            public string Slug { get; set; }
-        }
+        public record Command(Model Model, string Slug) : IRequest<ArticleEnvelope>;
+        public record Model(ArticleData Article);
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Article).NotNull();
+                RuleFor(x => x.Model.Article).NotNull();
             }
         }
 
@@ -61,13 +58,13 @@ namespace Conduit.Features.Articles
                     throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
                 }
 
-                article.Description = message.Article.Description ?? article.Description;
-                article.Body = message.Article.Body ?? article.Body;
-                article.Title = message.Article.Title ?? article.Title;
+                article.Description = message.Model.Article.Description ?? article.Description;
+                article.Body = message.Model.Article.Body ?? article.Body;
+                article.Title = message.Model.Article.Title ?? article.Title;
                 article.Slug = article.Title.GenerateSlug();
 
                 // list of currently saved article tags for the given article
-                var articleTagList = (message.Article.TagList ?? Enumerable.Empty<string>());
+                var articleTagList = (message.Model.Article.TagList ?? Enumerable.Empty<string>());
                 
                 var articleTagsToCreate = GetArticleTagsToCreate(article, articleTagList);
                 var articleTagsToDelete = GetArticleTagsToDelete(article, articleTagList);
@@ -79,7 +76,7 @@ namespace Conduit.Features.Articles
                 }
 
                 // ensure context is tracking any tags that are about to be created so that it won't attempt to insert a duplicate
-                _context.Tags.AttachRange(articleTagsToCreate.Select(a => a.Tag).ToArray());
+                _context.Tags.AttachRange(articleTagsToCreate.Where(x => x.Tag is not null).Select(a => a.Tag!).ToArray());
 
                 // add the new article tags
                 await _context.ArticleTags.AddRangeAsync(articleTagsToCreate, cancellationToken);
@@ -102,7 +99,7 @@ namespace Conduit.Features.Articles
                 var articleTagsToCreate = new List<ArticleTag>();
                 foreach (var tag in articleTagList)
                 {
-                    var at = article.ArticleTags.FirstOrDefault(t => t.TagId == tag);
+                    var at = article.ArticleTags?.FirstOrDefault(t => t.TagId == tag);
                     if (at == null)
                     {
                         at = new ArticleTag()

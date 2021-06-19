@@ -42,7 +42,7 @@ namespace Conduit.Infrastructure.Errors
             ILogger<ErrorHandlingMiddleware> logger,
             IStringLocalizer<ErrorHandlingMiddleware> localizer)
         {
-            string result = null;
+            string? result = null;
             switch (exception)
             {
                 case RestException re:

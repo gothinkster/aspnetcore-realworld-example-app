@@ -7,16 +7,13 @@ namespace Conduit.Features.Profiles
 {
     public class Details
     {
-        public class Query : IRequest<ProfileEnvelope>
-        {
-            public string Username { get; set; }
-        }
+        public record Query(string Username) : IRequest<ProfileEnvelope>;
 
         public class QueryValidator : AbstractValidator<Query>
         {
             public QueryValidator()
             {
-                RuleFor(x => x.Username).NotNull().NotEmpty();
+                RuleFor(x => x.Username).NotEmpty();
             }
         }
 

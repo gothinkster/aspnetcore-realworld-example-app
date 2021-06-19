@@ -12,15 +12,12 @@ namespace Conduit.IntegrationTests.Features.Users
         [Fact]
         public async Task Expect_Create_User()
         {
-            var command = new Create.Command()
-            {
-                User = new Create.UserData()
+            var command = new Create.Command(new Create.UserData()
                 {
                     Email = "email",
                     Password = "password",
                     Username = "username"
-                }
-            };
+            });
 
             await SendAsync(command);
 

@@ -2,6 +2,6 @@
 {
     public interface ICurrentUserAccessor
     {
-        string GetCurrentUsername();
+        string? GetCurrentUsername();
     }
 }

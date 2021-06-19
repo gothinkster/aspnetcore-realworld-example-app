@@ -8,6 +8,7 @@ using MediatR;
 namespace Conduit.Infrastructure
 {
     public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : notnull
     {
         private readonly List<IValidator<TRequest>> _validators;
 
