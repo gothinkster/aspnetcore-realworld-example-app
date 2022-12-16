@@ -14,6 +14,10 @@ namespace Conduit.Infrastructure.Errors
         private readonly ILogger<ErrorHandlingMiddleware> _logger;
         private readonly IStringLocalizer<ErrorHandlingMiddleware> _localizer;
 
+        private static Action<ILogger, string, Exception> _loggerMessage =
+            LoggerMessage.Define<string>(LogLevel.Error, eventId:
+                new EventId(id: 0, name: "ERROR"), formatString: "{Message}");
+
         public ErrorHandlingMiddleware(
             RequestDelegate next,
             IStringLocalizer<ErrorHandlingMiddleware> localizer,
@@ -54,7 +58,7 @@ namespace Conduit.Infrastructure.Errors
                     break;
                 case Exception e:
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    logger.LogError(e, "Unhandled Exception");
+                    _loggerMessage(logger, "Unhandled Exception", e);
                     result = JsonSerializer.Serialize(new
                     {
                         errors = localizer[Constants.InternalServerError].Value
