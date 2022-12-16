@@ -53,7 +53,7 @@ export function ArticlePage() {
   return article.match({
     none: () => <div>Loading article...</div>,
     some: (article) => (
-      <div className='article-page'>
+      <div className='article-page' key={article.createdAt + article.title}>
         <ArticlePageBanner {...{ article, metaSection, user }} />
 
         <div className='container page'>

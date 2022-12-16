@@ -87,7 +87,7 @@ function ArticleList({ articles }: { articles: ArticleViewerState['articles'] })
         )}
         {articles.map(({ article, isSubmitting }, index) => (
           <ArticlePreview
-            key={article.slug}
+            key={article.slug + article.createdAt}
             article={article}
             isSubmitting={isSubmitting}
             onFavoriteToggle={isSubmitting ? undefined : onFavoriteToggle(index, article)}
