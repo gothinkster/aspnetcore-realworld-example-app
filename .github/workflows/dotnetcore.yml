@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-dotnet@v1
+    - uses: actions/checkout@v3
+    - uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 5.0.400
-    - run: dotnet run -p backend/build/build.csproj
+        dotnet-version: 6.0.100
+    - run: cd backend && dotnet run --project build/build.csproj
