@@ -193,7 +193,7 @@ it('Should get user', async () => {
 });
 
 it('Should get update settings errors', async () => {
-  mockedAxios.put.mockRejectedValueOnce({ data: { errors: { x: ['y', 'z'] } } });
+  mockedAxios.put.mockRejectedValueOnce({response: { data: { errors: { x: ['y', 'z'] } } } });
 
   const result = await updateSettings({ email: '', password: '', bio: '', image: null, username: '' });
   result.match({

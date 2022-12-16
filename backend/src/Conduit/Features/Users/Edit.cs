@@ -42,14 +42,16 @@ namespace Conduit.Features.Users
             private readonly IPasswordHasher _passwordHasher;
             private readonly ICurrentUserAccessor _currentUserAccessor;
             private readonly IMapper _mapper;
+            private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
             public Handler(ConduitContext context, IPasswordHasher passwordHasher,
-                ICurrentUserAccessor currentUserAccessor, IMapper mapper)
+                ICurrentUserAccessor currentUserAccessor, IMapper mapper, IJwtTokenGenerator jwtTokenGenerator)
             {
                 _context = context;
                 _passwordHasher = passwordHasher;
                 _currentUserAccessor = currentUserAccessor;
                 _mapper = mapper;
+                _jwtTokenGenerator = jwtTokenGenerator;
             }
 
             public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
@@ -71,7 +73,9 @@ namespace Conduit.Features.Users
 
                 await _context.SaveChangesAsync(cancellationToken);
 
-                return new UserEnvelope(_mapper.Map<Domain.Person, User>(person));
+                var user = _mapper.Map<Domain.Person, User>(person);
+                user.Token = _jwtTokenGenerator.CreateToken(person.Username ?? throw new InvalidOperationException());
+                return new UserEnvelope(user);
             }
         }
     }
