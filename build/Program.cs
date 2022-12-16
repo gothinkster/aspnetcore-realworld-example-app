@@ -8,7 +8,7 @@ using static SimpleExec.Command;
 const string Clean = "clean";
 const string Build = "build";
 const string Test = "test";
-const string Format = "format";
+const string Restore = "restore";
 const string Publish = "publish";
 
 Target(Clean,
@@ -36,13 +36,12 @@ Target(Clean,
     });
 
 
-Target(Format, () =>
+Target(Restore, () =>
 {
-    Run("dotnet", "tool restore");
-    Run("dotnet", "format --check");
+    Run("dotnet", "restore");
 });
 
-Target(Build, DependsOn(Format), () => Run("dotnet", "build . -c Release"));
+Target(Build, DependsOn(Restore), () => Run("dotnet", "build . -c Release"));
 
 Target(Test, DependsOn(Build),
     () =>
@@ -63,7 +62,7 @@ Target(Publish, DependsOn(Test),
     project =>
     {
         Run("dotnet",
-            $"publish {project} -c Release -f net5.0 -o ./publish --no-restore --no-build --verbosity=normal");
+            $"publish {project} -c Release -f net6.0 -o ./publish --no-restore --no-build --verbosity=normal");
     });
 
 Target("default", DependsOn(Publish), () => Console.WriteLine("Done!"));
