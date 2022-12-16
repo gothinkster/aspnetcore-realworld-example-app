@@ -18,13 +18,13 @@ namespace Conduit.Features.Articles
         }
 
         [HttpGet]
-        public Task<ArticlesEnvelope> Get([FromQuery] string tag, [FromQuery] string author, [FromQuery] string favorited, [FromQuery] int? limit, [FromQuery] int? offset, CancellationToken cancellationToken)
+        public Task<ArticlesEnvelope> Get([FromQuery] string? tag, [FromQuery] string? author, [FromQuery] string? favorited, [FromQuery] int? limit, [FromQuery] int? offset, CancellationToken cancellationToken)
         {
             return _mediator.Send(new List.Query(tag, author, favorited, limit, offset), cancellationToken);
         }
 
         [HttpGet("feed")]
-        public Task<ArticlesEnvelope> GetFeed([FromQuery] string tag, [FromQuery] string author, [FromQuery] string favorited, [FromQuery] int? limit, [FromQuery] int? offset, CancellationToken cancellationToken)
+        public Task<ArticlesEnvelope> GetFeed([FromQuery] string? tag, [FromQuery] string? author, [FromQuery] string? favorited, [FromQuery] int? limit, [FromQuery] int? offset, CancellationToken cancellationToken)
         {
             return _mediator.Send(new List.Query(tag, author, favorited, limit, offset)
             {

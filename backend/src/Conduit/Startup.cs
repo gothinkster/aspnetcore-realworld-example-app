@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using AutoMapper;
@@ -108,7 +109,8 @@ namespace Conduit
                 })
                 .AddJsonOptions(opt =>
                 {
-                    opt.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                    opt.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+                    opt.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
                 })
                 .AddFluentValidation(cfg =>
                 {
