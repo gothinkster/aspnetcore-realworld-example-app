@@ -15,10 +15,7 @@ namespace Conduit.Infrastructure
     {
         private readonly ConduitContext _context;
 
-        public DBContextTransactionPipelineBehavior(ConduitContext context)
-        {
-            _context = context;
-        }
+        public DBContextTransactionPipelineBehavior(ConduitContext context) => _context = context;
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
