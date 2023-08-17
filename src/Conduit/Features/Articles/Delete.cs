@@ -15,10 +15,7 @@ namespace Conduit.Features.Articles
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            public CommandValidator()
-            {
-                RuleFor(x => x.Slug).NotNull().NotEmpty();
-            }
+            public CommandValidator() => RuleFor(x => x.Slug).NotNull().NotEmpty();
         }
 
         public class QueryHandler : IRequestHandler<Command>
