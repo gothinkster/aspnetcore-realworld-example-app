@@ -38,15 +38,9 @@ namespace Conduit.IntegrationTests
             _scopeFactory = _provider.GetService<IServiceScopeFactory>();
         }
 
-        public ConduitContext GetDbContext()
-        {
-            return _provider.GetRequiredService<ConduitContext>();
-        }
+        public ConduitContext GetDbContext() => _provider.GetRequiredService<ConduitContext>();
 
-        public void Dispose()
-        {
-            File.Delete(DbName);
-        }
+        public void Dispose() => File.Delete(DbName);
 
         public async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
         {
@@ -64,46 +58,31 @@ namespace Conduit.IntegrationTests
             }
         }
 
-        public Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
-        {
-            return ExecuteScopeAsync(sp =>
-            {
-                var mediator = sp.GetService<IMediator>();
+        public Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request) => ExecuteScopeAsync(sp =>
+                                                                                             {
+                                                                                                 var mediator = sp.GetService<IMediator>();
 
-                return mediator.Send(request);
-            });
-        }
+                                                                                                 return mediator.Send(request);
+                                                                                             });
 
-        public Task SendAsync(IRequest request)
-        {
-            return ExecuteScopeAsync(sp =>
-            {
-                var mediator = sp.GetService<IMediator>();
+        public Task SendAsync(IRequest request) => ExecuteScopeAsync(sp =>
+                                                            {
+                                                                var mediator = sp.GetService<IMediator>();
 
-                return mediator.Send(request);
-            });
-        }
+                                                                return mediator.Send(request);
+                                                            });
 
-        public Task ExecuteDbContextAsync(Func<ConduitContext, Task> action)
-        {
-            return ExecuteScopeAsync(sp => action(sp.GetService<ConduitContext>()));
-        }
+        public Task ExecuteDbContextAsync(Func<ConduitContext, Task> action) => ExecuteScopeAsync(sp => action(sp.GetService<ConduitContext>()));
 
-        public Task<T> ExecuteDbContextAsync<T>(Func<ConduitContext, Task<T>> action)
-        {
-            return ExecuteScopeAsync(sp => action(sp.GetService<ConduitContext>()));
-        }
+        public Task<T> ExecuteDbContextAsync<T>(Func<ConduitContext, Task<T>> action) => ExecuteScopeAsync(sp => action(sp.GetService<ConduitContext>()));
 
-        public Task InsertAsync(params object[] entities)
-        {
-            return ExecuteDbContextAsync(db =>
-            {
-                foreach (var entity in entities)
-                {
-                    db.Add(entity);
-                }
-                return db.SaveChangesAsync();
-            });
-        }
+        public Task InsertAsync(params object[] entities) => ExecuteDbContextAsync(db =>
+                                                                      {
+                                                                          foreach (var entity in entities)
+                                                                          {
+                                                                              db.Add(entity);
+                                                                          }
+                                                                          return db.SaveChangesAsync();
+                                                                      });
     }
 }
