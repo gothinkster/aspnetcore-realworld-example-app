@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 namespace Conduit.Infrastructure
 {
     // https://stackoverflow.com/questions/2920744/url-slugify-algorithm-in-c
-    public static class Slug
+    public static partial class Slug
     {
         public static string? GenerateSlug(this string? phrase)
         {
@@ -13,13 +13,20 @@ namespace Conduit.Infrastructure
             }
             var str = phrase.ToLowerInvariant();
             // invalid chars
-            str = Regex.Replace(str, @"[^a-z0-9\s-]", "");
+            str = InvalidCharsRegex().Replace(str, "");
             // convert multiple spaces into one space
-            str = Regex.Replace(str, @"\s+", " ").Trim();
+            str = MultipleSpacesRegex().Replace(str, " ").Trim();
             // cut and trim
             str = str.Substring(0, str.Length <= 45 ? str.Length : 45).Trim();
-            str = Regex.Replace(str, @"\s", "-"); // hyphens
+            str = TrimRegex().Replace(str, "-"); // hyphens
             return str;
         }
+
+        [GeneratedRegex("[^a-z0-9\\s-]")]
+        private static partial Regex InvalidCharsRegex();
+        [GeneratedRegex("\\s+")]
+        private static partial Regex MultipleSpacesRegex();
+        [GeneratedRegex("\\s")]
+        private static partial Regex TrimRegex();
     }
 }
