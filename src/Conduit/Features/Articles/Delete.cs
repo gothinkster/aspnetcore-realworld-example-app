@@ -22,10 +22,7 @@ namespace Conduit.Features.Articles
         {
             private readonly ConduitContext _context;
 
-            public QueryHandler(ConduitContext context)
-            {
-                _context = context;
-            }
+            public QueryHandler(ConduitContext context) => _context = context;
 
             public async Task<Unit> Handle(Command message, CancellationToken cancellationToken)
             {
