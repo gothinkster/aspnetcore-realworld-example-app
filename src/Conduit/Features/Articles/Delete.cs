@@ -24,14 +24,14 @@ namespace Conduit.Features.Articles
 
             public QueryHandler(ConduitContext context) => _context = context;
 
-            public async Task<Unit> Handle(Command message, CancellationToken cancellationToken)
+            public async Task Handle(Command message, CancellationToken cancellationToken)
             {
                 var article = await _context.Articles
                     .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken) ?? throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
 
                 _context.Articles.Remove(article);
                 await _context.SaveChangesAsync(cancellationToken);
-                return Unit.Value;
+                await Task.FromResult(Unit.Value);
             }
         }
     }
