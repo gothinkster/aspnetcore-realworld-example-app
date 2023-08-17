@@ -17,12 +17,9 @@ namespace Conduit.IntegrationTests
         private readonly ServiceProvider _provider;
         private readonly string DbName = Guid.NewGuid() + ".db";
 
-        static SliceFixture()
-        {
-            Config = new ConfigurationBuilder()
+        static SliceFixture() => Config = new ConfigurationBuilder()
                .AddEnvironmentVariables()
                .Build();
-        }
 
         public SliceFixture()
         {
