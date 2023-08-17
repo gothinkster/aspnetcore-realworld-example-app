@@ -25,7 +25,7 @@ namespace Conduit.Features.Comments
 
             public QueryHandler(ConduitContext context) => _context = context;
 
-            public async Task<Unit> Handle(Command message, CancellationToken cancellationToken)
+            public async Task Handle(Command message, CancellationToken cancellationToken)
             {
                 var article = await _context.Articles
                     .Include(x => x.Comments)
@@ -35,7 +35,7 @@ namespace Conduit.Features.Comments
 
                 _context.Comments.Remove(comment);
                 await _context.SaveChangesAsync(cancellationToken);
-                return Unit.Value;
+                await Task.FromResult(Unit.Value);
             }
         }
     }
