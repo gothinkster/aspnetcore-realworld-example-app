@@ -12,10 +12,7 @@ namespace Conduit.Infrastructure
     {
         private readonly List<IValidator<TRequest>> _validators;
 
-        public ValidationPipelineBehavior(IEnumerable<IValidator<TRequest>> validators)
-        {
-            _validators = validators.ToList();
-        }
+        public ValidationPipelineBehavior(IEnumerable<IValidator<TRequest>> validators) => _validators = validators.ToList();
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
