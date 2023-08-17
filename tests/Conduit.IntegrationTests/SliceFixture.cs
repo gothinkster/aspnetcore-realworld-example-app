@@ -11,23 +11,23 @@ namespace Conduit.IntegrationTests
 {
     public class SliceFixture : IDisposable
     {
-        static readonly IConfiguration Config;
+        static readonly IConfiguration CONFIG;
 
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ServiceProvider _provider;
-        private readonly string DbName = Guid.NewGuid() + ".db";
+        private readonly string _dbName = Guid.NewGuid() + ".db";
 
-        static SliceFixture() => Config = new ConfigurationBuilder()
+        static SliceFixture() => CONFIG = new ConfigurationBuilder()
                .AddEnvironmentVariables()
                .Build();
 
         public SliceFixture()
         {
-            var startup = new Startup(Config);
+            var startup = new Startup(CONFIG);
             var services = new ServiceCollection();
 
             var builder = new DbContextOptionsBuilder();
-            builder.UseInMemoryDatabase(DbName);
+            builder.UseInMemoryDatabase(_dbName);
             services.AddSingleton(new ConduitContext(builder.Options));
 
             startup.ConfigureServices(services);
@@ -40,7 +40,7 @@ namespace Conduit.IntegrationTests
 
         public ConduitContext GetDbContext() => _provider.GetRequiredService<ConduitContext>();
 
-        public void Dispose() => File.Delete(DbName);
+        public void Dispose() => File.Delete(_dbName);
 
         public async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
         {
