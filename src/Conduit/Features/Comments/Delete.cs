@@ -29,18 +29,9 @@ namespace Conduit.Features.Comments
             {
                 var article = await _context.Articles
                     .Include(x => x.Comments)
-                    .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
+                    .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken) ?? throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
 
-                if (article == null)
-                {
-                    throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
-                }
-
-                var comment = article.Comments.FirstOrDefault(x => x.CommentId == message.Id);
-                if (comment == null)
-                {
-                    throw new RestException(HttpStatusCode.NotFound, new { Comment = Constants.NOT_FOUND });
-                }
+                var comment = article.Comments.FirstOrDefault(x => x.CommentId == message.Id) ?? throw new RestException(HttpStatusCode.NotFound, new { Comment = Constants.NOT_FOUND });
 
                 _context.Comments.Remove(comment);
                 await _context.SaveChangesAsync(cancellationToken);
