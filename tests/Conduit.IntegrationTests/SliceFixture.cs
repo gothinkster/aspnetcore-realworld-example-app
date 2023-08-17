@@ -11,7 +11,7 @@ namespace Conduit.IntegrationTests
 {
     public class SliceFixture : IDisposable
     {
-        static readonly IConfiguration CONFIG;
+        private static readonly IConfiguration CONFIG;
 
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ServiceProvider _provider;
