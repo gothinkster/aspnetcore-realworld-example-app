@@ -6,10 +6,12 @@ using Conduit.Features.Profiles;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
 using Conduit.Infrastructure.Security;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -103,8 +105,11 @@ namespace Conduit
                     opt.EnableEndpointRouting = false;
                 })
                 .AddJsonOptions(opt => opt.JsonSerializerOptions.DefaultIgnoreCondition =
-                      System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)
-                .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>());
+                      System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
+
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssemblyContaining<Startup>();
 
             services.AddAutoMapper(GetType().Assembly);
 
