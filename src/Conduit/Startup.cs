@@ -25,7 +25,10 @@ namespace Conduit
 
         private readonly IConfiguration _config;
 
-        public Startup(IConfiguration config) => _config = config;
+        public Startup(IConfiguration config)
+        {
+            _config = config;
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -102,8 +105,14 @@ namespace Conduit
                     opt.Filters.Add(typeof(ValidatorActionFilter));
                     opt.EnableEndpointRouting = false;
                 })
-                .AddJsonOptions(opt => opt.JsonSerializerOptions.IgnoreNullValues = true)
-                .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>());
+                .AddJsonOptions(opt =>
+                {
+                    opt.JsonSerializerOptions.IgnoreNullValues = true;
+                })
+                .AddFluentValidation(cfg =>
+                {
+                    cfg.RegisterValidatorsFromAssemblyContaining<Startup>();
+                });
 
             services.AddAutoMapper(GetType().Assembly);
 
@@ -133,10 +142,16 @@ namespace Conduit
             app.UseMvc();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint
-            app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
+            app.UseSwagger(c =>
+            {
+                c.RouteTemplate = "swagger/{documentName}/swagger.json";
+            });
 
             // Enable middleware to serve swagger-ui assets(HTML, JS, CSS etc.)
-            app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld API V1"));
+            app.UseSwaggerUI(x =>
+            {
+                x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld API V1");
+            });
 
             app.ApplicationServices.GetRequiredService<ConduitContext>().Database.EnsureCreated();
         }
