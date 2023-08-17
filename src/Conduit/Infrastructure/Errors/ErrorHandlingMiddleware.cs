@@ -62,6 +62,8 @@ namespace Conduit.Infrastructure.Errors
                         errors = localizer[Constants.InternalServerError].Value
                     });
                     break;
+                default:
+                    break;
             }
 
             context.Response.ContentType = "application/json";
