@@ -26,7 +26,7 @@ namespace Conduit.IntegrationTests
             var startup = new Startup(Config);
             var services = new ServiceCollection();
 
-            DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
+            var builder = new DbContextOptionsBuilder();
             builder.UseInMemoryDatabase(DbName);
             services.AddSingleton(new ConduitContext(builder.Options));
 
