@@ -24,9 +24,9 @@ namespace Conduit
         public const string DEFAULT_DATABASE_CONNECTIONSTRING = "Filename=realworld.db";
         public const string DEFAULT_DATABASE_PROVIDER = "sqlite";
 
-        private readonly IConfiguration _config;
+        //private readonly IConfiguration _config;
 
-        public Startup(IConfiguration config) => _config = config;
+       // public Startup(IConfiguration config) => _config = config;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -37,14 +37,13 @@ namespace Conduit
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DBContextTransactionPipelineBehavior<,>));
 
             // take the connection string from the environment variable or use hard-coded database name
-            var connectionString = _config.GetValue<string>("ASPNETCORE_Conduit_ConnectionString") ??
-                                   DEFAULT_DATABASE_CONNECTIONSTRING;
+            var connectionString = DEFAULT_DATABASE_CONNECTIONSTRING;
             // take the database provider from the environment variable or use hard-coded database provider
-            var databaseProvider = _config.GetValue<string>("ASPNETCORE_Conduit_DatabaseProvider");
-            if (string.IsNullOrWhiteSpace(databaseProvider))
-            {
-                databaseProvider = DEFAULT_DATABASE_PROVIDER;
-            }
+            var databaseProvider = DEFAULT_DATABASE_PROVIDER;
+            //if (string.IsNullOrWhiteSpace(databaseProvider))
+            //{
+            //    databaseProvider = DEFAULT_DATABASE_PROVIDER;
+            //}
 
             services.AddDbContext<ConduitContext>(options =>
             {
