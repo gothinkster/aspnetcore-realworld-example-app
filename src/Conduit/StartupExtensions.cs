@@ -57,7 +57,7 @@ namespace Conduit
                             var token = context.HttpContext.Request.Headers["Authorization"];
                             if (token.Count > 0 && token[0].StartsWith("Token ", StringComparison.OrdinalIgnoreCase))
                             {
-                                context.Token = token[0].Substring("Token ".Length).Trim();
+                                context.Token = token[0]["Token ".Length..].Trim();
                             }
 
                             return Task.CompletedTask;
