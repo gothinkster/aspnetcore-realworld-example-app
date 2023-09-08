@@ -83,6 +83,7 @@ builder.Services.AddSwaggerGen(x =>
                 {
                     y.GroupName ?? throw new InvalidOperationException()
                 });
+    x.CustomSchemaIds(s => s.FullName?.Replace("+", "."));
 });
 
 builder.Services.AddCors();
