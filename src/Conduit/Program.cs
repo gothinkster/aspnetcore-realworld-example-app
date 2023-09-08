@@ -130,6 +130,7 @@ builder.Services.AddJwt();
 
 var app = builder.Build();
 
+app.Services.GetRequiredService<ILoggerFactory>().AddSerilogLogging();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
@@ -149,3 +150,4 @@ app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
 app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld API V1"));
 
 app.Services.GetRequiredService<ConduitContext>().Database.EnsureCreated();
+
