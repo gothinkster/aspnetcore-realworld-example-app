@@ -10,14 +10,8 @@ namespace Conduit.IntegrationTests
         /// stub the ICurrentUserAccessor with a given userName to be used in tests
         /// </summary>
         /// <param name="userName"></param>
-        public StubCurrentUserAccessor(string userName)
-        {
-            _currentUserName = userName;
-        }
+        public StubCurrentUserAccessor(string userName) => _currentUserName = userName;
 
-        public string GetCurrentUsername()
-        {
-            return _currentUserName;
-        }
+        public string GetCurrentUsername() => _currentUserName;
     }
 }
