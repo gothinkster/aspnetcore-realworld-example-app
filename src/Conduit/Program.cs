@@ -130,6 +130,10 @@ app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
 // Enable middleware to serve swagger-ui assets(HTML, JS, CSS etc.)
 app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld API V1"));
 
-app.Services.GetRequiredService<ConduitContext>().Database.EnsureCreated();
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ConduitContext>().Database.EnsureCreated();
+    // use context
+}
 app.Run();
 
