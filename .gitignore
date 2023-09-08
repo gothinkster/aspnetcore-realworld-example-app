@@ -285,4 +285,5 @@ tools
 .DS_Store
 
 # sqlite database
-*.db
+*.db-shm
+*.db-wal
