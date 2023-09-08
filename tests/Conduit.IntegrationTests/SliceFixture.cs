@@ -4,26 +4,25 @@ using System.Threading.Tasks;
 using Conduit.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Conduit.IntegrationTests
 {
     public class SliceFixture : IDisposable
     {
-        private static readonly IConfiguration CONFIG;
+        //private static readonly IConfiguration CONFIG;
 
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ServiceProvider _provider;
         private readonly string _dbName = Guid.NewGuid() + ".db";
 
-        static SliceFixture() => CONFIG = new ConfigurationBuilder()
-               .AddEnvironmentVariables()
-               .Build();
+        //static SliceFixture() => CONFIG = new ConfigurationBuilder()
+        //       .AddEnvironmentVariables()
+        //       .Build();
 
         public SliceFixture()
         {
-            var startup = new Startup(CONFIG);
+            var startup = new Startup();
             var services = new ServiceCollection();
 
             var builder = new DbContextOptionsBuilder();
