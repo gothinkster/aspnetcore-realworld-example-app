@@ -16,21 +16,6 @@ using FluentValidation.AspNetCore;
 using FluentValidation;
 using Conduit.Infrastructure.Errors;
 using Microsoft.Extensions.Logging;
-using Serilog;
-
-
-//var config = new ConfigurationBuilder()
-//    .AddEnvironmentVariables()
-//    .Build();
-
-//var host = new WebHostBuilder()
-//    .UseConfiguration(config)
-//    .UseKestrel()
-//    .UseUrls($"http://+:5000")
-//    .UseStartup<Startup>()
-//    .Build();
-
-//await host.RunAsync();
 
 // read database configuration (database provider + database connection) from environment variables
 //Environment.GetEnvironmentVariable(DEFAULT_DATABASE_PROVIDER)
@@ -49,10 +34,6 @@ builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DBContextTransac
 var connectionString = defaultDatabaseConnectionSrting;
 // take the database provider from the environment variable or use hard-coded database provider
 var databaseProvider = defaultDatabaseProvider;
-//if (string.IsNullOrWhiteSpace(databaseProvider))
-//{
-//    databaseProvider = DEFAULT_DATABASE_PROVIDER;
-//}
 
 builder.Services.AddDbContext<ConduitContext>(options =>
 {
@@ -150,4 +131,5 @@ app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
 app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld API V1"));
 
 app.Services.GetRequiredService<ConduitContext>().Database.EnsureCreated();
+app.Run();
 
