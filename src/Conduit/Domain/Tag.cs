@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 
-namespace Conduit.Domain
-{
-    public class Tag
-    {
-        public string? TagId { get; set; }
+namespace Conduit.Domain;
 
-        public List<ArticleTag> ArticleTags { get; set; } = new();
-    }
+public class Tag
+{
+    public string? TagId { get; set; }
+
+    public List<ArticleTag> ArticleTags { get; set; } = new();
 }

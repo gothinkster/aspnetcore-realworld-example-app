@@ -8,48 +8,85 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Conduit.Features.Favorites
-{
-    public class Delete
-    {
-        public record Command(string Slug) : IRequest<ArticleEnvelope>;
+namespace Conduit.Features.Favorites;
 
-        public class CommandValidator : AbstractValidator<Command>
+public class Delete
+{
+    public record Command(string Slug) : IRequest<ArticleEnvelope>;
+
+    public class CommandValidator : AbstractValidator<Command>
+    {
+        public CommandValidator()
         {
-            public CommandValidator()
-            {
-                DefaultValidatorExtensions.NotNull(RuleFor(x => x.Slug)).NotEmpty();
-            }
+            DefaultValidatorExtensions.NotNull(RuleFor(x => x.Slug)).NotEmpty();
+        }
+    }
+
+    public class QueryHandler : IRequestHandler<Command, ArticleEnvelope>
+    {
+        private readonly ConduitContext _context;
+        private readonly ICurrentUserAccessor _currentUserAccessor;
+
+        public QueryHandler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
+        {
+            _context = context;
+            _currentUserAccessor = currentUserAccessor;
         }
 
-        public class QueryHandler : IRequestHandler<Command, ArticleEnvelope>
+        public async Task<ArticleEnvelope> Handle(
+            Command message,
+            CancellationToken cancellationToken
+        )
         {
-            private readonly ConduitContext _context;
-            private readonly ICurrentUserAccessor _currentUserAccessor;
+            var article =
+                await _context.Articles.FirstOrDefaultAsync(
+                    x => x.Slug == message.Slug,
+                    cancellationToken
+                )
+                ?? throw new RestException(
+                    HttpStatusCode.NotFound,
+                    new { Article = Constants.NOT_FOUND }
+                );
 
-            public QueryHandler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
+            var person = await _context.Persons.FirstOrDefaultAsync(
+                x => x.Username == _currentUserAccessor.GetCurrentUsername(),
+                cancellationToken
+            );
+            if (person is null)
             {
-                _context = context;
-                _currentUserAccessor = currentUserAccessor;
+                throw new RestException(
+                    HttpStatusCode.NotFound,
+                    new { Article = Constants.NOT_FOUND }
+                );
             }
 
-            public async Task<ArticleEnvelope> Handle(Command message, CancellationToken cancellationToken)
+            var favorite = await _context.ArticleFavorites.FirstOrDefaultAsync(
+                x => x.ArticleId == article.ArticleId && x.PersonId == person.PersonId,
+                cancellationToken
+            );
+
+            if (favorite != null)
             {
-                var article = await _context.Articles.FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken) ?? throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
-
-                var person = await _context.Persons.FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
-
-                var favorite = await _context.ArticleFavorites.FirstOrDefaultAsync(x => x.ArticleId == article.ArticleId && x.PersonId == person.PersonId, cancellationToken);
-
-                if (favorite != null)
-                {
-                    _context.ArticleFavorites.Remove(favorite);
-                    await _context.SaveChangesAsync(cancellationToken);
-                }
-
-                return new ArticleEnvelope(await _context.Articles.GetAllData()
-                    .FirstOrDefaultAsync(x => x.ArticleId == article.ArticleId, cancellationToken));
+                _context.ArticleFavorites.Remove(favorite);
+                await _context.SaveChangesAsync(cancellationToken);
             }
+
+            article =
+                await _context.Articles
+                    .GetAllData()
+                    .FirstOrDefaultAsync(
+                        x => x.ArticleId == article.ArticleId,
+                        cancellationToken
+                    );
+            if (article is null)
+            {
+                throw new RestException(
+                    HttpStatusCode.NotFound,
+                    new { Article = Constants.NOT_FOUND }
+                );
+            }
+
+            return new ArticleEnvelope(article);
         }
     }
 }

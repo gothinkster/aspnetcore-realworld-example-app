@@ -6,29 +6,34 @@ using Conduit.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Conduit.Features.Tags
+namespace Conduit.Features.Tags;
+
+public class List
 {
-    public class List
+    public record Query : IRequest<TagsEnvelope>;
+
+    public class QueryHandler : IRequestHandler<Query, TagsEnvelope>
     {
-        public record Query : IRequest<TagsEnvelope>;
+        private readonly ConduitContext _context;
 
-        public class QueryHandler : IRequestHandler<Query, TagsEnvelope>
+        public QueryHandler(ConduitContext context)
         {
-            private readonly ConduitContext _context;
+            _context = context;
+        }
 
-            public QueryHandler(ConduitContext context)
+        public async Task<TagsEnvelope> Handle(
+            Query message,
+            CancellationToken cancellationToken
+        )
+        {
+            var tags = await _context.Tags
+                .OrderBy(x => x.TagId)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+            return new TagsEnvelope()
             {
-                _context = context;
-            }
-
-            public async Task<TagsEnvelope> Handle(Query message, CancellationToken cancellationToken)
-            {
-                var tags = await _context.Tags.OrderBy(x => x.TagId).AsNoTracking().ToListAsync(cancellationToken);
-                return new TagsEnvelope()
-                {
-                    Tags = tags?.Select(x => x.TagId ?? string.Empty).ToList() ?? new List<string>()
-                };
-            }
+                Tags = tags?.Select(x => x.TagId ?? string.Empty).ToList() ?? new List<string>()
+            };
         }
     }
 }

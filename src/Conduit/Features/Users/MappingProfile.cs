@@ -1,12 +1,11 @@
 using AutoMapper;
 
-namespace Conduit.Features.Users
+namespace Conduit.Features.Users;
+
+public class MappingProfile : Profile
 {
-    public class MappingProfile : Profile
+    public MappingProfile()
     {
-        public MappingProfile()
-        {
-            CreateMap<Domain.Person, User>(MemberList.None);
-        }
+        CreateMap<Domain.Person, User>(MemberList.None);
     }
 }

@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 
-namespace Conduit.Features.Tags
+namespace Conduit.Features.Tags;
+
+public class TagsEnvelope
 {
-    public class TagsEnvelope
-    {
-        public List<string> Tags { get; set; } = new();
-    }
+    public List<string> Tags { get; set; } = new();
 }

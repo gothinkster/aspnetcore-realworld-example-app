@@ -11,7 +11,8 @@ const string Test = "test";
 const string Format = "format";
 const string Publish = "publish";
 
-Target(Clean,
+Target(
+    Clean,
     ForEach("publish", "**/bin", "**/obj"),
     dir =>
     {
@@ -33,18 +34,23 @@ Target(Clean,
         {
             RemoveDirectory(d);
         }
-    });
+    }
+);
 
-
-Target(Format, () =>
-{
-    Run("dotnet", "tool restore");
-    Run("dotnet", "format --check");
-});
+Target(
+    Format,
+    () =>
+    {
+        Run("dotnet", "tool restore");
+        Run("dotnet", "csharpier --check");
+    }
+);
 
 Target(Build, DependsOn(Format), () => Run("dotnet", "build . -c Release"));
 
-Target(Test, DependsOn(Build),
+Target(
+    Test,
+    DependsOn(Build),
     () =>
     {
         IEnumerable<string> GetFiles(string d)
@@ -56,16 +62,21 @@ Target(Test, DependsOn(Build),
         {
             Run("dotnet", $"test {file} -c Release --no-restore --no-build --verbosity=normal");
         }
-    });
+    }
+);
 
-Target(Publish, DependsOn(Test),
+Target(
+    Publish,
+    DependsOn(Test),
     ForEach("src/Conduit"),
     project =>
     {
-        Run("dotnet",
-            $"publish {project} -c Release -f net5.0 -o ./publish --no-restore --no-build --verbosity=normal");
-    });
+        Run(
+            "dotnet",
+            $"publish {project} -c Release -f net7.0 -o ./publish --no-restore --no-build --verbosity=normal"
+        );
+    }
+);
 
 Target("default", DependsOn(Publish), () => Console.WriteLine("Done!"));
 await RunTargetsAndExitAsync(args);
-
