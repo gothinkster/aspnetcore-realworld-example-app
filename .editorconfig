@@ -279,6 +279,7 @@ dotnet_diagnostic.CA1725.severity = suggestion
 dotnet_diagnostic.CA1805.severity = suggestion
 dotnet_diagnostic.CA1816.severity = suggestion
 dotnet_diagnostic.CA1822.severity = suggestion
+dotnet_diagnostic.CA1824.severity = none
 dotnet_diagnostic.CA1825.severity = error
 dotnet_diagnostic.CA1826.severity = silent
 dotnet_diagnostic.CA1827.severity = error

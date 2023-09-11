@@ -7,32 +7,38 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Conduit.Features.Articles
+namespace Conduit.Features.Articles;
+
+public class Delete
 {
-    public class Delete
+    public record Command(string Slug) : IRequest;
+
+    public class CommandValidator : AbstractValidator<Command>
     {
-        public record Command(string Slug) : IRequest;
+        public CommandValidator() => RuleFor(x => x.Slug).NotNull().NotEmpty();
+    }
 
-        public class CommandValidator : AbstractValidator<Command>
+    public class QueryHandler : IRequestHandler<Command>
+    {
+        private readonly ConduitContext _context;
+
+        public QueryHandler(ConduitContext context) => _context = context;
+
+        public async Task Handle(Command message, CancellationToken cancellationToken)
         {
-            public CommandValidator() => RuleFor(x => x.Slug).NotNull().NotEmpty();
-        }
+            var article =
+                await _context.Articles.FirstOrDefaultAsync(
+                    x => x.Slug == message.Slug,
+                    cancellationToken
+                )
+                ?? throw new RestException(
+                    HttpStatusCode.NotFound,
+                    new { Article = Constants.NOT_FOUND }
+                );
 
-        public class QueryHandler : IRequestHandler<Command>
-        {
-            private readonly ConduitContext _context;
-
-            public QueryHandler(ConduitContext context) => _context = context;
-
-            public async Task Handle(Command message, CancellationToken cancellationToken)
-            {
-                var article = await _context.Articles
-                    .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken) ?? throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
-
-                _context.Articles.Remove(article);
-                await _context.SaveChangesAsync(cancellationToken);
-                await Task.FromResult(Unit.Value);
-            }
+            _context.Articles.Remove(article);
+            await _context.SaveChangesAsync(cancellationToken);
+            await Task.FromResult(Unit.Value);
         }
     }
 }

@@ -1,7 +1,6 @@
-namespace Conduit.Infrastructure.Security
+namespace Conduit.Infrastructure.Security;
+
+public interface IJwtTokenGenerator
 {
-    public interface IJwtTokenGenerator
-    {
-        string CreateToken(string username);
-    }
+    string CreateToken(string username);
 }

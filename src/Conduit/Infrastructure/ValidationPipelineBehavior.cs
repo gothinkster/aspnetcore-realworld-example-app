@@ -5,30 +5,35 @@ using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 
-namespace Conduit.Infrastructure
+namespace Conduit.Infrastructure;
+
+public class ValidationPipelineBehavior<TRequest, TResponse>
+    : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : notnull
 {
-    public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
+    private readonly List<IValidator<TRequest>> _validators;
+
+    public ValidationPipelineBehavior(IEnumerable<IValidator<TRequest>> validators) =>
+        _validators = validators.ToList();
+
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken
+    )
     {
-        private readonly List<IValidator<TRequest>> _validators;
+        var context = new ValidationContext<TRequest>(request);
+        var failures = _validators
+            .Select(v => v.Validate(context))
+            .SelectMany(result => result.Errors)
+            .Where(f => f != null)
+            .ToList();
 
-        public ValidationPipelineBehavior(IEnumerable<IValidator<TRequest>> validators) => _validators = validators.ToList();
-
-        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        if (failures.Count != 0)
         {
-            var context = new ValidationContext<TRequest>(request);
-            var failures = _validators
-                .Select(v => v.Validate(context))
-                .SelectMany(result => result.Errors)
-                .Where(f => f != null)
-                .ToList();
-
-            if (failures.Count != 0)
-            {
-                throw new ValidationException(failures);
-            }
-
-            return await next();
+            throw new ValidationException(failures);
         }
+
+        return await next();
     }
 }

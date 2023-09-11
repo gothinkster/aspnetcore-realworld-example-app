@@ -9,61 +9,87 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Conduit.Features.Followers
-{
-    public class Add
-    {
-        public record Command(string Username) : IRequest<ProfileEnvelope>;
+namespace Conduit.Features.Followers;
 
-        public class CommandValidator : AbstractValidator<Command>
+public class Add
+{
+    public record Command(string Username) : IRequest<ProfileEnvelope>;
+
+    public class CommandValidator : AbstractValidator<Command>
+    {
+        public CommandValidator()
         {
-            public CommandValidator()
-            {
-                DefaultValidatorExtensions.NotNull(RuleFor(x => x.Username)).NotEmpty();
-            }
+            DefaultValidatorExtensions.NotNull(RuleFor(x => x.Username)).NotEmpty();
+        }
+    }
+
+    public class QueryHandler : IRequestHandler<Command, ProfileEnvelope>
+    {
+        private readonly ConduitContext _context;
+        private readonly ICurrentUserAccessor _currentUserAccessor;
+        private readonly IProfileReader _profileReader;
+
+        public QueryHandler(
+            ConduitContext context,
+            ICurrentUserAccessor currentUserAccessor,
+            IProfileReader profileReader
+        )
+        {
+            _context = context;
+            _currentUserAccessor = currentUserAccessor;
+            _profileReader = profileReader;
         }
 
-        public class QueryHandler : IRequestHandler<Command, ProfileEnvelope>
+        public async Task<ProfileEnvelope> Handle(
+            Command message,
+            CancellationToken cancellationToken
+        )
         {
-            private readonly ConduitContext _context;
-            private readonly ICurrentUserAccessor _currentUserAccessor;
-            private readonly IProfileReader _profileReader;
+            var target = await _context.Persons.FirstOrDefaultAsync(
+                x => x.Username == message.Username,
+                cancellationToken
+            );
 
-            public QueryHandler(ConduitContext context, ICurrentUserAccessor currentUserAccessor, IProfileReader profileReader)
+            if (target is null)
             {
-                _context = context;
-                _currentUserAccessor = currentUserAccessor;
-                _profileReader = profileReader;
+                throw new RestException(
+                    HttpStatusCode.NotFound,
+                    new { User = Constants.NOT_FOUND }
+                );
             }
 
-            public async Task<ProfileEnvelope> Handle(Command message, CancellationToken cancellationToken)
+            var observer = await _context.Persons.FirstOrDefaultAsync(
+                x => x.Username == _currentUserAccessor.GetCurrentUsername(),
+                cancellationToken
+            );
+
+            if (observer is null)
             {
-                var target = await _context.Persons.FirstOrDefaultAsync(x => x.Username == message.Username, cancellationToken);
-
-                if (target == null)
-                {
-                    throw new RestException(HttpStatusCode.NotFound, new { User = Constants.NOT_FOUND });
-                }
-
-                var observer = await _context.Persons.FirstOrDefaultAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
-
-                var followedPeople = await _context.FollowedPeople.FirstOrDefaultAsync(x => x.ObserverId == observer.PersonId && x.TargetId == target.PersonId, cancellationToken);
-
-                if (followedPeople == null)
-                {
-                    followedPeople = new FollowedPeople()
-                    {
-                        Observer = observer,
-                        ObserverId = observer.PersonId,
-                        Target = target,
-                        TargetId = target.PersonId
-                    };
-                    await _context.FollowedPeople.AddAsync(followedPeople, cancellationToken);
-                    await _context.SaveChangesAsync(cancellationToken);
-                }
-
-                return await _profileReader.ReadProfile(message.Username, cancellationToken);
+                throw new RestException(
+                    HttpStatusCode.NotFound,
+                    new { User = Constants.NOT_FOUND }
+                );
             }
+
+            var followedPeople = await _context.FollowedPeople.FirstOrDefaultAsync(
+                x => x.ObserverId == observer.PersonId && x.TargetId == target.PersonId,
+                cancellationToken
+            );
+
+            if (followedPeople == null)
+            {
+                followedPeople = new FollowedPeople()
+                {
+                    Observer = observer,
+                    ObserverId = observer.PersonId,
+                    Target = target,
+                    TargetId = target.PersonId
+                };
+                await _context.FollowedPeople.AddAsync(followedPeople, cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+
+            return await _profileReader.ReadProfile(message.Username, cancellationToken);
         }
     }
 }

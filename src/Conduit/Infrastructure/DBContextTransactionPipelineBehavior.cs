@@ -3,39 +3,43 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 
-namespace Conduit.Infrastructure
+namespace Conduit.Infrastructure;
+
+/// <summary>
+/// Adds transaction to the processing pipeline
+/// </summary>
+/// <typeparam name="TRequest"></typeparam>
+/// <typeparam name="TResponse"></typeparam>
+public class DBContextTransactionPipelineBehavior<TRequest, TResponse>
+    : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : notnull
 {
-    /// <summary>
-    /// Adds transaction to the processing pipeline
-    /// </summary>
-    /// <typeparam name="TRequest"></typeparam>
-    /// <typeparam name="TResponse"></typeparam>
-    public class DBContextTransactionPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
+    private readonly ConduitContext _context;
+
+    public DBContextTransactionPipelineBehavior(ConduitContext context) => _context = context;
+
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken
+    )
     {
-        private readonly ConduitContext _context;
+        TResponse? result = default;
 
-        public DBContextTransactionPipelineBehavior(ConduitContext context) => _context = context;
-
-        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+        try
         {
-            TResponse? result = default;
+            _context.BeginTransaction();
 
-            try
-            {
-                _context.BeginTransaction();
+            result = await next();
 
-                result = await next();
-
-                _context.CommitTransaction();
-            }
-            catch (Exception)
-            {
-                _context.RollbackTransaction();
-                throw;
-            }
-
-            return result;
+            _context.CommitTransaction();
         }
+        catch (Exception)
+        {
+            _context.RollbackTransaction();
+            throw;
+        }
+
+        return result;
     }
 }
