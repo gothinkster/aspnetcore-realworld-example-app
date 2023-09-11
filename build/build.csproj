@@ -1,14 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
     <OutputType>Exe</OutputType>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Bullseye" Version="4.2.1" />
-    <PackageReference Include="Glob" Version="1.1.9" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
-    <PackageReference Include="SimpleExec" Version="11.0.0" />
+    <PackageReference Include="Bullseye" />
+    <PackageReference Include="Glob" />
+    <PackageReference Include="SimpleExec" />
   </ItemGroup>
 </Project>
