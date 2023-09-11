@@ -6,6 +6,7 @@ using Conduit.Features.Profiles;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
 using Conduit.Infrastructure.Security;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -23,30 +24,26 @@ namespace Conduit
         public const string DEFAULT_DATABASE_CONNECTIONSTRING = "Filename=realworld.db";
         public const string DEFAULT_DATABASE_PROVIDER = "sqlite";
 
-        private readonly IConfiguration _config;
+        //private readonly IConfiguration _config;
 
-        public Startup(IConfiguration config)
-        {
-            _config = config;
-        }
+        //public Startup(IConfiguration config) => _config = config;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DBContextTransactionPipelineBehavior<,>));
 
             // take the connection string from the environment variable or use hard-coded database name
-            var connectionString = _config.GetValue<string>("ASPNETCORE_Conduit_ConnectionString") ??
-                                   DEFAULT_DATABASE_CONNECTIONSTRING;
+            var connectionString = DEFAULT_DATABASE_CONNECTIONSTRING;
             // take the database provider from the environment variable or use hard-coded database provider
-            var databaseProvider = _config.GetValue<string>("ASPNETCORE_Conduit_DatabaseProvider");
-            if (string.IsNullOrWhiteSpace(databaseProvider))
-            {
-                databaseProvider = DEFAULT_DATABASE_PROVIDER;
-            }
+            var databaseProvider = DEFAULT_DATABASE_PROVIDER;
+            //if (string.IsNullOrWhiteSpace(databaseProvider))
+            //{
+            //    databaseProvider = DEFAULT_DATABASE_PROVIDER;
+            //}
 
             services.AddDbContext<ConduitContext>(options =>
             {
@@ -105,14 +102,12 @@ namespace Conduit
                     opt.Filters.Add(typeof(ValidatorActionFilter));
                     opt.EnableEndpointRouting = false;
                 })
-                .AddJsonOptions(opt =>
-                {
-                    opt.JsonSerializerOptions.IgnoreNullValues = true;
-                })
-                .AddFluentValidation(cfg =>
-                {
-                    cfg.RegisterValidatorsFromAssemblyContaining<Startup>();
-                });
+                .AddJsonOptions(opt => opt.JsonSerializerOptions.DefaultIgnoreCondition =
+                      System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
+
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssemblyContaining<Startup>();
 
             services.AddAutoMapper(GetType().Assembly);
 
@@ -142,16 +137,10 @@ namespace Conduit
             app.UseMvc();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint
-            app.UseSwagger(c =>
-            {
-                c.RouteTemplate = "swagger/{documentName}/swagger.json";
-            });
+            app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
 
             // Enable middleware to serve swagger-ui assets(HTML, JS, CSS etc.)
-            app.UseSwaggerUI(x =>
-            {
-                x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld API V1");
-            });
+            app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld API V1"));
 
             app.ApplicationServices.GetRequiredService<ConduitContext>().Database.EnsureCreated();
         }
