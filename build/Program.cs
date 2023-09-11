@@ -42,7 +42,7 @@ Target(
     () =>
     {
         Run("dotnet", "tool restore");
-        Run("dotnet", "format --check");
+        Run("dotnet", "csharpier --check");
     }
 );
 
