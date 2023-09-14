@@ -11,10 +11,7 @@ namespace Conduit.Infrastructure
     {
         private readonly ILogger logger;
 
-        public ValidatorActionFilter(ILogger<ValidatorActionFilter> logger)
-        {
-            this.logger = logger;
-        }
+        public ValidatorActionFilter(ILogger<ValidatorActionFilter> logger) => this.logger = logger;
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
