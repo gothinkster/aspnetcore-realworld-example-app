@@ -8,14 +8,8 @@ namespace Conduit.Infrastructure
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CurrentUserAccessor(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
+        public CurrentUserAccessor(IHttpContextAccessor httpContextAccessor) => _httpContextAccessor = httpContextAccessor;
 
-        public string? GetCurrentUsername()
-        {
-            return _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-        }
+        public string? GetCurrentUsername() => _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
     }
 }
