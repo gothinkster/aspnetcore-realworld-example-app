@@ -27,12 +27,8 @@ namespace Conduit.Features.Profiles
             var currentUserName = _currentUserAccessor.GetCurrentUsername();
 
             var person = await _context.Persons.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Username == username, cancellationToken);
+                .FirstOrDefaultAsync(x => x.Username == username, cancellationToken) ?? throw new RestException(HttpStatusCode.NotFound, new { User = Constants.NOT_FOUND });
 
-            if (person == null)
-            {
-                throw new RestException(HttpStatusCode.NotFound, new { User = Constants.NOT_FOUND });
-            }
             var profile = _mapper.Map<Domain.Person, Profile>(person);
 
             if (currentUserName != null)

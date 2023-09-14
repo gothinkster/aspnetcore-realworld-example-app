@@ -51,11 +51,7 @@ namespace Conduit.Features.Users
 
             public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
-                var person = await _context.Persons.Where(x => x.Email == message.User.Email).SingleOrDefaultAsync(cancellationToken);
-                if (person == null)
-                {
-                    throw new RestException(HttpStatusCode.Unauthorized, new { Error = "Invalid email / password." });
-                }
+                var person = await _context.Persons.Where(x => x.Email == message.User.Email).SingleOrDefaultAsync(cancellationToken) ?? throw new RestException(HttpStatusCode.Unauthorized, new { Error = "Invalid email / password." });
 
                 if (!person.Hash.SequenceEqual(await _passwordHasher.Hash(message.User.Password ?? throw new InvalidOperationException(), person.Salt)))
                 {
