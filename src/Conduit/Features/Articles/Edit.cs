@@ -108,7 +108,7 @@ namespace Conduit.Features.Articles
             /// <summary>
             /// check which article tags need to be deleted
             /// </summary>
-            static List<ArticleTag> GetArticleTagsToDelete(Article article, IEnumerable<string> articleTagList)
+            internal static List<ArticleTag> GetArticleTagsToDelete(Article article, IEnumerable<string> articleTagList)
             {
                 var articleTagsToDelete = new List<ArticleTag>();
                 foreach (var tag in article.ArticleTags)
