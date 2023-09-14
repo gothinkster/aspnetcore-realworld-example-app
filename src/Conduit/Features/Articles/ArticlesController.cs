@@ -21,7 +21,7 @@ namespace Conduit.Features.Articles
         public Task<ArticlesEnvelope> GetFeed([FromQuery] string tag, [FromQuery] string author, [FromQuery] string favorited, [FromQuery] int? limit, [FromQuery] int? offset, CancellationToken cancellationToken) => _mediator.Send(new List.Query(tag, author, favorited, limit, offset)
         {
             IsFeed = true
-        });
+        }, cancellationToken);
 
         [HttpGet("{slug}")]
         public Task<ArticleEnvelope> Get(string slug, CancellationToken cancellationToken) => _mediator.Send(new Details.Query(slug), cancellationToken);
