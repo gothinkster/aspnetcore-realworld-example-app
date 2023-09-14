@@ -8,7 +8,7 @@ namespace Conduit.Infrastructure.Security
 {
     public class PasswordHasher : IPasswordHasher
     {
-        private readonly HMACSHA512 x = new(Encoding.UTF8.GetBytes("realworld"));
+        private readonly HMACSHA512 _x = new(Encoding.UTF8.GetBytes("realworld"));
 
         public Task<byte[]> Hash(string password, byte[] salt)
         {
@@ -18,9 +18,9 @@ namespace Conduit.Infrastructure.Security
             Buffer.BlockCopy(bytes, 0, allBytes, 0, bytes.Length);
             Buffer.BlockCopy(salt, 0, allBytes, bytes.Length, salt.Length);
 
-            return x.ComputeHashAsync(new MemoryStream(allBytes));
+            return _x.ComputeHashAsync(new MemoryStream(allBytes));
         }
 
-        public void Dispose() => x.Dispose();
+        public void Dispose() => _x.Dispose();
     }
 }
