@@ -38,10 +38,7 @@ namespace Conduit.Features.Articles
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            public CommandValidator()
-            {
-                RuleFor(x => x.Article).NotNull().SetValidator(new ArticleDataValidator());
-            }
+            public CommandValidator() => RuleFor(x => x.Article).NotNull().SetValidator(new ArticleDataValidator());
         }
 
         public class Handler : IRequestHandler<Command, ArticleEnvelope>
@@ -59,7 +56,7 @@ namespace Conduit.Features.Articles
             {
                 var author = await _context.Persons.FirstAsync(x => x.Username == _currentUserAccessor.GetCurrentUsername(), cancellationToken);
                 var tags = new List<Tag>();
-                foreach (var tag in (message.Article.TagList ?? Enumerable.Empty<string>()))
+                foreach (var tag in message.Article.TagList ?? Enumerable.Empty<string>())
                 {
                     var t = await _context.Tags.FindAsync(tag);
                     if (t == null)
