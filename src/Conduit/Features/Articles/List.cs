@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Conduit.Domain;
 using Conduit.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
