@@ -31,20 +31,14 @@ namespace Conduit.Features.Articles
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            public CommandValidator()
-            {
-                RuleFor(x => x.Model.Article).NotNull();
-            }
+            public CommandValidator() => RuleFor(x => x.Model.Article).NotNull();
         }
 
         public class Handler : IRequestHandler<Command, ArticleEnvelope>
         {
             private readonly ConduitContext _context;
 
-            public Handler(ConduitContext context)
-            {
-                _context = context;
-            }
+            public Handler(ConduitContext context) => _context = context;
 
             public async Task<ArticleEnvelope> Handle(Command message, CancellationToken cancellationToken)
             {
