@@ -16,10 +16,7 @@ namespace Conduit.Features.Comments
         {
             private readonly ConduitContext _context;
 
-            public QueryHandler(ConduitContext context)
-            {
-                _context = context;
-            }
+            public QueryHandler(ConduitContext context) => _context = context;
 
             public async Task<CommentsEnvelope> Handle(Query message, CancellationToken cancellationToken)
             {
