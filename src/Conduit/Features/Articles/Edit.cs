@@ -45,12 +45,7 @@ namespace Conduit.Features.Articles
                 var article = await _context.Articles
                     .Include(x => x.ArticleTags)    // include also the article tags since they also need to be updated
                     .Where(x => x.Slug == message.Slug)
-                    .FirstOrDefaultAsync(cancellationToken);
-
-                if (article == null)
-                {
-                    throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
-                }
+                    .FirstOrDefaultAsync(cancellationToken) ?? throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
 
                 article.Description = message.Model.Article.Description ?? article.Description;
                 article.Body = message.Model.Article.Body ?? article.Body;
