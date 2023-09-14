@@ -22,15 +22,9 @@ namespace Conduit.Features.Users
         }
 
         [HttpGet]
-        public Task<UserEnvelope> GetCurrent(CancellationToken cancellationToken)
-        {
-            return _mediator.Send(new Details.Query(_currentUserAccessor.GetCurrentUsername() ?? "<unknown>"), cancellationToken);
-        }
+        public Task<UserEnvelope> GetCurrent(CancellationToken cancellationToken) => _mediator.Send(new Details.Query(_currentUserAccessor.GetCurrentUsername() ?? "<unknown>"), cancellationToken);
 
         [HttpPut]
-        public Task<UserEnvelope> UpdateUser([FromBody] Edit.Command command, CancellationToken cancellationToken)
-        {
-            return _mediator.Send(command, cancellationToken);
-        }
+        public Task<UserEnvelope> UpdateUser([FromBody] Edit.Command command, CancellationToken cancellationToken) => _mediator.Send(command, cancellationToken);
     }
 }
