@@ -28,7 +28,7 @@ namespace Conduit.Infrastructure
                     errors.Add(valuePair.Key, valuePair.Value.Errors.Select(x => x.ErrorMessage).ToArray());
                 }
 
-                string content = JsonSerializer.Serialize(new { errors });
+                var content = JsonSerializer.Serialize(new { errors });
                 result.Content = content;
                 result.ContentType = "application/json";
 
