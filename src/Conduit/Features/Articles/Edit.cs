@@ -83,7 +83,7 @@ namespace Conduit.Features.Articles
             /// <summary>
             /// check which article tags need to be added
             /// </summary>
-            static List<ArticleTag> GetArticleTagsToCreate(Article article, IEnumerable<string> articleTagList)
+            internal static List<ArticleTag> GetArticleTagsToCreate(Article article, IEnumerable<string> articleTagList)
             {
                 var articleTagsToCreate = new List<ArticleTag>();
                 foreach (var tag in articleTagList)
