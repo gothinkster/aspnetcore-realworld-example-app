@@ -11,7 +11,7 @@ using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Conduit
 {
-    public static class StartupExtensions
+    public static class ProgramExtensions
     {
         public static void AddJwt(this IServiceCollection services)
         {
