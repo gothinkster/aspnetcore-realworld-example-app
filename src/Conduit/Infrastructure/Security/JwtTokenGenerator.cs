@@ -9,10 +9,7 @@ namespace Conduit.Infrastructure.Security
     {
         private readonly JwtIssuerOptions _jwtOptions;
 
-        public JwtTokenGenerator(IOptions<JwtIssuerOptions> jwtOptions)
-        {
-            _jwtOptions = jwtOptions.Value;
-        }
+        public JwtTokenGenerator(IOptions<JwtIssuerOptions> jwtOptions) => _jwtOptions = jwtOptions.Value;
 
         public string CreateToken(string username)
         {
