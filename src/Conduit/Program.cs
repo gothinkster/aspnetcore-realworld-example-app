@@ -98,7 +98,7 @@ builder.Services.AddMvc(opt =>
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
-builder.Services.AddValidatorsFromAssemblyContaining<Startup>();
+//builder.Services.AddValidatorsFromAssemblyContaining<Startup>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
