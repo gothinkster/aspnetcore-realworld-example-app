@@ -16,10 +16,7 @@ namespace Conduit.Features.Followers
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            public CommandValidator()
-            {
-                DefaultValidatorExtensions.NotNull(RuleFor(x => x.Username)).NotEmpty();
-            }
+            public CommandValidator() => DefaultValidatorExtensions.NotNull(RuleFor(x => x.Username)).NotEmpty();
         }
 
         public class QueryHandler : IRequestHandler<Command, ProfileEnvelope>

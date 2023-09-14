@@ -18,10 +18,7 @@ namespace Conduit.Features.Users
 
         public class QueryValidator : AbstractValidator<Query>
         {
-            public QueryValidator()
-            {
-                RuleFor(x => x.Username).NotNull().NotEmpty();
-            }
+            public QueryValidator() => RuleFor(x => x.Username).NotNull().NotEmpty();
         }
 
         public class QueryHandler : IRequestHandler<Query, UserEnvelope>

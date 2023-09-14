@@ -10,15 +10,9 @@ namespace Conduit.Features.Profiles
     {
         private readonly IMediator _mediator;
 
-        public ProfilesController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        public ProfilesController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet("{username}")]
-        public Task<ProfileEnvelope> Get(string username, CancellationToken cancellationToken)
-        {
-            return _mediator.Send(new Details.Query(username), cancellationToken);
-        }
+        public Task<ProfileEnvelope> Get(string username, CancellationToken cancellationToken) => _mediator.Send(new Details.Query(username), cancellationToken);
     }
 }

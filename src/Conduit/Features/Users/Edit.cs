@@ -30,10 +30,7 @@ namespace Conduit.Features.Users
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            public CommandValidator()
-            {
-                RuleFor(x => x.User).NotNull();
-            }
+            public CommandValidator() => RuleFor(x => x.User).NotNull();
         }
 
         public class Handler : IRequestHandler<Command, UserEnvelope>

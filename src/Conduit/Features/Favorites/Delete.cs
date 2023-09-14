@@ -16,10 +16,7 @@ namespace Conduit.Features.Favorites
 
         public class CommandValidator : AbstractValidator<Command>
         {
-            public CommandValidator()
-            {
-                DefaultValidatorExtensions.NotNull(RuleFor(x => x.Slug)).NotEmpty();
-            }
+            public CommandValidator() => DefaultValidatorExtensions.NotNull(RuleFor(x => x.Slug)).NotEmpty();
         }
 
         public class QueryHandler : IRequestHandler<Command, ArticleEnvelope>

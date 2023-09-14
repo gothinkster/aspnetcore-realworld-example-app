@@ -16,10 +16,7 @@ namespace Conduit.Features.Tags
         {
             private readonly ConduitContext _context;
 
-            public QueryHandler(ConduitContext context)
-            {
-                _context = context;
-            }
+            public QueryHandler(ConduitContext context) => _context = context;
 
             public async Task<TagsEnvelope> Handle(Query message, CancellationToken cancellationToken)
             {

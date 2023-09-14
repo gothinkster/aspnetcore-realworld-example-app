@@ -10,15 +10,9 @@ namespace Conduit.Features.Tags
     {
         private readonly IMediator _mediator;
 
-        public TagsController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        public TagsController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet]
-        public Task<TagsEnvelope> Get(CancellationToken cancellationToken)
-        {
-            return _mediator.Send(new List.Query(), cancellationToken);
-        }
+        public Task<TagsEnvelope> Get(CancellationToken cancellationToken) => _mediator.Send(new List.Query(), cancellationToken);
     }
 }
