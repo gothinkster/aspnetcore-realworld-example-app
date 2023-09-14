@@ -59,7 +59,7 @@ namespace Conduit.Infrastructure.Errors
                     LOGGER_MESSAGE(logger, "Unhandled Exception", e);
                     result = JsonSerializer.Serialize(new
                     {
-                        errors = localizer[Constants.InternalServerError].Value
+                        errors = localizer[Constants.INTERNAL_SERVER_ERROR].Value
                     });
                     break;
                 default:
