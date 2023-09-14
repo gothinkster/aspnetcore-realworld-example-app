@@ -18,10 +18,7 @@ namespace Conduit.Features.Comments
         public record Model(CommentData Comment) : IRequest<CommentEnvelope>;
         public class CommandValidator : AbstractValidator<Command>
         {
-            public CommandValidator()
-            {
-                RuleFor(x => x.Model.Comment.Body).NotEmpty();
-            }
+            public CommandValidator() => RuleFor(x => x.Model.Comment.Body).NotEmpty();
         }
 
         public class Handler : IRequestHandler<Command, CommentEnvelope>
