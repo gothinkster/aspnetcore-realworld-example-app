@@ -13,7 +13,6 @@ using System;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
 using FluentValidation.AspNetCore;
-using FluentValidation;
 using Conduit.Infrastructure.Errors;
 using Microsoft.Extensions.Logging;
 
@@ -25,7 +24,7 @@ var defaultDatabaseProvider = "sqlite";
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DBContextTransactionPipelineBehavior<,>));
