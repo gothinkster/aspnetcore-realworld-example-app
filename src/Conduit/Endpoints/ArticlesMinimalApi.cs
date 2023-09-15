@@ -1,7 +1,6 @@
 
 using System.Threading;
 using Conduit.Features.Articles;
-using Conduit.Infrastructure;
 using Conduit.Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
