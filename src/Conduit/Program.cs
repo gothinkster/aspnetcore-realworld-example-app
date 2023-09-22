@@ -5,7 +5,6 @@ using Conduit.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +14,7 @@ using System.Collections.Generic;
 using FluentValidation.AspNetCore;
 using Conduit.Infrastructure.Errors;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http.Json;
 
 // read database configuration (database provider + database connection) from environment variables
 //Environment.GetEnvironmentVariable(DEFAULT_DATABASE_PROVIDER)
@@ -86,15 +86,18 @@ builder.Services.AddSwaggerGen(x =>
 });
 
 builder.Services.AddCors();
-builder.Services.AddMvc(opt =>
-{
-    opt.Conventions.Add(new GroupByApiRootConvention());
-    opt.Filters.Add(typeof(ValidatorActionFilter));
-    opt.EnableEndpointRouting = false;
-})
-    .AddJsonOptions(opt => opt.JsonSerializerOptions.DefaultIgnoreCondition =
-          System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
+//TODO: Add Action Filters to Minimal Api
+//builder.Services.AddMvc(opt =>
+//{
+//    opt.Conventions.Add(new GroupByApiRootConvention());
+//    opt.Filters.Add(typeof(ValidatorActionFilter));
+//    opt.EnableEndpointRouting = false;
+//})
+//    .AddJsonOptions(opt => opt.JsonSerializerOptions.DefaultIgnoreCondition =
+//          System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
 
+
+builder.Services.Configure<JsonOptions>(opt => opt.SerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 //builder.Services.AddValidatorsFromAssemblyContaining<Startup>();
