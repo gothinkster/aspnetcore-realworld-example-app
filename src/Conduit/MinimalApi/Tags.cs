@@ -11,6 +11,6 @@ namespace Conduit.MinimalApi
            app.MapGet("tags", async (
                CancellationToken cancellationToken,
                IMediator mediator)
-               => await mediator.Send(new List.Query(), cancellationToken));
+               => await mediator.Send(new List.Query(), cancellationToken)).WithOpenApi();
     }
 }

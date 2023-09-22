@@ -13,10 +13,10 @@ namespace Conduit.MinimalApi
         {
             app.MapPost("articles/{slug}/favorite", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
                  CancellationToken cancellationToken,
-               IMediator mediator) => await mediator.Send(new Add.Command(slug), cancellationToken));
+               IMediator mediator) => await mediator.Send(new Add.Command(slug), cancellationToken)).WithOpenApi();
 
             app.MapDelete("articles/{slug}/favorite", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
-                CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(slug), cancellationToken));
+                CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(slug), cancellationToken)).WithOpenApi();
 
         }
     }

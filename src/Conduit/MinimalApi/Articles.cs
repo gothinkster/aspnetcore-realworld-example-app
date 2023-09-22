@@ -20,7 +20,7 @@ namespace Conduit.MinimalApi
                 [FromQuery] int? limit,
                 [FromQuery] int? offset,
                 CancellationToken cancellationToken,
-                IMediator mediator) => await mediator.Send(new List.Query(tag, author, favorited, limit, offset), cancellationToken));
+                IMediator mediator) => await mediator.Send(new List.Query(tag, author, favorited, limit, offset), cancellationToken)).WithOpenApi();
 
             app.MapGet("articles/feed", async ([FromQuery] string tag,
                 [FromQuery] string author,
@@ -28,22 +28,22 @@ namespace Conduit.MinimalApi
                 [FromQuery] int? limit,
                 [FromQuery] int? offset,
                 CancellationToken cancellationToken,
-                IMediator mediator) => await mediator.Send(new List.Query(tag, author, favorited, limit, offset)));
+                IMediator mediator) => await mediator.Send(new List.Query(tag, author, favorited, limit, offset))).WithOpenApi();
 
             app.MapGet("articles/{slug}", async (string slug,
                 CancellationToken cancellationToken,
-               IMediator mediator) => await mediator.Send(new Details.Query(slug), cancellationToken));
+               IMediator mediator) => await mediator.Send(new Details.Query(slug), cancellationToken)).WithOpenApi();
 
             app.MapPost("articles", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async ([FromBody] Create.Command command,
                CancellationToken cancellationToken,
-               IMediator mediator) => await mediator.Send(command, cancellationToken));
+               IMediator mediator) => await mediator.Send(command, cancellationToken)).WithOpenApi();
 
             app.MapPut("articles/{slug}", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
                 [FromBody] Edit.Model model,
-                CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Edit.Command(model, slug), cancellationToken));
+                CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Edit.Command(model, slug), cancellationToken)).WithOpenApi();
 
             app.MapDelete("articles/{slug}", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
-                CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(slug), cancellationToken));
+                CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(slug), cancellationToken)).WithOpenApi();
         }
     }
 }

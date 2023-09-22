@@ -11,6 +11,6 @@ namespace Conduit.MinimalApi
             app.MapGet("profiles/{username}", async (string username,
                 CancellationToken cancellationToken,
                 IMediator mediator)
-                => await mediator.Send(new Details.Query(username), cancellationToken));
+                => await mediator.Send(new Details.Query(username), cancellationToken)).WithOpenApi();
     }
 }
