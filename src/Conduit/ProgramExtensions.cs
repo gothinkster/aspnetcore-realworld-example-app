@@ -65,6 +65,7 @@ namespace Conduit
                     };
 
                 });
+            services.AddAuthorization();
         }
 
         public static void AddSerilogLogging(this ILoggerFactory loggerFactory)
