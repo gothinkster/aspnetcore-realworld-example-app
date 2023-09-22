@@ -15,6 +15,7 @@ using FluentValidation.AspNetCore;
 using Conduit.Infrastructure.Errors;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http.Json;
+using Conduit.MinimalApi;
 
 // read database configuration (database provider + database connection) from environment variables
 //Environment.GetEnvironmentVariable(DEFAULT_DATABASE_PROVIDER)
@@ -126,7 +127,13 @@ app.UseCors(builder =>
 
 app.UseAuthentication();
 //app.UseMvc();
-
+app.RegisterArticleEndpoints();
+app.RegisterCommentEndpoints();
+app.RegisterFavoritesEndpoint();
+app.RegisterFollowerEndpoints();
+app.RegisterProfileEndpoints();
+app.RegisterTagsEndpoints();
+app.RegisterUsersEndpoint();
 // Enable middleware to serve generated Swagger as a JSON endpoint
 app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
 
