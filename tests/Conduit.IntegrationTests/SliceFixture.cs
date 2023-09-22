@@ -22,14 +22,14 @@ namespace Conduit.IntegrationTests
 
         public SliceFixture()
         {
-            var startup = new Startup();
+            //var startup = new Startup();
             var services = new ServiceCollection();
 
             var builder = new DbContextOptionsBuilder();
             builder.UseInMemoryDatabase(_dbName);
             services.AddSingleton(new ConduitContext(builder.Options));
 
-            startup.ConfigureServices(services);
+            //startup.ConfigureServices(services);
 
             _provider = services.BuildServiceProvider();
 
