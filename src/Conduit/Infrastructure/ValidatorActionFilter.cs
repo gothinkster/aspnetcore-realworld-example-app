@@ -9,7 +9,7 @@ namespace Conduit.Infrastructure
 {
     public class ValidatorActionFilter : IActionFilter
     {
-        private readonly ILogger logger;
+        
 
         public ValidatorActionFilter(ILogger<ValidatorActionFilter> logger) => this.logger = logger;
 
