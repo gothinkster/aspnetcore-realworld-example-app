@@ -116,7 +116,7 @@ builder.Services.AddJwt();
 var app = builder.Build();
 
 app.Services.GetRequiredService<ILoggerFactory>().AddSerilogLogging();
-
+app.UseRouting();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseCors(builder =>
@@ -125,6 +125,7 @@ app.UseCors(builder =>
         .AllowAnyHeader()
         .AllowAnyMethod());
 
+app.UseAuthorization();
 app.UseAuthentication();
 //app.UseMvc();
 app.RegisterArticleEndpoints();
@@ -139,7 +140,6 @@ app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
 
 // Enable middleware to serve swagger-ui assets(HTML, JS, CSS etc.)
 app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld API V1"));
-
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ConduitContext>().Database.EnsureCreated();
