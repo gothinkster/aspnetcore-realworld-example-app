@@ -3,16 +3,20 @@ using System.Linq;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
+//using Microsoft.Extensions.Logging;
 
 namespace Conduit.Infrastructure
 {
     public class ValidatorActionFilter : IActionFilter
     {
-        private readonly ILogger logger;
+        /// <summary>
+        /// private readonly ILogger logger;
+        /// </summary>
+        /// <param name="logger"></param>
 
-        public ValidatorActionFilter(ILogger<ValidatorActionFilter> logger) => this.logger = logger;
+        ///public ValidatorActionFilter(ILogger<ValidatorActionFilter> logger) => this.logger = logger;
 
+        public ValidatorActionFilter() { }
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (!filterContext.ModelState.IsValid)
