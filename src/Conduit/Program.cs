@@ -10,7 +10,6 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using System;
 using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
 using FluentValidation.AspNetCore;
 using Conduit.Infrastructure.Errors;
 using Microsoft.Extensions.Logging;
