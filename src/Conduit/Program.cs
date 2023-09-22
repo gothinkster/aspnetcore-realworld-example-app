@@ -122,7 +122,7 @@ app.UseCors(builder =>
         .AllowAnyMethod());
 
 app.UseAuthentication();
-app.UseMvc();
+//app.UseMvc();
 
 // Enable middleware to serve generated Swagger as a JSON endpoint
 app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
