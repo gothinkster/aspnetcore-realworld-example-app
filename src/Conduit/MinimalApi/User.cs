@@ -21,11 +21,11 @@ namespace Conduit.MinimalApi
             async ([FromBody] Edit.Command command, CancellationToken cancellationToken,
                 IMediator mediator) => await mediator.Send(command, cancellationToken)).WithOpenApi();
 
-            app.MapPost("users", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
+            app.MapPost("user",
             async ([FromBody] Create.Command command, CancellationToken cancellationToken,
                IMediator mediator) => await mediator.Send(command, cancellationToken)).WithOpenApi();
 
-            app.MapPost("users/login", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
+            app.MapPost("user/login",
             async ([FromBody] Login.Command command, CancellationToken cancellationToken,
               IMediator mediator) => await mediator.Send(command, cancellationToken)).WithOpenApi();
         }
