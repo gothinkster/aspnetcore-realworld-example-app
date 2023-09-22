@@ -7,7 +7,7 @@ namespace Conduit.MinimalApi
 {
     public static class Tags
     {
-        public static void RegisterProfileEndpoints(this WebApplication app) =>
+        public static void RegisterTagsEndpoints(this WebApplication app) =>
            app.MapGet("tags", async (
                CancellationToken cancellationToken,
                IMediator mediator)
