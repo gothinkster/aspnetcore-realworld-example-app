@@ -1,4 +1,5 @@
 using Conduit.Features.Comments;
+using Conduit.Infrastructure;
 using Conduit.Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -14,14 +15,14 @@ namespace Conduit.MinimalApi
         public static RouteGroupBuilder RegisterCommentEndpoints(this RouteGroupBuilder app)
         {
             app.MapPost("articles/{slug}/comments", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
-                [FromBody] Create.Model model, CancellationToken cancellationToken,
+                [Validate][FromBody] Create.Model model, CancellationToken cancellationToken,
                IMediator mediator) => await mediator.Send(new Create.Command(model, slug), cancellationToken));
 
             app.MapGet("articles/{slug}/comments", async (string slug,
                [FromBody] Create.Model model, CancellationToken cancellationToken,
               IMediator mediator) => await mediator.Send(new List.Query(slug), cancellationToken));
 
-            app.MapDelete("articles/{slug}/comments/{id}", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
+            app.MapDelete("articles/{slug}/comments/{id}", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async ([Validate] string slug,
                 int id, CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(slug, id), cancellationToken));
 
             return app;

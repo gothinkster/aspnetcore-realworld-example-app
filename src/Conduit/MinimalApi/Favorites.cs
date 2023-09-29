@@ -1,4 +1,5 @@
 using Conduit.Features.Favorites;
+using Conduit.Infrastructure;
 using Conduit.Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -12,11 +13,11 @@ namespace Conduit.MinimalApi
     {
         public static RouteGroupBuilder RegisterFavoritesEndpoint(this RouteGroupBuilder app)
         {
-            app.MapPost("articles/{slug}/favorite", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
+            app.MapPost("articles/{slug}/favorite", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async ([Validate] string slug,
                  CancellationToken cancellationToken,
                IMediator mediator) => await mediator.Send(new Add.Command(slug), cancellationToken));
 
-            app.MapDelete("articles/{slug}/favorite", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
+            app.MapDelete("articles/{slug}/favorite", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async ([Validate] string slug,
                 CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(slug), cancellationToken));
 
             return app;

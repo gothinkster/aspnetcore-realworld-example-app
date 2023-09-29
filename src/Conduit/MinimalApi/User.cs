@@ -15,19 +15,19 @@ namespace Conduit.MinimalApi
         public static RouteGroupBuilder RegisterUsersEndpoint(this RouteGroupBuilder app)
         {
             app.MapGet("user", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-            async (ICurrentUserAccessor currentUserAccessor, CancellationToken cancellationToken,
+            async ([Validate]ICurrentUserAccessor currentUserAccessor, CancellationToken cancellationToken,
               IMediator mediator) => await mediator.Send(new Details.Query(currentUserAccessor.GetCurrentUsername() ?? "<unknown>"), cancellationToken));
 
             app.MapPut("user", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-            async ([FromBody] Edit.Command command, CancellationToken cancellationToken,
+            async ([Validate][FromBody] Edit.Command command, CancellationToken cancellationToken,
                 IMediator mediator) => await mediator.Send(command, cancellationToken));
 
             app.MapPost("user",
-            async ([FromBody] Create.Command command, CancellationToken cancellationToken,
+            async ([Validate][FromBody] Create.Command command, CancellationToken cancellationToken,
                IMediator mediator) => await mediator.Send(command, cancellationToken));
 
             app.MapPost("user/login",
-            async ([FromBody] Login.Command command, CancellationToken cancellationToken,
+            async ([Validate][FromBody] Login.Command command, CancellationToken cancellationToken,
               IMediator mediator) => await mediator.Send(command, cancellationToken));
 
             return app;

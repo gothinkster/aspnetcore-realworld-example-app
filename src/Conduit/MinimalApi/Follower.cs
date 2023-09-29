@@ -1,4 +1,5 @@
 using Conduit.Features.Followers;
+using Conduit.Infrastructure;
 using Conduit.Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -13,11 +14,11 @@ namespace Conduit.MinimalApi
         public static RouteGroupBuilder RegisterFollowerEndpoints(this RouteGroupBuilder app)
         {
             app.MapPost("profiles/{username}/follow", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-            async (string username, CancellationToken cancellationToken,
+            async ([Validate] string username, CancellationToken cancellationToken,
               IMediator mediator) => await mediator.Send(new Add.Command(username), cancellationToken));
 
             app.MapDelete("profiles/{slug}/comments/{id}", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-            async (string username, CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(username), cancellationToken));
+            async ([Validate] string username, CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(username), cancellationToken));
 
             return app;
         }

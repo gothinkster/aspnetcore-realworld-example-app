@@ -3,6 +3,7 @@ using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Conduit.Features.Profiles;
 using Microsoft.AspNetCore.Routing;
+using Conduit.Infrastructure;
 
 namespace Conduit.MinimalApi
 {
@@ -10,7 +11,7 @@ namespace Conduit.MinimalApi
     {
         public static RouteGroupBuilder RegisterProfileEndpoints(this RouteGroupBuilder app)
         {
-            app.MapGet("profiles/{username}", async (string username,
+            app.MapGet("profiles/{username}", async ([Validate] string username,
                 CancellationToken cancellationToken,
                 IMediator mediator)
                 => await mediator.Send(new Details.Query(username), cancellationToken));

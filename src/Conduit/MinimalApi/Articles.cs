@@ -1,6 +1,7 @@
 
 using System.Threading;
 using Conduit.Features.Articles;
+using Conduit.Infrastructure;
 using Conduit.Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -30,19 +31,19 @@ namespace Conduit.MinimalApi
                 CancellationToken cancellationToken,
                 IMediator mediator) => await mediator.Send(new List.Query(tag, author, favorited, limit, offset)));
 
-            app.MapGet("articles/{slug}", async (string slug,
+            app.MapGet("articles/{slug}", async ([Validate] string slug,
                 CancellationToken cancellationToken,
                IMediator mediator) => await mediator.Send(new Details.Query(slug), cancellationToken));
 
-            app.MapPost("articles", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async ([FromBody] Create.Command command,
+            app.MapPost("articles", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async ([Validate][FromBody] Create.Command command,
                CancellationToken cancellationToken,
                IMediator mediator) => await mediator.Send(command, cancellationToken));
 
             app.MapPut("articles/{slug}", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
-                [FromBody] Edit.Model model,
+                [Validate][FromBody] Edit.Model model,
                 CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Edit.Command(model, slug), cancellationToken));
 
-            app.MapDelete("articles/{slug}", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
+            app.MapDelete("articles/{slug}", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async ([Validate] string slug,
                 CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(slug), cancellationToken));
 
             return app;
