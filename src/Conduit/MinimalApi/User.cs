@@ -16,19 +16,19 @@ namespace Conduit.MinimalApi
         {
             app.MapGet("user", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
             async (ICurrentUserAccessor currentUserAccessor, CancellationToken cancellationToken,
-              IMediator mediator) => await mediator.Send(new Details.Query(currentUserAccessor.GetCurrentUsername() ?? "<unknown>"), cancellationToken)).WithOpenApi();
+              IMediator mediator) => await mediator.Send(new Details.Query(currentUserAccessor.GetCurrentUsername() ?? "<unknown>"), cancellationToken));
 
             app.MapPut("user", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
             async ([FromBody] Edit.Command command, CancellationToken cancellationToken,
-                IMediator mediator) => await mediator.Send(command, cancellationToken)).WithOpenApi();
+                IMediator mediator) => await mediator.Send(command, cancellationToken));
 
             app.MapPost("user",
             async ([FromBody] Create.Command command, CancellationToken cancellationToken,
-               IMediator mediator) => await mediator.Send(command, cancellationToken)).WithOpenApi();
+               IMediator mediator) => await mediator.Send(command, cancellationToken));
 
             app.MapPost("user/login",
             async ([FromBody] Login.Command command, CancellationToken cancellationToken,
-              IMediator mediator) => await mediator.Send(command, cancellationToken)).WithOpenApi();
+              IMediator mediator) => await mediator.Send(command, cancellationToken));
 
             return app;
         }

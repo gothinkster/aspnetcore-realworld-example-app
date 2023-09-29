@@ -14,10 +14,10 @@ namespace Conduit.MinimalApi
         {
             app.MapPost("profiles/{username}/follow", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
             async (string username, CancellationToken cancellationToken,
-              IMediator mediator) => await mediator.Send(new Add.Command(username), cancellationToken)).WithOpenApi();
+              IMediator mediator) => await mediator.Send(new Add.Command(username), cancellationToken));
 
             app.MapDelete("profiles/{slug}/comments/{id}", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-            async (string username, CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(username), cancellationToken)).WithOpenApi();
+            async (string username, CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(username), cancellationToken));
 
             return app;
         }

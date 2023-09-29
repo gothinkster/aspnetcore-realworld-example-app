@@ -15,14 +15,14 @@ namespace Conduit.MinimalApi
         {
             app.MapPost("articles/{slug}/comments", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
                 [FromBody] Create.Model model, CancellationToken cancellationToken,
-               IMediator mediator) => await mediator.Send(new Create.Command(model, slug), cancellationToken)).WithOpenApi();
+               IMediator mediator) => await mediator.Send(new Create.Command(model, slug), cancellationToken));
 
             app.MapGet("articles/{slug}/comments", async (string slug,
                [FromBody] Create.Model model, CancellationToken cancellationToken,
-              IMediator mediator) => await mediator.Send(new List.Query(slug), cancellationToken)).WithOpenApi();
+              IMediator mediator) => await mediator.Send(new List.Query(slug), cancellationToken));
 
             app.MapDelete("articles/{slug}/comments/{id}", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
-                int id, CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(slug, id), cancellationToken)).WithOpenApi();
+                int id, CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(slug, id), cancellationToken));
 
             return app;
 
