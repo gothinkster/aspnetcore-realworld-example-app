@@ -15,6 +15,7 @@ using Conduit.Infrastructure.Errors;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http.Json;
 using Conduit.MinimalApi;
+using FluentValidation;
 
 // read database configuration (database provider + database connection) from environment variables
 //Environment.GetEnvironmentVariable(DEFAULT_DATABASE_PROVIDER)
@@ -101,7 +102,7 @@ builder.Services.AddCors();
 builder.Services.Configure<JsonOptions>(opt => opt.SerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
-//builder.Services.AddValidatorsFromAssemblyContaining<Startup>();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
 
 builder.Services.AddAutoMapper(typeof(Program));
 

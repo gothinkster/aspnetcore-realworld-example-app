@@ -1,46 +1,88 @@
+
+
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Net;
+using System.Reflection;
+using System.Threading.Tasks;
+using System;
 using System.Linq;
-using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-//using Microsoft.Extensions.Logging;
 
 namespace Conduit.Infrastructure
 {
-    public class ValidatorActionFilter : IActionFilter
+
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
+    public class ValidateAttribute : Attribute
     {
-        /// <summary>
-        /// private readonly ILogger logger;
-        /// </summary>
-        /// <param name="logger"></param>
+    }
 
-        ///public ValidatorActionFilter(ILogger<ValidatorActionFilter> logger) => this.logger = logger;
-
-        public ValidatorActionFilter() { }
-        public void OnActionExecuting(ActionExecutingContext filterContext)
+    public static class ValidationActionFilter
+    {
+        public static EndpointFilterDelegate ValidationFilterFactory(EndpointFilterFactoryContext context, EndpointFilterDelegate next)
         {
-            if (!filterContext.ModelState.IsValid)
+            var validationDescriptors = GetValidators(context.MethodInfo, context.ApplicationServices);
+
+            if (validationDescriptors.Any())
             {
-                var result = new ContentResult();
-                var errors = new Dictionary<string, string[]>();
+                return invocationContext => Validate(validationDescriptors, invocationContext, next);
+            }
 
-                foreach (var valuePair in filterContext.ModelState)
+            // pass-thru
+            return invocationContext => next(invocationContext);
+        }
+
+        private static async ValueTask<object?> Validate(IEnumerable<ValidationDescriptor> validationDescriptors, EndpointFilterInvocationContext invocationContext, EndpointFilterDelegate next)
+        {
+            foreach (var descriptor in validationDescriptors)
+            {
+                var argument = invocationContext.Arguments[descriptor.ArgumentIndex];
+
+                if (argument is not null)
                 {
-                    errors.Add(valuePair.Key, valuePair.Value.Errors.Select(x => x.ErrorMessage).ToArray());
+                    var validationResult = await descriptor.Validator.ValidateAsync(
+                        new ValidationContext<object>(argument)
+                    );
+
+                    if (!validationResult.IsValid)
+                    {
+                        return Results.ValidationProblem(validationResult.ToDictionary(),
+                            statusCode: (int)HttpStatusCode.UnprocessableEntity);
+                    }
                 }
+            }
 
-                var content = JsonSerializer.Serialize(new { errors });
-                result.Content = content;
-                result.ContentType = "application/json";
+            return await next.Invoke(invocationContext);
+        }
 
-                filterContext.HttpContext.Response.StatusCode = 422; //unprocessable entity;
-                filterContext.Result = result;
+        private static IEnumerable<ValidationDescriptor> GetValidators(MethodInfo methodInfo, IServiceProvider serviceProvider)
+        {
+            var parameters = methodInfo.GetParameters();
+
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                var parameter = parameters[i];
+
+                if (parameter.GetCustomAttribute<ValidateAttribute>() is not null)
+                {
+                    var validatorType = typeof(IValidator<>).MakeGenericType(parameter.ParameterType);
+
+                    // Note that FluentValidation validators needs to be registered as singleton
+                    var validator = serviceProvider.GetService(validatorType) as IValidator;
+
+                    if (validator is not null)
+                    {
+                        yield return new ValidationDescriptor { ArgumentIndex = i, ArgumentType = parameter.ParameterType, Validator = validator };
+                    }
+                }
             }
         }
 
-        public void OnActionExecuted(ActionExecutedContext filterContext)
+        private class ValidationDescriptor
         {
-
+            public required int ArgumentIndex { get; init; }
+            public required Type ArgumentType { get; init; }
+            public required IValidator Validator { get; init; }
         }
     }
 }
