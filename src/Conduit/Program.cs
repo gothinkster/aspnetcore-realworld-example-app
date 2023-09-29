@@ -88,15 +88,7 @@ builder.Services.AddSwaggerGen(x =>
 });
 
 builder.Services.AddCors();
-//TODO: Add Action Filters to Minimal Api
-//builder.Services.AddMvc(opt =>
-//{
-//    opt.Conventions.Add(new GroupByApiRootConvention());
-//    opt.Filters.Add(typeof(ValidatorActionFilter));
-//    opt.EnableEndpointRouting = false;
-//})
-//    .AddJsonOptions(opt => opt.JsonSerializerOptions.DefaultIgnoreCondition =
-//          System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
+
 
 
 builder.Services.Configure<JsonOptions>(opt => opt.SerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
