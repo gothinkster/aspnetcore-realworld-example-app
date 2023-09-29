@@ -15,7 +15,7 @@ namespace Conduit.MinimalApi
         public static RouteGroupBuilder RegisterUsersEndpoint(this RouteGroupBuilder app)
         {
             app.MapGet("user", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-            async ([Validate]ICurrentUserAccessor currentUserAccessor, CancellationToken cancellationToken,
+            async ([Validate] ICurrentUserAccessor currentUserAccessor, CancellationToken cancellationToken,
               IMediator mediator) => await mediator.Send(new Details.Query(currentUserAccessor.GetCurrentUsername() ?? "<unknown>"), cancellationToken));
 
             app.MapPut("user", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
