@@ -1,45 +1,81 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Conduit.Features.Profiles;
 using Conduit.Infrastructure;
+using Conduit.Infrastructure.Security;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Xunit;
+using Microsoft.AspNetCore.Http.Json;
+using System.Reflection;
 
 namespace Conduit.IntegrationTests
 {
-    public class SliceFixture : IDisposable
+    [CollectionDefinition(nameof(SliceFixture))]
+    public class SliceFixtureCollection : ICollectionFixture<SliceFixture> { }
+    public class SliceFixture : IAsyncLifetime
     {
         //private static readonly IConfiguration CONFIG;
 
-        private readonly IServiceScopeFactory _scopeFactory;
-        private readonly ServiceProvider _provider;
-        private readonly string _dbName = Guid.NewGuid() + ".db";
 
+        private static IServiceScopeFactory _scopeFactory;
+        private static ServiceProvider _provider;
+        private readonly string _dbName = "Filename=realworldtest.db";
         //static SliceFixture() => CONFIG = new ConfigurationBuilder()
         //       .AddEnvironmentVariables()
         //       .Build();
 
+        public async Task InitializeAsync()
+        {
+            var builder = WebApplication.CreateBuilder();
+
+            var services = builder.Services;
+            services.AddEndpointsApiExplorer();
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DBContextTransactionPipelineBehavior<,>));
+            services.AddDbContext<ConduitContext>(options => options.UseInMemoryDatabase(_dbName));
+            //services.AddCors();
+            services.Configure<JsonOptions>(opt => opt.SerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
+            services.AddAutoMapper(typeof(Program));
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
+            services.AddScoped<IProfileReader, ProfileReader>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //GetDbContext().Database.EnsureCreated();
+            _provider = services.BuildServiceProvider();
+            _scopeFactory = _provider.GetService<IServiceScopeFactory>();
+
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<ConduitContext>().Database.EnsureCreated();
+            }
+            await Task.CompletedTask;
+        }
         public SliceFixture()
         {
-            //var startup = new Startup();
-            var services = new ServiceCollection();
-
-            var builder = new DbContextOptionsBuilder();
-            builder.UseInMemoryDatabase(_dbName);
-            services.AddSingleton(new ConduitContext(builder.Options));
-
-            //startup.ConfigureServices(services);
-
-            _provider = services.BuildServiceProvider();
-
-            GetDbContext().Database.EnsureCreated();
-            _scopeFactory = _provider.GetService<IServiceScopeFactory>();
+            //_provider = services.BuildServiceProvider();
+            //_scopeFactory = _provider.GetService<IServiceScopeFactory>();
         }
 
         public ConduitContext GetDbContext() => _provider.GetRequiredService<ConduitContext>();
 
-        public void Dispose() => File.Delete(_dbName);
+        public async Task DeleteDatabaseAsync()
+        {
+            File.Delete(_dbName);
+            await Task.CompletedTask;
+        }
+        public async Task DisposeAsync() => await DeleteDatabaseAsync();
 
         public async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
         {

@@ -23,7 +23,7 @@ namespace Conduit.MinimalApi
                 IMediator mediator) => await mediator.Send(command, cancellationToken));
 
             app.MapPost("user",
-            async ([Validate][FromBody] Create.Command command, CancellationToken cancellationToken,
+            async ([FromBody] Create.Command command, CancellationToken cancellationToken,
                IMediator mediator) => await mediator.Send(command, cancellationToken));
 
             app.MapPost("user/login",

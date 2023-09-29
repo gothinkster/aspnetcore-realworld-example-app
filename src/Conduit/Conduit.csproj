@@ -27,6 +27,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Infrastructure.Errors.ErrorHandlingMiddleware.resx</DependentUpon>
     </Compile>
+    <InternalsVisibleTo Include="$(AssmeblyName).IntegrationTests"></InternalsVisibleTo>
   </ItemGroup>
 
   <ItemGroup>
