@@ -130,15 +130,7 @@ app.UseAuthorization();
 app.UseAuthentication();
 //app.UseMvc();
 
-var root = app.MapGroup("");
-root.AddEndpointFilterFactory(ValidationActionFilter.ValidationFilterFactory);
-root.RegisterArticleEndpoints();
-root.RegisterCommentEndpoints();
-root.RegisterFavoritesEndpoint();
-root.RegisterFollowerEndpoints();
-root.RegisterProfileEndpoints();
-root.RegisterTagsEndpoints();
-root.RegisterUsersEndpoint();
+
 // Enable middleware to serve generated Swagger as a JSON endpoint
 app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
 
@@ -148,5 +140,16 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ConduitContext>().Database.EnsureCreated();
 }
+
+var root = app.MapGroup("");
+root.AddEndpointFilterFactory(ValidationActionFilter.ValidationFilterFactory);
+root.RegisterArticleEndpoints().WithOpenApi();
+root.RegisterCommentEndpoints().WithOpenApi();
+root.RegisterFavoritesEndpoint().WithOpenApi();
+root.RegisterFollowerEndpoints().WithOpenApi();
+root.RegisterProfileEndpoints().WithOpenApi();
+root.RegisterTagsEndpoints().WithOpenApi();
+root.RegisterUsersEndpoint().WithOpenApi();
+
 app.Run();
 
