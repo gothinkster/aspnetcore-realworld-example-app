@@ -12,7 +12,7 @@ namespace Conduit.MinimalApi
 {
     public static class Articles
     {
-        public static void RegisterArticleEndpoints(this WebApplication app)
+        public static RouteGroupBuilder RegisterArticleEndpoints(this RouteGroupBuilder app)
         {
             app.MapGet("articles", async ([FromQuery] string tag,
                 [FromQuery] string author,
@@ -44,6 +44,8 @@ namespace Conduit.MinimalApi
 
             app.MapDelete("articles/{slug}", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
                 CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(slug), cancellationToken)).WithOpenApi();
+
+            return app;
         }
     }
 }

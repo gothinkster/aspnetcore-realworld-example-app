@@ -129,13 +129,16 @@ app.UseCors(builder =>
 app.UseAuthorization();
 app.UseAuthentication();
 //app.UseMvc();
-app.RegisterArticleEndpoints();
-app.RegisterCommentEndpoints();
-app.RegisterFavoritesEndpoint();
-app.RegisterFollowerEndpoints();
-app.RegisterProfileEndpoints();
-app.RegisterTagsEndpoints();
-app.RegisterUsersEndpoint();
+
+var root = app.MapGroup("");
+root.AddEndpointFilterFactory(ValidationActionFilter.ValidationFilterFactory);
+root.RegisterArticleEndpoints();
+root.RegisterCommentEndpoints();
+root.RegisterFavoritesEndpoint();
+root.RegisterFollowerEndpoints();
+root.RegisterProfileEndpoints();
+root.RegisterTagsEndpoints();
+root.RegisterUsersEndpoint();
 // Enable middleware to serve generated Swagger as a JSON endpoint
 app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
 

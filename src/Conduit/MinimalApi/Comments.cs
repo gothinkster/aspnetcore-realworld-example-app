@@ -4,13 +4,14 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using System.Threading;
 
 namespace Conduit.MinimalApi
 {
     public static class Comments
     {
-        public static void RegisterCommentEndpoints(this WebApplication app)
+        public static RouteGroupBuilder RegisterCommentEndpoints(this RouteGroupBuilder app)
         {
             app.MapPost("articles/{slug}/comments", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
                 [FromBody] Create.Model model, CancellationToken cancellationToken,
@@ -22,6 +23,8 @@ namespace Conduit.MinimalApi
 
             app.MapDelete("articles/{slug}/comments/{id}", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)] async (string slug,
                 int id, CancellationToken cancellationToken, IMediator mediator) => await mediator.Send(new Delete.Command(slug, id), cancellationToken)).WithOpenApi();
+
+            return app;
 
         }
     }

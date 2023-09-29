@@ -6,12 +6,13 @@ using Conduit.Features.Users;
 using Microsoft.AspNetCore.Mvc;
 using Conduit.Infrastructure.Security;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Routing;
 
 namespace Conduit.MinimalApi
 {
     public static class User
     {
-        public static void RegisterUsersEndpoint(this WebApplication app)
+        public static RouteGroupBuilder RegisterUsersEndpoint(this RouteGroupBuilder app)
         {
             app.MapGet("user", [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
             async (ICurrentUserAccessor currentUserAccessor, CancellationToken cancellationToken,
@@ -28,6 +29,8 @@ namespace Conduit.MinimalApi
             app.MapPost("user/login",
             async ([FromBody] Login.Command command, CancellationToken cancellationToken,
               IMediator mediator) => await mediator.Send(command, cancellationToken)).WithOpenApi();
+
+            return app;
         }
     }
 }
