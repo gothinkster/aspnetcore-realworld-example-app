@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Conduit.Features.Users;
 
@@ -5,7 +6,7 @@ namespace Conduit.IntegrationTests.Features.Users
 {
     public static class UserHelpers
     {
-        public static readonly string DefaultUserName = "username";
+        public static readonly string DefaultUserName = "username" + new Random().Next(0, 1000).ToString();
 
         /// <summary>
         /// creates a default user to be used in different tests
@@ -16,7 +17,7 @@ namespace Conduit.IntegrationTests.Features.Users
         {
             var command = new Create.Command(new Create.UserData()
             {
-                Email = "email",
+                Email = "email@" + new Random().Next(0, 1000).ToString() + ".com",
                 Password = "password",
                 Username = DefaultUserName
             });
