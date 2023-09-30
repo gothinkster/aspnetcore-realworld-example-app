@@ -38,8 +38,7 @@ namespace Conduit.IntegrationTests.Features.Comments
             );
 
             var dbComment = dbArticleWithComments.Comments
-                .Where(c => c.ArticleId == dbArticleWithComments.ArticleId && c.Author == dbArticleWithComments.Author)
-                .FirstOrDefault();
+.FirstOrDefault(c => c.ArticleId == dbArticleWithComments.ArticleId && c.Author == dbArticleWithComments.Author);
 
             return dbComment;
         }
