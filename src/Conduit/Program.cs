@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Http.Json;
 using Conduit.MinimalApi;
 using FluentValidation;
 
-// read database configuration (database provider + database connection) from environment variables
+//Read database configuration (database provider + database connection) from environment variables
 //Environment.GetEnvironmentVariable(DEFAULT_DATABASE_PROVIDER)
 //Environment.GetEnvironmentVariable(DEFAULT_DATABASE_CONNECTION_STRING)
 var defaultDatabaseConnectionString = "Filename=realworld.db";
