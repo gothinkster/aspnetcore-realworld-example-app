@@ -12,21 +12,14 @@ public class List
 {
     public record Query : IRequest<TagsEnvelope>;
 
-    public class QueryHandler : IRequestHandler<Query, TagsEnvelope>
+    public class QueryHandler(ConduitContext context) : IRequestHandler<Query, TagsEnvelope>
     {
-        private readonly ConduitContext _context;
-
-        public QueryHandler(ConduitContext context)
-        {
-            _context = context;
-        }
-
         public async Task<TagsEnvelope> Handle(
             Query message,
             CancellationToken cancellationToken
         )
         {
-            var tags = await _context.Tags
+            var tags = await context.Tags
                 .OrderBy(x => x.TagId)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);

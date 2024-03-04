@@ -2,9 +2,9 @@ namespace Conduit.Domain;
 
 public class FollowedPeople
 {
-    public int ObserverId { get; set; }
-    public Person? Observer { get; set; }
+    public int ObserverId { get; init; }
+    public Person? Observer { get; init; }
 
-    public int TargetId { get; set; }
-    public Person? Target { get; set; }
+    public int TargetId { get; init; }
+    public Person? Target { get; init; }
 }

@@ -16,30 +16,19 @@ public class Delete
 
     public class CommandValidator : AbstractValidator<Command>
     {
-        public CommandValidator()
-        {
-            DefaultValidatorExtensions.NotNull(RuleFor(x => x.Slug)).NotEmpty();
-        }
+        public CommandValidator() => RuleFor(x => x.Slug).NotNull().NotEmpty();
     }
 
-    public class QueryHandler : IRequestHandler<Command, ArticleEnvelope>
+    public class QueryHandler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
+        : IRequestHandler<Command, ArticleEnvelope>
     {
-        private readonly ConduitContext _context;
-        private readonly ICurrentUserAccessor _currentUserAccessor;
-
-        public QueryHandler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
-        {
-            _context = context;
-            _currentUserAccessor = currentUserAccessor;
-        }
-
         public async Task<ArticleEnvelope> Handle(
             Command message,
             CancellationToken cancellationToken
         )
         {
             var article =
-                await _context.Articles.FirstOrDefaultAsync(
+                await context.Articles.FirstOrDefaultAsync(
                     x => x.Slug == message.Slug,
                     cancellationToken
                 )
@@ -48,8 +37,8 @@ public class Delete
                     new { Article = Constants.NOT_FOUND }
                 );
 
-            var person = await _context.Persons.FirstOrDefaultAsync(
-                x => x.Username == _currentUserAccessor.GetCurrentUsername(),
+            var person = await context.Persons.FirstOrDefaultAsync(
+                x => x.Username == currentUserAccessor.GetCurrentUsername(),
                 cancellationToken
             );
             if (person is null)
@@ -60,19 +49,19 @@ public class Delete
                 );
             }
 
-            var favorite = await _context.ArticleFavorites.FirstOrDefaultAsync(
+            var favorite = await context.ArticleFavorites.FirstOrDefaultAsync(
                 x => x.ArticleId == article.ArticleId && x.PersonId == person.PersonId,
                 cancellationToken
             );
 
             if (favorite != null)
             {
-                _context.ArticleFavorites.Remove(favorite);
-                await _context.SaveChangesAsync(cancellationToken);
+                context.ArticleFavorites.Remove(favorite);
+                await context.SaveChangesAsync(cancellationToken);
             }
 
             article =
-                await _context.Articles
+                await context.Articles
                     .GetAllData()
                     .FirstOrDefaultAsync(
                         x => x.ArticleId == article.ArticleId,

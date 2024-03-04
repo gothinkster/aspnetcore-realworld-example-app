@@ -16,7 +16,7 @@ public class CreateTests : SliceFixture
                 Title = "Test article dsergiu77",
                 Description = "Description of the test article",
                 Body = "Body of the test article",
-                TagList = new string[] { "tag1", "tag2" }
+                TagList = ["tag1", "tag2"]
             }
         );
 

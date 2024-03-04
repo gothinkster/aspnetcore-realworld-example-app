@@ -16,10 +16,7 @@ Target(
     ForEach("publish", "**/bin", "**/obj"),
     dir =>
     {
-        IEnumerable<string> GetDirectories(string d)
-        {
-            return Glob.Directories(".", d);
-        }
+        IEnumerable<string> GetDirectories(string d) => Glob.Directories(".", d);
 
         void RemoveDirectory(string d)
         {
@@ -53,10 +50,7 @@ Target(
     DependsOn(Build),
     () =>
     {
-        IEnumerable<string> GetFiles(string d)
-        {
-            return Glob.Files(".", d);
-        }
+        IEnumerable<string> GetFiles(string d) => Glob.Files(".", d);
 
         foreach (var file in GetFiles("tests/**/*.csproj"))
         {

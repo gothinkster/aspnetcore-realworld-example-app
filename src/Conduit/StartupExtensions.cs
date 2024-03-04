@@ -60,10 +60,9 @@ public static class StartupExtensions
                 {
                     OnMessageReceived = (context) =>
                     {
-                        var token = context.HttpContext.Request.Headers["Authorization"].ToString();
+                        var token = context.HttpContext.Request.Headers.Authorization.ToString();
                         if (
-                            token is not null
-                            && token.StartsWith("Token ", StringComparison.OrdinalIgnoreCase)
+                            token.StartsWith("Token ", StringComparison.OrdinalIgnoreCase)
                         )
                         {
                             context.Token = token["Token ".Length..].Trim();

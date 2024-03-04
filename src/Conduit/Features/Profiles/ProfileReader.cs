@@ -9,31 +9,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Conduit.Features.Profiles;
 
-public class ProfileReader : IProfileReader
+public class ProfileReader(
+    ConduitContext context,
+    ICurrentUserAccessor currentUserAccessor,
+    IMapper mapper)
+    : IProfileReader
 {
-    private readonly ConduitContext _context;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-    private readonly IMapper _mapper;
-
-    public ProfileReader(
-        ConduitContext context,
-        ICurrentUserAccessor currentUserAccessor,
-        IMapper mapper
-    )
-    {
-        _context = context;
-        _currentUserAccessor = currentUserAccessor;
-        _mapper = mapper;
-    }
-
     public async Task<ProfileEnvelope> ReadProfile(
         string username,
         CancellationToken cancellationToken
     )
     {
-        var currentUserName = _currentUserAccessor.GetCurrentUsername();
+        var currentUserName = currentUserAccessor.GetCurrentUsername();
 
-        var person = await _context.Persons
+        var person = await context.Persons
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Username == username, cancellationToken);
         if (person is null)
@@ -51,11 +40,11 @@ public class ProfileReader : IProfileReader
                 new { User = Constants.NOT_FOUND }
             );
         }
-        var profile = _mapper.Map<Domain.Person, Profile>(person);
+        var profile = mapper.Map<Domain.Person, Profile>(person);
 
         if (currentUserName != null)
         {
-            var currentPerson = await _context.Persons
+            var currentPerson = await context.Persons
                 .Include(x => x.Following)
                 .Include(x => x.Followers)
                 .FirstOrDefaultAsync(x => x.Username == currentUserName, cancellationToken);

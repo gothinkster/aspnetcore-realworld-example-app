@@ -10,33 +10,29 @@ namespace Conduit.Infrastructure;
 /// </summary>
 /// <typeparam name="TRequest"></typeparam>
 /// <typeparam name="TResponse"></typeparam>
-public class DBContextTransactionPipelineBehavior<TRequest, TResponse>
+public class DBContextTransactionPipelineBehavior<TRequest, TResponse>(ConduitContext context)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
-    private readonly ConduitContext _context;
-
-    public DBContextTransactionPipelineBehavior(ConduitContext context) => _context = context;
-
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken
     )
     {
-        TResponse? result = default;
+        TResponse? result;
 
         try
         {
-            _context.BeginTransaction();
+            context.BeginTransaction();
 
             result = await next();
 
-            _context.CommitTransaction();
+            context.CommitTransaction();
         }
         catch (Exception)
         {
-            _context.RollbackTransaction();
+            context.RollbackTransaction();
             throw;
         }
 

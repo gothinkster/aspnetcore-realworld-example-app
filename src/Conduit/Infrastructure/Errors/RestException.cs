@@ -3,15 +3,9 @@ using System.Net;
 
 namespace Conduit.Infrastructure.Errors;
 
-public class RestException : Exception
+public class RestException(HttpStatusCode code, object? errors = null) : Exception
 {
-    public RestException(HttpStatusCode code, object? errors = null)
-    {
-        Code = code;
-        Errors = errors;
-    }
+    public object? Errors { get; } = errors;
 
-    public object? Errors { get; set; }
-
-    public HttpStatusCode Code { get; }
+    public HttpStatusCode Code { get; } = code;
 }

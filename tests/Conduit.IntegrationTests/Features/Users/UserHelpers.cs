@@ -15,12 +15,7 @@ public static class UserHelpers
     public static async Task<User> CreateDefaultUser(SliceFixture fixture)
     {
         var command = new Create.Command(
-            new Create.UserData()
-            {
-                Email = "email",
-                Password = "password",
-                Username = DefaultUserName
-            }
+            new Create.UserData(DefaultUserName, "email", "password")
         );
 
         var commandResult = await fixture.SendAsync(command);

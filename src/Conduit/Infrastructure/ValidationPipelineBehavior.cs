@@ -7,14 +7,11 @@ using MediatR;
 
 namespace Conduit.Infrastructure;
 
-public class ValidationPipelineBehavior<TRequest, TResponse>
+public class ValidationPipelineBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
-    private readonly List<IValidator<TRequest>> _validators;
-
-    public ValidationPipelineBehavior(IEnumerable<IValidator<TRequest>> validators) =>
-        _validators = validators.ToList();
+    private readonly List<IValidator<TRequest>> _validators = validators.ToList();
 
     public async Task<TResponse> Handle(
         TRequest request,

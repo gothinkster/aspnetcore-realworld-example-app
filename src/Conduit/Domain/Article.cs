@@ -9,7 +9,7 @@ namespace Conduit.Domain;
 public class Article
 {
     [JsonIgnore]
-    public int ArticleId { get; set; }
+    public int ArticleId { get; init; }
 
     public string? Slug { get; set; }
 
@@ -19,12 +19,12 @@ public class Article
 
     public string? Body { get; set; }
 
-    public Person? Author { get; set; }
+    public Person? Author { get; init; }
 
-    public List<Comment> Comments { get; set; } = new();
+    public List<Comment> Comments { get; init; } = new();
 
     [NotMapped]
-    public bool Favorited => ArticleFavorites?.Any() ?? false;
+    public bool Favorited => ArticleFavorites.Count != 0;
 
     [NotMapped]
     public int FavoritesCount => ArticleFavorites?.Count ?? 0;
@@ -34,12 +34,12 @@ public class Article
         ArticleTags.Where(x => x.TagId is not null).Select(x => x.TagId!).ToList();
 
     [JsonIgnore]
-    public List<ArticleTag> ArticleTags { get; set; } = new();
+    public List<ArticleTag> ArticleTags { get; init; } = new();
 
     [JsonIgnore]
-    public List<ArticleFavorite> ArticleFavorites { get; set; } = new();
+    public List<ArticleFavorite> ArticleFavorites { get; init; } = new();
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; init; }
 
     public DateTime UpdatedAt { get; set; }
 }

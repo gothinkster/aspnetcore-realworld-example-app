@@ -19,16 +19,12 @@ public class Delete
         public CommandValidator() => RuleFor(x => x.Slug).NotNull().NotEmpty();
     }
 
-    public class QueryHandler : IRequestHandler<Command>
+    public class QueryHandler(ConduitContext context) : IRequestHandler<Command>
     {
-        private readonly ConduitContext _context;
-
-        public QueryHandler(ConduitContext context) => _context = context;
-
         public async Task Handle(Command message, CancellationToken cancellationToken)
         {
             var article =
-                await _context.Articles
+                await context.Articles
                     .Include(x => x.Comments)
                     .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken)
                 ?? throw new RestException(
@@ -43,8 +39,8 @@ public class Delete
                     new { Comment = Constants.NOT_FOUND }
                 );
 
-            _context.Comments.Remove(comment);
-            await _context.SaveChangesAsync(cancellationToken);
+            context.Comments.Remove(comment);
+            await context.SaveChangesAsync(cancellationToken);
             await Task.FromResult(Unit.Value);
         }
     }

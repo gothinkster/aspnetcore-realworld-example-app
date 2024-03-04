@@ -9,29 +9,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace Conduit.Features.Favorites;
 
 [Route("articles")]
-public class FavoritesController : Controller
+public class FavoritesController(IMediator mediator) : Controller
 {
-    private readonly IMediator _mediator;
-
-    public FavoritesController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpPost("{slug}/favorite")]
     [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-    public Task<ArticleEnvelope> FavoriteAdd(string slug, CancellationToken cancellationToken)
-    {
-        return _mediator.Send(new Add.Command(slug), cancellationToken);
-    }
+    public Task<ArticleEnvelope> FavoriteAdd(string slug, CancellationToken cancellationToken) => mediator.Send(new Add.Command(slug), cancellationToken);
 
     [HttpDelete("{slug}/favorite")]
     [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
     public Task<ArticleEnvelope> FavoriteDelete(
         string slug,
         CancellationToken cancellationToken
-    )
-    {
-        return _mediator.Send(new Delete.Command(slug), cancellationToken);
-    }
+    ) =>
+        mediator.Send(new Delete.Command(slug), cancellationToken);
 }

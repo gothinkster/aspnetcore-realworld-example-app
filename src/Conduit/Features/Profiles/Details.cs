@@ -11,24 +11,11 @@ public class Details
 
     public class QueryValidator : AbstractValidator<Query>
     {
-        public QueryValidator()
-        {
-            RuleFor(x => x.Username).NotEmpty();
-        }
+        public QueryValidator() => RuleFor(x => x.Username).NotEmpty();
     }
 
-    public class QueryHandler : IRequestHandler<Query, ProfileEnvelope>
+    public class QueryHandler(IProfileReader profileReader) : IRequestHandler<Query, ProfileEnvelope>
     {
-        private readonly IProfileReader _profileReader;
-
-        public QueryHandler(IProfileReader profileReader)
-        {
-            _profileReader = profileReader;
-        }
-
-        public Task<ProfileEnvelope> Handle(Query message, CancellationToken cancellationToken)
-        {
-            return _profileReader.ReadProfile(message.Username, cancellationToken);
-        }
+        public Task<ProfileEnvelope> Handle(Query message, CancellationToken cancellationToken) => profileReader.ReadProfile(message.Username, cancellationToken);
     }
 }

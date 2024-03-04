@@ -9,26 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace Conduit.Features.Followers;
 
 [Route("profiles")]
-public class FollowersController : Controller
+public class FollowersController(IMediator mediator) : Controller
 {
-    private readonly IMediator _mediator;
-
-    public FollowersController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpPost("{username}/follow")]
     [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-    public Task<ProfileEnvelope> Follow(string username, CancellationToken cancellationToken)
-    {
-        return _mediator.Send(new Add.Command(username), cancellationToken);
-    }
+    public Task<ProfileEnvelope> Follow(string username, CancellationToken cancellationToken) => mediator.Send(new Add.Command(username), cancellationToken);
 
     [HttpDelete("{username}/follow")]
     [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-    public Task<ProfileEnvelope> Unfollow(string username, CancellationToken cancellationToken)
-    {
-        return _mediator.Send(new Delete.Command(username), cancellationToken);
-    }
+    public Task<ProfileEnvelope> Unfollow(string username, CancellationToken cancellationToken) => mediator.Send(new Delete.Command(username), cancellationToken);
 }

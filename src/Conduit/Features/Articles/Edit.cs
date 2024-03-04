@@ -15,16 +15,7 @@ namespace Conduit.Features.Articles;
 
 public class Edit
 {
-    public class ArticleData
-    {
-        public string? Title { get; set; }
-
-        public string? Description { get; set; }
-
-        public string? Body { get; set; }
-
-        public string[]? TagList { get; set; }
-    }
+    public record ArticleData(string? Title, string? Description, string? Body, string[]? TagList);
 
     public record Command(Model Model, string Slug) : IRequest<ArticleEnvelope>;
 
@@ -32,27 +23,17 @@ public class Edit
 
     public class CommandValidator : AbstractValidator<Command>
     {
-        public CommandValidator()
-        {
-            RuleFor(x => x.Model.Article).NotNull();
-        }
+        public CommandValidator() => RuleFor(x => x.Model.Article).NotNull();
     }
 
-    public class Handler : IRequestHandler<Command, ArticleEnvelope>
+    public class Handler(ConduitContext context) : IRequestHandler<Command, ArticleEnvelope>
     {
-        private readonly ConduitContext _context;
-
-        public Handler(ConduitContext context)
-        {
-            _context = context;
-        }
-
         public async Task<ArticleEnvelope> Handle(
             Command message,
             CancellationToken cancellationToken
         )
         {
-            var article = await _context.Articles
+            var article = await context.Articles
                 .Include(x => x.ArticleTags) // include also the article tags since they also need to be updated
                 .Where(x => x.Slug == message.Slug)
                 .FirstOrDefaultAsync(cancellationToken);
@@ -77,30 +58,30 @@ public class Edit
             var articleTagsToDelete = GetArticleTagsToDelete(article, articleTagList);
 
             if (
-                _context.ChangeTracker.Entries().First(x => x.Entity == article).State
+                context.ChangeTracker.Entries().First(x => x.Entity == article).State
                 == EntityState.Modified
-                || articleTagsToCreate.Any()
-                || articleTagsToDelete.Any()
+                || articleTagsToCreate.Count != 0
+                || articleTagsToDelete.Count != 0
             )
             {
                 article.UpdatedAt = DateTime.UtcNow;
             }
 
             // ensure context is tracking any tags that are about to be created so that it won't attempt to insert a duplicate
-            _context.Tags.AttachRange(
+            context.Tags.AttachRange(
                 articleTagsToCreate.Where(x => x.Tag is not null).Select(a => a.Tag!).ToArray()
             );
 
             // add the new article tags
-            await _context.ArticleTags.AddRangeAsync(articleTagsToCreate, cancellationToken);
+            await context.ArticleTags.AddRangeAsync(articleTagsToCreate, cancellationToken);
 
             // delete the tags that do not exist anymore
-            _context.ArticleTags.RemoveRange(articleTagsToDelete);
+            context.ArticleTags.RemoveRange(articleTagsToDelete);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
 
             article =
-                await _context.Articles
+                await context.Articles
                     .GetAllData()
                     .Where(x => x.Slug == article.Slug)
                     .FirstOrDefaultAsync(
