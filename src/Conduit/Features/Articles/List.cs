@@ -33,8 +33,8 @@ public class List
 
             if (message.IsFeed && currentUserAccessor.GetCurrentUsername() != null)
             {
-                var currentUser = await context.Persons
-                    .Include(x => x.Following)
+                var currentUser = await context
+                    .Persons.Include(x => x.Following)
                     .FirstOrDefaultAsync(
                         x => x.Username == currentUserAccessor.GetCurrentUsername(),
                         cancellationToken
@@ -47,11 +47,8 @@ public class List
                         new { User = Constants.NOT_FOUND }
                     );
                 }
-                queryable = queryable.Where(
-                    x =>
-                        currentUser.Following
-                            .Select(y => y.TargetId)
-                            .Contains(x.Author!.PersonId)
+                queryable = queryable.Where(x =>
+                    currentUser.Following.Select(y => y.TargetId).Contains(x.Author!.PersonId)
                 );
             }
 
@@ -63,8 +60,8 @@ public class List
                 );
                 if (tag != null)
                 {
-                    queryable = queryable.Where(
-                        x => x.ArticleTags.Select(y => y.TagId).Contains(tag.TagId)
+                    queryable = queryable.Where(x =>
+                        x.ArticleTags.Select(y => y.TagId).Contains(tag.TagId)
                     );
                 }
                 else
@@ -97,8 +94,8 @@ public class List
                 );
                 if (author != null)
                 {
-                    queryable = queryable.Where(
-                        x => x.ArticleFavorites.Any(y => y.PersonId == author.PersonId)
+                    queryable = queryable.Where(x =>
+                        x.ArticleFavorites.Any(y => y.PersonId == author.PersonId)
                     );
                 }
                 else

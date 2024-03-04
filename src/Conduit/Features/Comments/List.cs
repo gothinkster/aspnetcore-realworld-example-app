@@ -19,8 +19,8 @@ public class List
             CancellationToken cancellationToken
         )
         {
-            var article = await context.Articles
-                .Include(x => x.Comments)
+            var article = await context
+                .Articles.Include(x => x.Comments)
                 .ThenInclude(x => x.Author)
                 .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
 

@@ -25,8 +25,8 @@ public class Details
             CancellationToken cancellationToken
         )
         {
-            var article = await context.Articles
-                .GetAllData()
+            var article = await context
+                .Articles.GetAllData()
                 .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
 
             if (article == null)

@@ -23,8 +23,8 @@ public class Add
     public class QueryHandler(
         ConduitContext context,
         ICurrentUserAccessor currentUserAccessor,
-        IProfileReader profileReader)
-        : IRequestHandler<Command, ProfileEnvelope>
+        IProfileReader profileReader
+    ) : IRequestHandler<Command, ProfileEnvelope>
     {
         public async Task<ProfileEnvelope> Handle(
             Command message,

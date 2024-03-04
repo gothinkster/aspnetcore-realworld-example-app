@@ -12,8 +12,8 @@ namespace Conduit.Features.Profiles;
 public class ProfileReader(
     ConduitContext context,
     ICurrentUserAccessor currentUserAccessor,
-    IMapper mapper)
-    : IProfileReader
+    IMapper mapper
+) : IProfileReader
 {
     public async Task<ProfileEnvelope> ReadProfile(
         string username,
@@ -22,30 +22,24 @@ public class ProfileReader(
     {
         var currentUserName = currentUserAccessor.GetCurrentUsername();
 
-        var person = await context.Persons
-            .AsNoTracking()
+        var person = await context
+            .Persons.AsNoTracking()
             .FirstOrDefaultAsync(x => x.Username == username, cancellationToken);
         if (person is null)
         {
-            throw new RestException(
-                HttpStatusCode.NotFound,
-                new { User = Constants.NOT_FOUND }
-            );
+            throw new RestException(HttpStatusCode.NotFound, new { User = Constants.NOT_FOUND });
         }
 
         if (person == null)
         {
-            throw new RestException(
-                HttpStatusCode.NotFound,
-                new { User = Constants.NOT_FOUND }
-            );
+            throw new RestException(HttpStatusCode.NotFound, new { User = Constants.NOT_FOUND });
         }
         var profile = mapper.Map<Domain.Person, Profile>(person);
 
         if (currentUserName != null)
         {
-            var currentPerson = await context.Persons
-                .Include(x => x.Following)
+            var currentPerson = await context
+                .Persons.Include(x => x.Following)
                 .Include(x => x.Followers)
                 .FirstOrDefaultAsync(x => x.Username == currentUserName, cancellationToken);
 

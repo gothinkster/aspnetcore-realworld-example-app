@@ -25,8 +25,13 @@ public class EditTests : SliceFixture
 
         var command = new Edit.Command(
             new(
-                new Edit.ArticleData("Updated " + createdArticle.Title, "Updated " + createdArticle.Description, "Updated " + createdArticle.Body,
-                    [createdArticle.TagList[1],  "tag3"])),
+                new Edit.ArticleData(
+                    "Updated " + createdArticle.Title,
+                    "Updated " + createdArticle.Description,
+                    "Updated " + createdArticle.Body,
+                    [createdArticle.TagList[1], "tag3"]
+                )
+            ),
             createdArticle.Slug ?? throw new InvalidOperationException()
         );
 
@@ -43,6 +48,6 @@ public class EditTests : SliceFixture
         Assert.Equal(edited.Article.TagList.Count, command.Model.Article.TagList?.Count() ?? 0);
         // use assert Contains because we do not know the order in which the tags are saved/retrieved
         Assert.Contains(edited.Article.TagList[0], command.Model.Article.TagList ?? []);
-        Assert.Contains(edited.Article.TagList[1], command.Model.Article.TagList?? []);
+        Assert.Contains(edited.Article.TagList[1], command.Model.Article.TagList ?? []);
     }
 }

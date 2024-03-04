@@ -24,16 +24,13 @@ public class Details
     public class QueryHandler(
         ConduitContext context,
         IJwtTokenGenerator jwtTokenGenerator,
-        IMapper mapper)
-        : IRequestHandler<Query, UserEnvelope>
+        IMapper mapper
+    ) : IRequestHandler<Query, UserEnvelope>
     {
-        public async Task<UserEnvelope> Handle(
-            Query message,
-            CancellationToken cancellationToken
-        )
+        public async Task<UserEnvelope> Handle(Query message, CancellationToken cancellationToken)
         {
-            var person = await context.Persons
-                .AsNoTracking()
+            var person = await context
+                .Persons.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Username == message.Username, cancellationToken);
 
             if (person == null)

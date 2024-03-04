@@ -18,11 +18,7 @@ public class ArticlesController(IMediator mediator) : Controller
         [FromQuery] int? limit,
         [FromQuery] int? offset,
         CancellationToken cancellationToken
-    ) =>
-        mediator.Send(
-            new List.Query(tag, author, favorited, limit, offset),
-            cancellationToken
-        );
+    ) => mediator.Send(new List.Query(tag, author, favorited, limit, offset), cancellationToken);
 
     [HttpGet("feed")]
     public Task<ArticlesEnvelope> GetFeed(
@@ -34,18 +30,20 @@ public class ArticlesController(IMediator mediator) : Controller
         CancellationToken cancellationToken
     ) =>
         mediator.Send(
-            new List.Query(tag, author, favorited, limit, offset) { IsFeed = true }, cancellationToken);
+            new List.Query(tag, author, favorited, limit, offset) { IsFeed = true },
+            cancellationToken
+        );
 
     [HttpGet("{slug}")]
-    public Task<ArticleEnvelope> Get(string slug, CancellationToken cancellationToken) => mediator.Send(new Details.Query(slug), cancellationToken);
+    public Task<ArticleEnvelope> Get(string slug, CancellationToken cancellationToken) =>
+        mediator.Send(new Details.Query(slug), cancellationToken);
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
     public Task<ArticleEnvelope> Create(
         [FromBody] Create.Command command,
         CancellationToken cancellationToken
-    ) =>
-        mediator.Send(command, cancellationToken);
+    ) => mediator.Send(command, cancellationToken);
 
     [HttpPut("{slug}")]
     [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
@@ -53,10 +51,10 @@ public class ArticlesController(IMediator mediator) : Controller
         string slug,
         [FromBody] Edit.Model model,
         CancellationToken cancellationToken
-    ) =>
-        mediator.Send(new Edit.Command(model, slug), cancellationToken);
+    ) => mediator.Send(new Edit.Command(model, slug), cancellationToken);
 
     [HttpDelete("{slug}")]
     [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-    public Task Delete(string slug, CancellationToken cancellationToken) => mediator.Send(new Delete.Command(slug), cancellationToken);
+    public Task Delete(string slug, CancellationToken cancellationToken) =>
+        mediator.Send(new Delete.Command(slug), cancellationToken);
 }

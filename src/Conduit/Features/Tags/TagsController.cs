@@ -9,5 +9,6 @@ namespace Conduit.Features.Tags;
 public class TagsController(IMediator mediator) : Controller
 {
     [HttpGet]
-    public Task<TagsEnvelope> Get(CancellationToken cancellationToken) => mediator.Send(new List.Query(), cancellationToken);
+    public Task<TagsEnvelope> Get(CancellationToken cancellationToken) =>
+        mediator.Send(new List.Query(), cancellationToken);
 }

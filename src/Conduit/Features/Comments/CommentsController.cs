@@ -16,13 +16,14 @@ public class CommentsController(IMediator mediator) : Controller
         string slug,
         [FromBody] Create.Model model,
         CancellationToken cancellationToken
-    ) =>
-        mediator.Send(new Create.Command(model, slug), cancellationToken);
+    ) => mediator.Send(new Create.Command(model, slug), cancellationToken);
 
     [HttpGet("{slug}/comments")]
-    public Task<CommentsEnvelope> Get(string slug, CancellationToken cancellationToken) => mediator.Send(new List.Query(slug), cancellationToken);
+    public Task<CommentsEnvelope> Get(string slug, CancellationToken cancellationToken) =>
+        mediator.Send(new List.Query(slug), cancellationToken);
 
     [HttpDelete("{slug}/comments/{id}")]
     [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-    public Task Delete(string slug, int id, CancellationToken cancellationToken) => mediator.Send(new Delete.Command(slug, id), cancellationToken);
+    public Task Delete(string slug, int id, CancellationToken cancellationToken) =>
+        mediator.Send(new Delete.Command(slug, id), cancellationToken);
 }

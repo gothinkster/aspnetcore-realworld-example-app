@@ -60,13 +60,9 @@ public class Delete
                 await context.SaveChangesAsync(cancellationToken);
             }
 
-            article =
-                await context.Articles
-                    .GetAllData()
-                    .FirstOrDefaultAsync(
-                        x => x.ArticleId == article.ArticleId,
-                        cancellationToken
-                    );
+            article = await context
+                .Articles.GetAllData()
+                .FirstOrDefaultAsync(x => x.ArticleId == article.ArticleId, cancellationToken);
             if (article is null)
             {
                 throw new RestException(

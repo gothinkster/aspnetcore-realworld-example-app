@@ -14,13 +14,10 @@ public class List
 
     public class QueryHandler(ConduitContext context) : IRequestHandler<Query, TagsEnvelope>
     {
-        public async Task<TagsEnvelope> Handle(
-            Query message,
-            CancellationToken cancellationToken
-        )
+        public async Task<TagsEnvelope> Handle(Query message, CancellationToken cancellationToken)
         {
-            var tags = await context.Tags
-                .OrderBy(x => x.TagId)
+            var tags = await context
+                .Tags.OrderBy(x => x.TagId)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
             return new TagsEnvelope()

@@ -14,8 +14,10 @@ public class Details
         public QueryValidator() => RuleFor(x => x.Username).NotEmpty();
     }
 
-    public class QueryHandler(IProfileReader profileReader) : IRequestHandler<Query, ProfileEnvelope>
+    public class QueryHandler(IProfileReader profileReader)
+        : IRequestHandler<Query, ProfileEnvelope>
     {
-        public Task<ProfileEnvelope> Handle(Query message, CancellationToken cancellationToken) => profileReader.ReadProfile(message.Username, cancellationToken);
+        public Task<ProfileEnvelope> Handle(Query message, CancellationToken cancellationToken) =>
+            profileReader.ReadProfile(message.Username, cancellationToken);
     }
 }

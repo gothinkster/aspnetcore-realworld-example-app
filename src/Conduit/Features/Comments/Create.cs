@@ -32,8 +32,8 @@ public class Create
             CancellationToken cancellationToken
         )
         {
-            var article = await context.Articles
-                .Include(x => x.Comments)
+            var article = await context
+                .Articles.Include(x => x.Comments)
                 .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
 
             if (article == null)

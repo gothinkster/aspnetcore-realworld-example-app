@@ -38,7 +38,8 @@ public class Create
 
     public class CommandValidator : AbstractValidator<Command>
     {
-        public CommandValidator() => RuleFor(x => x.Article).NotNull().SetValidator(new ArticleDataValidator());
+        public CommandValidator() =>
+            RuleFor(x => x.Article).NotNull().SetValidator(new ArticleDataValidator());
     }
 
     public class Handler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)

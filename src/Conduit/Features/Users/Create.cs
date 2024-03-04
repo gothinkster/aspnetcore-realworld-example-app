@@ -34,17 +34,14 @@ public class Create
         ConduitContext context,
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator,
-        IMapper mapper)
-        : IRequestHandler<Command, UserEnvelope>
+        IMapper mapper
+    ) : IRequestHandler<Command, UserEnvelope>
     {
-        public async Task<UserEnvelope> Handle(
-            Command message,
-            CancellationToken cancellationToken
-        )
+        public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
         {
             if (
-                await context.Persons
-                    .Where(x => x.Username == message.User.Username)
+                await context
+                    .Persons.Where(x => x.Username == message.User.Username)
                     .AnyAsync(cancellationToken)
             )
             {
@@ -55,8 +52,8 @@ public class Create
             }
 
             if (
-                await context.Persons
-                    .Where(x => x.Email == message.User.Email)
+                await context
+                    .Persons.Where(x => x.Email == message.User.Email)
                     .AnyAsync(cancellationToken)
             )
             {

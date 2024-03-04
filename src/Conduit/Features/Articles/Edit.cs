@@ -33,8 +33,8 @@ public class Edit
             CancellationToken cancellationToken
         )
         {
-            var article = await context.Articles
-                .Include(x => x.ArticleTags) // include also the article tags since they also need to be updated
+            var article = await context
+                .Articles.Include(x => x.ArticleTags) // include also the article tags since they also need to be updated
                 .Where(x => x.Slug == message.Slug)
                 .FirstOrDefaultAsync(cancellationToken);
 
@@ -59,7 +59,7 @@ public class Edit
 
             if (
                 context.ChangeTracker.Entries().First(x => x.Entity == article).State
-                == EntityState.Modified
+                    == EntityState.Modified
                 || articleTagsToCreate.Count != 0
                 || articleTagsToDelete.Count != 0
             )
@@ -80,14 +80,10 @@ public class Edit
 
             await context.SaveChangesAsync(cancellationToken);
 
-            article =
-                await context.Articles
-                    .GetAllData()
-                    .Where(x => x.Slug == article.Slug)
-                    .FirstOrDefaultAsync(
-                        x => x.ArticleId == article.ArticleId,
-                        cancellationToken
-                    );
+            article = await context
+                .Articles.GetAllData()
+                .Where(x => x.Slug == article.Slug)
+                .FirstOrDefaultAsync(x => x.ArticleId == article.ArticleId, cancellationToken);
             if (article is null)
             {
                 throw new RestException(

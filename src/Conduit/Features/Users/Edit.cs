@@ -39,17 +39,14 @@ public class Edit
         ConduitContext context,
         IPasswordHasher passwordHasher,
         ICurrentUserAccessor currentUserAccessor,
-        IMapper mapper)
-        : IRequestHandler<Command, UserEnvelope>
+        IMapper mapper
+    ) : IRequestHandler<Command, UserEnvelope>
     {
-        public async Task<UserEnvelope> Handle(
-            Command message,
-            CancellationToken cancellationToken
-        )
+        public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
         {
             var currentUsername = currentUserAccessor.GetCurrentUsername();
-            var person = await context.Persons
-                .Where(x => x.Username == currentUsername)
+            var person = await context
+                .Persons.Where(x => x.Username == currentUsername)
                 .FirstOrDefaultAsync(cancellationToken);
             if (person is null)
             {

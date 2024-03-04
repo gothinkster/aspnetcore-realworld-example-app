@@ -24,8 +24,8 @@ public class Delete
         public async Task Handle(Command message, CancellationToken cancellationToken)
         {
             var article =
-                await context.Articles
-                    .Include(x => x.Comments)
+                await context
+                    .Articles.Include(x => x.Comments)
                     .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken)
                 ?? throw new RestException(
                     HttpStatusCode.NotFound,

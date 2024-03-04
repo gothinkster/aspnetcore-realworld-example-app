@@ -38,16 +38,13 @@ public class Login
         ConduitContext context,
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator,
-        IMapper mapper)
-        : IRequestHandler<Command, UserEnvelope>
+        IMapper mapper
+    ) : IRequestHandler<Command, UserEnvelope>
     {
-        public async Task<UserEnvelope> Handle(
-            Command message,
-            CancellationToken cancellationToken
-        )
+        public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
         {
-            var person = await context.Persons
-                .Where(x => x.Email == message.User.Email)
+            var person = await context
+                .Persons.Where(x => x.Email == message.User.Email)
                 .SingleOrDefaultAsync(cancellationToken);
             if (person == null)
             {

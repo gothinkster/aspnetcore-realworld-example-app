@@ -9,5 +9,6 @@ namespace Conduit.Features.Profiles;
 public class ProfilesController(IMediator mediator) : Controller
 {
     [HttpGet("{username}")]
-    public Task<ProfileEnvelope> Get(string username, CancellationToken cancellationToken) => mediator.Send(new Details.Query(username), cancellationToken);
+    public Task<ProfileEnvelope> Get(string username, CancellationToken cancellationToken) =>
+        mediator.Send(new Details.Query(username), cancellationToken);
 }

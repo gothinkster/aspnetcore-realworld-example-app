@@ -11,7 +11,8 @@ namespace Conduit.Infrastructure.Errors;
 public class ErrorHandlingMiddleware(
     RequestDelegate next,
     IStringLocalizer<ErrorHandlingMiddleware> localizer,
-    ILogger<ErrorHandlingMiddleware> logger)
+    ILogger<ErrorHandlingMiddleware> logger
+)
 {
     private static readonly Action<ILogger, string, Exception> LOGGER_MESSAGE =
         LoggerMessage.Define<string>(

@@ -23,6 +23,5 @@ public class UserController(IMediator mediator, ICurrentUserAccessor currentUser
     public Task<UserEnvelope> UpdateUser(
         [FromBody] Edit.Command command,
         CancellationToken cancellationToken
-    ) =>
-        mediator.Send(command, cancellationToken);
+    ) => mediator.Send(command, cancellationToken);
 }

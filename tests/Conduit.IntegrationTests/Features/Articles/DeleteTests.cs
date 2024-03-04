@@ -33,8 +33,8 @@ public class DeleteTests : SliceFixture
         var articleDeleteHandler = new Delete.QueryHandler(dbContext);
         await articleDeleteHandler.Handle(deleteCmd, new System.Threading.CancellationToken());
 
-        var dbArticle = await ExecuteDbContextAsync(
-            db => db.Articles.Where(d => d.Slug == deleteCmd.Slug).SingleOrDefaultAsync()
+        var dbArticle = await ExecuteDbContextAsync(db =>
+            db.Articles.Where(d => d.Slug == deleteCmd.Slug).SingleOrDefaultAsync()
         );
 
         Assert.Null(dbArticle);
@@ -54,23 +54,21 @@ public class DeleteTests : SliceFixture
         );
 
         var article = await ArticleHelpers.CreateArticle(this, createCmd);
-        var dbArticleWithTags = await ExecuteDbContextAsync(
-            db =>
-                db.Articles
-                    .Include(a => a.ArticleTags)
-                    .Where(d => d.Slug == article.Slug)
-                    .SingleOrDefaultAsync()
+        var dbArticleWithTags = await ExecuteDbContextAsync(db =>
+            db.Articles.Include(a => a.ArticleTags)
+                .Where(d => d.Slug == article.Slug)
+                .SingleOrDefaultAsync()
         );
 
-        var deleteCmd = new Delete.Command(article.Slug?? throw new InvalidOperationException());
+        var deleteCmd = new Delete.Command(article.Slug ?? throw new InvalidOperationException());
 
         var dbContext = GetDbContext();
 
         var articleDeleteHandler = new Delete.QueryHandler(dbContext);
         await articleDeleteHandler.Handle(deleteCmd, new System.Threading.CancellationToken());
 
-        var dbArticle = await ExecuteDbContextAsync(
-            db => db.Articles.Where(d => d.Slug == deleteCmd.Slug).SingleOrDefaultAsync()
+        var dbArticle = await ExecuteDbContextAsync(db =>
+            db.Articles.Where(d => d.Slug == deleteCmd.Slug).SingleOrDefaultAsync()
         );
         Assert.Null(dbArticle);
     }
@@ -88,13 +86,12 @@ public class DeleteTests : SliceFixture
         );
 
         var article = await ArticleHelpers.CreateArticle(this, createArticleCmd);
-        var dbArticle = await ExecuteDbContextAsync(
-            db =>
-                db.Articles
-                    .Include(a => a.ArticleTags)
+        var dbArticle =
+            await ExecuteDbContextAsync(db =>
+                db.Articles.Include(a => a.ArticleTags)
                     .Where(d => d.Slug == article.Slug)
                     .SingleOrDefaultAsync()
-        ) ?? throw new InvalidOperationException();
+            ) ?? throw new InvalidOperationException();
 
         var articleId = dbArticle.ArticleId;
         var slug = dbArticle.Slug;
@@ -102,7 +99,7 @@ public class DeleteTests : SliceFixture
         // create article comment
         var createCommentCmd = new Conduit.Features.Comments.Create.Command(
             new(new Conduit.Features.Comments.Create.CommentData("article comment")),
-            slug?? throw new InvalidOperationException()
+            slug ?? throw new InvalidOperationException()
         );
 
         var comment = await CommentHelpers.CreateComment(
@@ -119,8 +116,8 @@ public class DeleteTests : SliceFixture
         var articleDeleteHandler = new Delete.QueryHandler(dbContext);
         await articleDeleteHandler.Handle(deleteCmd, new System.Threading.CancellationToken());
 
-        var deleted = await ExecuteDbContextAsync(
-            db => db.Articles.Where(d => d.Slug == deleteCmd.Slug).SingleOrDefaultAsync()
+        var deleted = await ExecuteDbContextAsync(db =>
+            db.Articles.Where(d => d.Slug == deleteCmd.Slug).SingleOrDefaultAsync()
         );
         Assert.Null(deleted);
     }
