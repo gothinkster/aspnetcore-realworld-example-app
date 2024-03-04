@@ -16,35 +16,21 @@ public class Delete
 
     public class CommandValidator : AbstractValidator<Command>
     {
-        public CommandValidator()
-        {
-            DefaultValidatorExtensions.NotNull(RuleFor(x => x.Username)).NotEmpty();
-        }
+        public CommandValidator() => RuleFor(x => x.Username).NotNull().NotEmpty();
     }
 
-    public class QueryHandler : IRequestHandler<Command, ProfileEnvelope>
+    public class QueryHandler(
+        ConduitContext context,
+        ICurrentUserAccessor currentUserAccessor,
+        IProfileReader profileReader
+    ) : IRequestHandler<Command, ProfileEnvelope>
     {
-        private readonly ConduitContext _context;
-        private readonly ICurrentUserAccessor _currentUserAccessor;
-        private readonly IProfileReader _profileReader;
-
-        public QueryHandler(
-            ConduitContext context,
-            ICurrentUserAccessor currentUserAccessor,
-            IProfileReader profileReader
-        )
-        {
-            _context = context;
-            _currentUserAccessor = currentUserAccessor;
-            _profileReader = profileReader;
-        }
-
         public async Task<ProfileEnvelope> Handle(
             Command message,
             CancellationToken cancellationToken
         )
         {
-            var target = await _context.Persons.FirstOrDefaultAsync(
+            var target = await context.Persons.FirstOrDefaultAsync(
                 x => x.Username == message.Username,
                 cancellationToken
             );
@@ -57,8 +43,8 @@ public class Delete
                 );
             }
 
-            var observer = await _context.Persons.FirstOrDefaultAsync(
-                x => x.Username == _currentUserAccessor.GetCurrentUsername(),
+            var observer = await context.Persons.FirstOrDefaultAsync(
+                x => x.Username == currentUserAccessor.GetCurrentUsername(),
                 cancellationToken
             );
 
@@ -70,18 +56,18 @@ public class Delete
                 );
             }
 
-            var followedPeople = await _context.FollowedPeople.FirstOrDefaultAsync(
+            var followedPeople = await context.FollowedPeople.FirstOrDefaultAsync(
                 x => x.ObserverId == observer.PersonId && x.TargetId == target.PersonId,
                 cancellationToken
             );
 
             if (followedPeople != null)
             {
-                _context.FollowedPeople.Remove(followedPeople);
-                await _context.SaveChangesAsync(cancellationToken);
+                context.FollowedPeople.Remove(followedPeople);
+                await context.SaveChangesAsync(cancellationToken);
             }
 
-            return await _profileReader.ReadProfile(message.Username, cancellationToken);
+            return await profileReader.ReadProfile(message.Username, cancellationToken);
         }
     }
 }

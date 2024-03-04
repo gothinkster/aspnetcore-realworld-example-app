@@ -46,28 +46,26 @@ public static class CommentHelpers
             new System.Threading.CancellationToken()
         );
 
-        var dbArticleWithComments = await fixture.ExecuteDbContextAsync(
-            db =>
-                db.Articles
-                    .Include(a => a.Comments)
-                    .Include(a => a.Author)
-                    .Where(a => a.Slug == command.Slug)
-                    .SingleOrDefaultAsync()
+        var dbArticleWithComments = await fixture.ExecuteDbContextAsync(db =>
+            db.Articles.Include(a => a.Comments)
+                .Include(a => a.Author)
+                .Where(a => a.Slug == command.Slug)
+                .SingleOrDefaultAsync()
         );
 
         if (dbArticleWithComments is null)
         {
-            throw new RestException(HttpStatusCode.NotFound, new {Article = Constants.NOT_FOUND});
+            throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
         }
 
         var dbComment = dbArticleWithComments.Comments.FirstOrDefault(c =>
-                    c.ArticleId == dbArticleWithComments.ArticleId
-                    && c.Author == dbArticleWithComments.Author
-);
+            c.ArticleId == dbArticleWithComments.ArticleId
+            && c.Author == dbArticleWithComments.Author
+        );
 
         if (dbComment is null)
         {
-            throw new RestException(HttpStatusCode.NotFound, new {Article = Constants.NOT_FOUND});
+            throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
         }
 
         return dbComment;

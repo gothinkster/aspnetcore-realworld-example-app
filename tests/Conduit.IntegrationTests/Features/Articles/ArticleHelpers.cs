@@ -37,16 +37,12 @@ public static class ArticleHelpers
             new System.Threading.CancellationToken()
         );
 
-        var dbArticle = await fixture.ExecuteDbContextAsync(
-            db =>
-                db.Articles
-                    .Where(a => a.ArticleId == created.Article.ArticleId)
-                    .SingleOrDefaultAsync()
+        var dbArticle = await fixture.ExecuteDbContextAsync(db =>
+            db.Articles.Where(a => a.ArticleId == created.Article.ArticleId).SingleOrDefaultAsync()
         );
         if (dbArticle is null)
         {
-            throw new RestException(HttpStatusCode.NotFound, new {Article = Constants.NOT_FOUND});
-
+            throw new RestException(HttpStatusCode.NotFound, new { Article = Constants.NOT_FOUND });
         }
 
         return dbArticle;

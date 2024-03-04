@@ -8,11 +8,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Conduit.Infrastructure.Errors;
 
-public class ErrorHandlingMiddleware
+public class ErrorHandlingMiddleware(
+    RequestDelegate next,
+    IStringLocalizer<ErrorHandlingMiddleware> localizer,
+    ILogger<ErrorHandlingMiddleware> logger
+)
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<ErrorHandlingMiddleware> _logger;
-    private readonly IStringLocalizer<ErrorHandlingMiddleware> _localizer;
     private static readonly Action<ILogger, string, Exception> LOGGER_MESSAGE =
         LoggerMessage.Define<string>(
             LogLevel.Error,
@@ -20,26 +21,15 @@ public class ErrorHandlingMiddleware
             formatString: "{Message}"
         );
 
-    public ErrorHandlingMiddleware(
-        RequestDelegate next,
-        IStringLocalizer<ErrorHandlingMiddleware> localizer,
-        ILogger<ErrorHandlingMiddleware> logger
-    )
-    {
-        _next = next;
-        _logger = logger;
-        _localizer = localizer;
-    }
-
     public async Task Invoke(HttpContext context)
     {
         try
         {
-            await _next(context);
+            await next(context);
         }
         catch (Exception ex)
         {
-            await HandleExceptionAsync(context, ex, _logger, _localizer);
+            await HandleExceptionAsync(context, ex, logger, localizer);
         }
     }
 
@@ -50,25 +40,23 @@ public class ErrorHandlingMiddleware
         IStringLocalizer<ErrorHandlingMiddleware> localizer
     )
     {
-        string? result = null;
+        string? result;
         switch (exception)
         {
             case RestException re:
                 context.Response.StatusCode = (int)re.Code;
                 result = JsonSerializer.Serialize(new { errors = re.Errors });
                 break;
-            case Exception e:
+            default:
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                LOGGER_MESSAGE(logger, "Unhandled Exception", e);
+                LOGGER_MESSAGE(logger, "Unhandled Exception", exception);
                 result = JsonSerializer.Serialize(
                     new { errors = localizer[Constants.InternalServerError].Value }
                 );
                 break;
-            default:
-                break;
         }
 
         context.Response.ContentType = "application/json";
-        await context.Response.WriteAsync(result ?? "{}");
+        await context.Response.WriteAsync(result);
     }
 }

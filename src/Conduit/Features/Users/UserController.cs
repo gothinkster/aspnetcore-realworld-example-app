@@ -10,32 +10,18 @@ namespace Conduit.Features.Users;
 
 [Route("user")]
 [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-public class UserController
+public class UserController(IMediator mediator, ICurrentUserAccessor currentUserAccessor)
 {
-    private readonly IMediator _mediator;
-    private readonly ICurrentUserAccessor _currentUserAccessor;
-
-    public UserController(IMediator mediator, ICurrentUserAccessor currentUserAccessor)
-    {
-        _mediator = mediator;
-        _currentUserAccessor = currentUserAccessor;
-    }
-
     [HttpGet]
-    public Task<UserEnvelope> GetCurrent(CancellationToken cancellationToken)
-    {
-        return _mediator.Send(
-            new Details.Query(_currentUserAccessor.GetCurrentUsername() ?? "<unknown>"),
+    public Task<UserEnvelope> GetCurrent(CancellationToken cancellationToken) =>
+        mediator.Send(
+            new Details.Query(currentUserAccessor.GetCurrentUsername() ?? "<unknown>"),
             cancellationToken
         );
-    }
 
     [HttpPut]
     public Task<UserEnvelope> UpdateUser(
         [FromBody] Edit.Command command,
         CancellationToken cancellationToken
-    )
-    {
-        return _mediator.Send(command, cancellationToken);
-    }
+    ) => mediator.Send(command, cancellationToken);
 }

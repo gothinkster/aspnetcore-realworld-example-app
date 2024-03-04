@@ -5,14 +5,9 @@ using Microsoft.Extensions.Options;
 
 namespace Conduit.Infrastructure.Security;
 
-public class JwtTokenGenerator : IJwtTokenGenerator
+public class JwtTokenGenerator(IOptions<JwtIssuerOptions> jwtOptions) : IJwtTokenGenerator
 {
-    private readonly JwtIssuerOptions _jwtOptions;
-
-    public JwtTokenGenerator(IOptions<JwtIssuerOptions> jwtOptions)
-    {
-        _jwtOptions = jwtOptions.Value;
-    }
+    private readonly JwtIssuerOptions _jwtOptions = jwtOptions.Value;
 
     public string CreateToken(string username)
     {

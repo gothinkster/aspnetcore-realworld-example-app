@@ -6,22 +6,22 @@ namespace Conduit.Domain;
 public class Comment
 {
     [JsonPropertyName("id")]
-    public int CommentId { get; set; }
+    public int CommentId { get; init; }
 
-    public string? Body { get; set; }
+    public string? Body { get; init; }
 
-    public Person? Author { get; set; }
-
-    [JsonIgnore]
-    public int AuthorId { get; set; }
+    public Person? Author { get; init; }
 
     [JsonIgnore]
-    public Article? Article { get; set; }
+    public int AuthorId { get; init; }
 
     [JsonIgnore]
-    public int ArticleId { get; set; }
+    public Article? Article { get; init; }
 
-    public DateTime CreatedAt { get; set; }
+    [JsonIgnore]
+    public int ArticleId { get; init; }
 
-    public DateTime UpdatedAt { get; set; }
+    public DateTime CreatedAt { get; init; }
+
+    public DateTime UpdatedAt { get; init; }
 }

@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{E0DF0C
 		Directory.Packages.props = Directory.Packages.props
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json
+		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{79EC8D73-8DAD-430E-93CE-C1F29DBC33FA}"

@@ -17,29 +17,18 @@ public class Add
 
     public class CommandValidator : AbstractValidator<Command>
     {
-        public CommandValidator()
-        {
-            DefaultValidatorExtensions.NotNull(RuleFor(x => x.Slug)).NotEmpty();
-        }
+        public CommandValidator() => RuleFor(x => x.Slug).NotNull().NotEmpty();
     }
 
-    public class QueryHandler : IRequestHandler<Command, ArticleEnvelope>
+    public class QueryHandler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
+        : IRequestHandler<Command, ArticleEnvelope>
     {
-        private readonly ConduitContext _context;
-        private readonly ICurrentUserAccessor _currentUserAccessor;
-
-        public QueryHandler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
-        {
-            _context = context;
-            _currentUserAccessor = currentUserAccessor;
-        }
-
         public async Task<ArticleEnvelope> Handle(
             Command message,
             CancellationToken cancellationToken
         )
         {
-            var article = await _context.Articles.FirstOrDefaultAsync(
+            var article = await context.Articles.FirstOrDefaultAsync(
                 x => x.Slug == message.Slug,
                 cancellationToken
             );
@@ -52,8 +41,8 @@ public class Add
                 );
             }
 
-            var person = await _context.Persons.FirstOrDefaultAsync(
-                x => x.Username == _currentUserAccessor.GetCurrentUsername(),
+            var person = await context.Persons.FirstOrDefaultAsync(
+                x => x.Username == currentUserAccessor.GetCurrentUsername(),
                 cancellationToken
             );
 
@@ -65,7 +54,7 @@ public class Add
                 );
             }
 
-            var favorite = await _context.ArticleFavorites.FirstOrDefaultAsync(
+            var favorite = await context.ArticleFavorites.FirstOrDefaultAsync(
                 x => x.ArticleId == article.ArticleId && x.PersonId == person.PersonId,
                 cancellationToken
             );
@@ -79,19 +68,13 @@ public class Add
                     Person = person,
                     PersonId = person.PersonId
                 };
-                await _context.ArticleFavorites.AddAsync(favorite, cancellationToken);
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.ArticleFavorites.AddAsync(favorite, cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
             }
 
-
-
-            article =
-                await _context.Articles
-                    .GetAllData()
-                    .FirstOrDefaultAsync(
-                        x => x.ArticleId == article.ArticleId,
-                        cancellationToken
-                    );
+            article = await context
+                .Articles.GetAllData()
+                .FirstOrDefaultAsync(x => x.ArticleId == article.ArticleId, cancellationToken);
             if (article is null)
             {
                 throw new RestException(

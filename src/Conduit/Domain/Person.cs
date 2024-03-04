@@ -7,7 +7,7 @@ namespace Conduit.Domain;
 public class Person
 {
     [JsonIgnore]
-    public int PersonId { get; set; }
+    public int PersonId { get; init; }
 
     public string? Username { get; set; }
 
@@ -18,17 +18,17 @@ public class Person
     public string? Image { get; set; }
 
     [JsonIgnore]
-    public List<ArticleFavorite> ArticleFavorites { get; set; } = new();
+    public List<ArticleFavorite> ArticleFavorites { get; init; } = new();
 
     [JsonIgnore]
-    public List<FollowedPeople> Following { get; set; } = new();
+    public List<FollowedPeople> Following { get; init; } = new();
 
     [JsonIgnore]
-    public List<FollowedPeople> Followers { get; set; } = new();
+    public List<FollowedPeople> Followers { get; init; } = new();
 
     [JsonIgnore]
-    public byte[] Hash { get; set; } = Array.Empty<byte>();
+    public byte[] Hash { get; set; } = [];
 
     [JsonIgnore]
-    public byte[] Salt { get; set; } = Array.Empty<byte>();
+    public byte[] Salt { get; set; } = [];
 }

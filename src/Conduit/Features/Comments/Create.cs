@@ -21,30 +21,19 @@ public class Create
 
     public class CommandValidator : AbstractValidator<Command>
     {
-        public CommandValidator()
-        {
-            RuleFor(x => x.Model.Comment.Body).NotEmpty();
-        }
+        public CommandValidator() => RuleFor(x => x.Model.Comment.Body).NotEmpty();
     }
 
-    public class Handler : IRequestHandler<Command, CommentEnvelope>
+    public class Handler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
+        : IRequestHandler<Command, CommentEnvelope>
     {
-        private readonly ConduitContext _context;
-        private readonly ICurrentUserAccessor _currentUserAccessor;
-
-        public Handler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
-        {
-            _context = context;
-            _currentUserAccessor = currentUserAccessor;
-        }
-
         public async Task<CommentEnvelope> Handle(
             Command message,
             CancellationToken cancellationToken
         )
         {
-            var article = await _context.Articles
-                .Include(x => x.Comments)
+            var article = await context
+                .Articles.Include(x => x.Comments)
                 .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
 
             if (article == null)
@@ -55,8 +44,8 @@ public class Create
                 );
             }
 
-            var author = await _context.Persons.FirstAsync(
-                x => x.Username == _currentUserAccessor.GetCurrentUsername(),
+            var author = await context.Persons.FirstAsync(
+                x => x.Username == currentUserAccessor.GetCurrentUsername(),
                 cancellationToken
             );
 
@@ -67,11 +56,11 @@ public class Create
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
-            await _context.Comments.AddAsync(comment, cancellationToken);
+            await context.Comments.AddAsync(comment, cancellationToken);
 
             article.Comments.Add(comment);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
 
             return new CommentEnvelope(comment);
         }

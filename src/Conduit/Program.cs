@@ -1,21 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Conduit;
 using Conduit.Features.Profiles;
-using Conduit.Infrastructure.Security;
 using Conduit.Infrastructure;
+using Conduit.Infrastructure.Errors;
+using Conduit.Infrastructure.Security;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore;
-using System;
-using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
-using FluentValidation.AspNetCore;
-using FluentValidation;
-using Conduit.Infrastructure.Errors;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 // read database configuration (database provider + database connection) from environment variables
 //Environment.GetEnvironmentVariable(DEFAULT_DATABASE_PROVIDER)
@@ -25,8 +25,8 @@ var defaultDatabaseProvider = "sqlite";
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMediatR(
-    cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly())
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly())
 );
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 builder.Services.AddScoped(
@@ -99,28 +99,28 @@ builder.Services.AddSwaggerGen(x =>
     x.SwaggerDoc("v1", new OpenApiInfo { Title = "RealWorld API", Version = "v1" });
     x.CustomSchemaIds(y => y.FullName);
     x.DocInclusionPredicate((version, apiDescription) => true);
-    x.TagActionsBy(
-        y => new List<string>() { y.GroupName ?? throw new InvalidOperationException() }
-    );
+    x.TagActionsBy(y => new List<string>()
+    {
+        y.GroupName ?? throw new InvalidOperationException()
+    });
     x.CustomSchemaIds(s => s.FullName?.Replace("+", "."));
 });
 
 builder.Services.AddCors();
-builder.Services
-    .AddMvc(opt =>
+builder
+    .Services.AddMvc(opt =>
     {
         opt.Conventions.Add(new GroupByApiRootConvention());
         opt.Filters.Add(typeof(ValidatorActionFilter));
         opt.EnableEndpointRouting = false;
     })
-    .AddJsonOptions(
-        opt =>
-            opt.JsonSerializerOptions.DefaultIgnoreCondition = System
-                .Text
-                .Json
-                .Serialization
-                .JsonIgnoreCondition
-                .WhenWritingNull
+    .AddJsonOptions(opt =>
+        opt.JsonSerializerOptions.DefaultIgnoreCondition = System
+            .Text
+            .Json
+            .Serialization
+            .JsonIgnoreCondition
+            .WhenWritingNull
     );
 
 builder.Services.AddFluentValidationAutoValidation();
@@ -156,8 +156,8 @@ app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld A
 
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider
-        .GetRequiredService<ConduitContext>()
+    var dbContext = scope
+        .ServiceProvider.GetRequiredService<ConduitContext>()
         .Database.EnsureCreated();
     // use context
 }

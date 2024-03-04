@@ -12,22 +12,15 @@ public class List
 {
     public record Query(string Slug) : IRequest<CommentsEnvelope>;
 
-    public class QueryHandler : IRequestHandler<Query, CommentsEnvelope>
+    public class QueryHandler(ConduitContext context) : IRequestHandler<Query, CommentsEnvelope>
     {
-        private readonly ConduitContext _context;
-
-        public QueryHandler(ConduitContext context)
-        {
-            _context = context;
-        }
-
         public async Task<CommentsEnvelope> Handle(
             Query message,
             CancellationToken cancellationToken
         )
         {
-            var article = await _context.Articles
-                .Include(x => x.Comments)
+            var article = await context
+                .Articles.Include(x => x.Comments)
                 .ThenInclude(x => x.Author)
                 .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
 

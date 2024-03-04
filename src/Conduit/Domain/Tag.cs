@@ -4,7 +4,7 @@ namespace Conduit.Domain;
 
 public class Tag
 {
-    public string? TagId { get; set; }
+    public string? TagId { get; init; }
 
-    public List<ArticleTag> ArticleTags { get; set; } = new();
+    public List<ArticleTag> ArticleTags { get; init; } = new();
 }

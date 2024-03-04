@@ -16,14 +16,7 @@ namespace Conduit.Features.Users;
 
 public class Create
 {
-    public class UserData
-    {
-        public string? Username { get; set; }
-
-        public string? Email { get; set; }
-
-        public string? Password { get; set; }
-    }
+    public record UserData(string? Username, string? Email, string? Password);
 
     public record Command(UserData User) : IRequest<UserEnvelope>;
 
@@ -37,34 +30,18 @@ public class Create
         }
     }
 
-    public class Handler : IRequestHandler<Command, UserEnvelope>
+    public class Handler(
+        ConduitContext context,
+        IPasswordHasher passwordHasher,
+        IJwtTokenGenerator jwtTokenGenerator,
+        IMapper mapper
+    ) : IRequestHandler<Command, UserEnvelope>
     {
-        private readonly ConduitContext _context;
-        private readonly IPasswordHasher _passwordHasher;
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
-        private readonly IMapper _mapper;
-
-        public Handler(
-            ConduitContext context,
-            IPasswordHasher passwordHasher,
-            IJwtTokenGenerator jwtTokenGenerator,
-            IMapper mapper
-        )
-        {
-            _context = context;
-            _passwordHasher = passwordHasher;
-            _jwtTokenGenerator = jwtTokenGenerator;
-            _mapper = mapper;
-        }
-
-        public async Task<UserEnvelope> Handle(
-            Command message,
-            CancellationToken cancellationToken
-        )
+        public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
         {
             if (
-                await _context.Persons
-                    .Where(x => x.Username == message.User.Username)
+                await context
+                    .Persons.Where(x => x.Username == message.User.Username)
                     .AnyAsync(cancellationToken)
             )
             {
@@ -75,8 +52,8 @@ public class Create
             }
 
             if (
-                await _context.Persons
-                    .Where(x => x.Email == message.User.Email)
+                await context
+                    .Persons.Where(x => x.Email == message.User.Email)
                     .AnyAsync(cancellationToken)
             )
             {
@@ -91,18 +68,18 @@ public class Create
             {
                 Username = message.User.Username,
                 Email = message.User.Email,
-                Hash = await _passwordHasher.Hash(
+                Hash = await passwordHasher.Hash(
                     message.User.Password ?? throw new InvalidOperationException(),
                     salt
                 ),
                 Salt = salt
             };
 
-            await _context.Persons.AddAsync(person, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
+            await context.Persons.AddAsync(person, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
 
-            var user = _mapper.Map<Person, User>(person);
-            user.Token = _jwtTokenGenerator.CreateToken(
+            var user = mapper.Map<Person, User>(person);
+            user.Token = jwtTokenGenerator.CreateToken(
                 person.Username ?? throw new InvalidOperationException()
             );
             return new UserEnvelope(user);

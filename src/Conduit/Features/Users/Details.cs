@@ -18,36 +18,19 @@ public class Details
 
     public class QueryValidator : AbstractValidator<Query>
     {
-        public QueryValidator()
-        {
-            RuleFor(x => x.Username).NotNull().NotEmpty();
-        }
+        public QueryValidator() => RuleFor(x => x.Username).NotNull().NotEmpty();
     }
 
-    public class QueryHandler : IRequestHandler<Query, UserEnvelope>
+    public class QueryHandler(
+        ConduitContext context,
+        IJwtTokenGenerator jwtTokenGenerator,
+        IMapper mapper
+    ) : IRequestHandler<Query, UserEnvelope>
     {
-        private readonly ConduitContext _context;
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
-        private readonly IMapper _mapper;
-
-        public QueryHandler(
-            ConduitContext context,
-            IJwtTokenGenerator jwtTokenGenerator,
-            IMapper mapper
-        )
+        public async Task<UserEnvelope> Handle(Query message, CancellationToken cancellationToken)
         {
-            _context = context;
-            _jwtTokenGenerator = jwtTokenGenerator;
-            _mapper = mapper;
-        }
-
-        public async Task<UserEnvelope> Handle(
-            Query message,
-            CancellationToken cancellationToken
-        )
-        {
-            var person = await _context.Persons
-                .AsNoTracking()
+            var person = await context
+                .Persons.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Username == message.Username, cancellationToken);
 
             if (person == null)
@@ -58,8 +41,8 @@ public class Details
                 );
             }
 
-            var user = _mapper.Map<Domain.Person, User>(person);
-            user.Token = _jwtTokenGenerator.CreateToken(
+            var user = mapper.Map<Domain.Person, User>(person);
+            user.Token = jwtTokenGenerator.CreateToken(
                 person.Username ?? throw new InvalidOperationException()
             );
             return new UserEnvelope(user);

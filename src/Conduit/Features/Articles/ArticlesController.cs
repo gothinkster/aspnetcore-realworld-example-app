@@ -8,15 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Conduit.Features.Articles;
 
 [Route("articles")]
-public class ArticlesController : Controller
+public class ArticlesController(IMediator mediator) : Controller
 {
-    private readonly IMediator _mediator;
-
-    public ArticlesController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [HttpGet]
     public Task<ArticlesEnvelope> Get(
         [FromQuery] string tag,
@@ -25,13 +18,7 @@ public class ArticlesController : Controller
         [FromQuery] int? limit,
         [FromQuery] int? offset,
         CancellationToken cancellationToken
-    )
-    {
-        return _mediator.Send(
-            new List.Query(tag, author, favorited, limit, offset),
-            cancellationToken
-        );
-    }
+    ) => mediator.Send(new List.Query(tag, author, favorited, limit, offset), cancellationToken);
 
     [HttpGet("feed")]
     public Task<ArticlesEnvelope> GetFeed(
@@ -41,28 +28,22 @@ public class ArticlesController : Controller
         [FromQuery] int? limit,
         [FromQuery] int? offset,
         CancellationToken cancellationToken
-    )
-    {
-        return _mediator.Send(
-            new List.Query(tag, author, favorited, limit, offset) { IsFeed = true }
+    ) =>
+        mediator.Send(
+            new List.Query(tag, author, favorited, limit, offset) { IsFeed = true },
+            cancellationToken
         );
-    }
 
     [HttpGet("{slug}")]
-    public Task<ArticleEnvelope> Get(string slug, CancellationToken cancellationToken)
-    {
-        return _mediator.Send(new Details.Query(slug), cancellationToken);
-    }
+    public Task<ArticleEnvelope> Get(string slug, CancellationToken cancellationToken) =>
+        mediator.Send(new Details.Query(slug), cancellationToken);
 
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
     public Task<ArticleEnvelope> Create(
         [FromBody] Create.Command command,
         CancellationToken cancellationToken
-    )
-    {
-        return _mediator.Send(command, cancellationToken);
-    }
+    ) => mediator.Send(command, cancellationToken);
 
     [HttpPut("{slug}")]
     [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
@@ -70,15 +51,10 @@ public class ArticlesController : Controller
         string slug,
         [FromBody] Edit.Model model,
         CancellationToken cancellationToken
-    )
-    {
-        return _mediator.Send(new Edit.Command(model, slug), cancellationToken);
-    }
+    ) => mediator.Send(new Edit.Command(model, slug), cancellationToken);
 
     [HttpDelete("{slug}")]
     [Authorize(AuthenticationSchemes = JwtIssuerOptions.Schemes)]
-    public Task Delete(string slug, CancellationToken cancellationToken)
-    {
-        return _mediator.Send(new Delete.Command(slug), cancellationToken);
-    }
+    public Task Delete(string slug, CancellationToken cancellationToken) =>
+        mediator.Send(new Delete.Command(slug), cancellationToken);
 }

@@ -32,13 +32,10 @@ public class Startup
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddMediatR(
-            cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly())
+        services.AddMediatR(cfg =>
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly())
         );
-        services.AddTransient(
-            typeof(IPipelineBehavior<,>),
-            typeof(ValidationPipelineBehavior<,>)
-        );
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
         services.AddScoped(
             typeof(IPipelineBehavior<,>),
             typeof(DBContextTransactionPipelineBehavior<,>)
@@ -57,18 +54,18 @@ public class Startup
         {
             if (
                 databaseProvider
-                .ToLowerInvariant()
-                .Trim()
-                .Equals("sqlite", StringComparison.Ordinal)
+                    .ToLowerInvariant()
+                    .Trim()
+                    .Equals("sqlite", StringComparison.Ordinal)
             )
             {
                 options.UseSqlite(connectionString);
             }
             else if (
                 databaseProvider
-                .ToLowerInvariant()
-                .Trim()
-                .Equals("sqlserver", StringComparison.Ordinal)
+                    .ToLowerInvariant()
+                    .Trim()
+                    .Equals("sqlserver", StringComparison.Ordinal)
             )
             {
                 // only works in windows container
@@ -120,9 +117,10 @@ public class Startup
             x.SwaggerDoc("v1", new OpenApiInfo { Title = "RealWorld API", Version = "v1" });
             x.CustomSchemaIds(y => y.FullName);
             x.DocInclusionPredicate((version, apiDescription) => true);
-            x.TagActionsBy(
-                y => new List<string>() { y.GroupName ?? throw new InvalidOperationException() }
-            );
+            x.TagActionsBy(y => new List<string>()
+            {
+                y.GroupName ?? throw new InvalidOperationException()
+            });
         });
 
         services.AddCors();
@@ -133,14 +131,13 @@ public class Startup
                 opt.Filters.Add(typeof(ValidatorActionFilter));
                 opt.EnableEndpointRouting = false;
             })
-            .AddJsonOptions(
-                opt =>
-                    opt.JsonSerializerOptions.DefaultIgnoreCondition = System
-                        .Text
-                        .Json
-                        .Serialization
-                        .JsonIgnoreCondition
-                        .WhenWritingNull
+            .AddJsonOptions(opt =>
+                opt.JsonSerializerOptions.DefaultIgnoreCondition = System
+                    .Text
+                    .Json
+                    .Serialization
+                    .JsonIgnoreCondition
+                    .WhenWritingNull
             );
 
         services.AddFluentValidationAutoValidation();
@@ -174,9 +171,7 @@ public class Startup
         app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
 
         // Enable middleware to serve swagger-ui assets(HTML, JS, CSS etc.)
-        app.UseSwaggerUI(
-            x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld API V1")
-        );
+        app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "RealWorld API V1"));
 
         app.ApplicationServices.GetRequiredService<ConduitContext>().Database.EnsureCreated();
     }

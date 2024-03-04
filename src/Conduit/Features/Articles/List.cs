@@ -21,30 +21,22 @@ public class List
         bool IsFeed = false
     ) : IRequest<ArticlesEnvelope>;
 
-    public class QueryHandler : IRequestHandler<Query, ArticlesEnvelope>
+    public class QueryHandler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
+        : IRequestHandler<Query, ArticlesEnvelope>
     {
-        private readonly ConduitContext _context;
-        private readonly ICurrentUserAccessor _currentUserAccessor;
-
-        public QueryHandler(ConduitContext context, ICurrentUserAccessor currentUserAccessor)
-        {
-            _context = context;
-            _currentUserAccessor = currentUserAccessor;
-        }
-
         public async Task<ArticlesEnvelope> Handle(
             Query message,
             CancellationToken cancellationToken
         )
         {
-            var queryable = _context.Articles.GetAllData();
+            var queryable = context.Articles.GetAllData();
 
-            if (message.IsFeed && _currentUserAccessor.GetCurrentUsername() != null)
+            if (message.IsFeed && currentUserAccessor.GetCurrentUsername() != null)
             {
-                var currentUser = await _context.Persons
-                    .Include(x => x.Following)
+                var currentUser = await context
+                    .Persons.Include(x => x.Following)
                     .FirstOrDefaultAsync(
-                        x => x.Username == _currentUserAccessor.GetCurrentUsername(),
+                        x => x.Username == currentUserAccessor.GetCurrentUsername(),
                         cancellationToken
                     );
 
@@ -55,24 +47,21 @@ public class List
                         new { User = Constants.NOT_FOUND }
                     );
                 }
-                queryable = queryable.Where(
-                    x =>
-                        currentUser.Following
-                            .Select(y => y.TargetId)
-                            .Contains(x.Author!.PersonId)
+                queryable = queryable.Where(x =>
+                    currentUser.Following.Select(y => y.TargetId).Contains(x.Author!.PersonId)
                 );
             }
 
             if (!string.IsNullOrWhiteSpace(message.Tag))
             {
-                var tag = await _context.ArticleTags.FirstOrDefaultAsync(
+                var tag = await context.ArticleTags.FirstOrDefaultAsync(
                     x => x.TagId == message.Tag,
                     cancellationToken
                 );
                 if (tag != null)
                 {
-                    queryable = queryable.Where(
-                        x => x.ArticleTags.Select(y => y.TagId).Contains(tag.TagId)
+                    queryable = queryable.Where(x =>
+                        x.ArticleTags.Select(y => y.TagId).Contains(tag.TagId)
                     );
                 }
                 else
@@ -83,7 +72,7 @@ public class List
 
             if (!string.IsNullOrWhiteSpace(message.Author))
             {
-                var author = await _context.Persons.FirstOrDefaultAsync(
+                var author = await context.Persons.FirstOrDefaultAsync(
                     x => x.Username == message.Author,
                     cancellationToken
                 );
@@ -99,14 +88,14 @@ public class List
 
             if (!string.IsNullOrWhiteSpace(message.FavoritedUsername))
             {
-                var author = await _context.Persons.FirstOrDefaultAsync(
+                var author = await context.Persons.FirstOrDefaultAsync(
                     x => x.Username == message.FavoritedUsername,
                     cancellationToken
                 );
                 if (author != null)
                 {
-                    queryable = queryable.Where(
-                        x => x.ArticleFavorites.Any(y => y.PersonId == author.PersonId)
+                    queryable = queryable.Where(x =>
+                        x.ArticleFavorites.Any(y => y.PersonId == author.PersonId)
                     );
                 }
                 else

@@ -18,19 +18,15 @@ public class Details
         public QueryValidator() => RuleFor(x => x.Slug).NotNull().NotEmpty();
     }
 
-    public class QueryHandler : IRequestHandler<Query, ArticleEnvelope>
+    public class QueryHandler(ConduitContext context) : IRequestHandler<Query, ArticleEnvelope>
     {
-        private readonly ConduitContext _context;
-
-        public QueryHandler(ConduitContext context) => _context = context;
-
         public async Task<ArticleEnvelope> Handle(
             Query message,
             CancellationToken cancellationToken
         )
         {
-            var article = await _context.Articles
-                .GetAllData()
+            var article = await context
+                .Articles.GetAllData()
                 .FirstOrDefaultAsync(x => x.Slug == message.Slug, cancellationToken);
 
             if (article == null)

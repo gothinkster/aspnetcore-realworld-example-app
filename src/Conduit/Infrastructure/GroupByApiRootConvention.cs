@@ -8,9 +8,7 @@ public class GroupByApiRootConvention : IControllerModelConvention
 {
     public void Apply(ControllerModel controller)
     {
-        var controllerNamespace = controller.Attributes
-            .OfType<RouteAttribute>()
-            .FirstOrDefault();
+        var controllerNamespace = controller.Attributes.OfType<RouteAttribute>().FirstOrDefault();
         var apiVersion =
             controllerNamespace?.Template?.Split('/').First().ToLowerInvariant() ?? "default";
 
