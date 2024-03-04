@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <ItemGroup>
     <PackageReference Include="AutoMapper" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection"  />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
