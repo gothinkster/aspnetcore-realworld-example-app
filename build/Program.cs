@@ -67,7 +67,7 @@ Target(
     {
         Run(
             "dotnet",
-            $"publish {project} -c Release -f net7.0 -o ./publish --no-restore --no-build --verbosity=normal"
+            $"publish {project} -c Release -f net8.0 -o ./publish --no-restore --no-build --verbosity=normal"
         );
     }
 );

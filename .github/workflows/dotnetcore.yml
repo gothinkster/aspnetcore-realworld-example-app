@@ -12,4 +12,4 @@ jobs:
     - uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.201
-    - run: dotnet run -p build/build.csproj
+    - run: dotnet run --project build/build.csproj
