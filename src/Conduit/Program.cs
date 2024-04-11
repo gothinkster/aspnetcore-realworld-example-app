@@ -82,10 +82,7 @@ builder.Services.AddSwaggerGen(x =>
     x.SwaggerDoc("v1", new OpenApiInfo { Title = "RealWorld API", Version = "v1" });
     x.CustomSchemaIds(y => y.FullName);
     x.DocInclusionPredicate((_, _) => true);
-    x.TagActionsBy(y => new List<string>
-    {
-        y.GroupName ?? throw new InvalidOperationException()
-    });
+    x.TagActionsBy(y => new List<string> { y.GroupName ?? throw new InvalidOperationException() });
     x.CustomSchemaIds(s => s.FullName?.Replace("+", "."));
 });
 

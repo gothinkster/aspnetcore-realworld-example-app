@@ -110,11 +110,7 @@ public class List
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
-            return new ArticlesEnvelope
-            {
-                Articles = articles,
-                ArticlesCount = queryable.Count()
-            };
+            return new ArticlesEnvelope { Articles = articles, ArticlesCount = queryable.Count() };
         }
     }
 }

@@ -10,10 +10,10 @@ namespace Conduit.IntegrationTests;
 
 public class SliceFixture : IDisposable
 {
-
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ServiceProvider _provider;
     private readonly string _dbName = Guid.NewGuid() + ".db";
+
     public SliceFixture()
     {
         var services = new ServiceCollection();
