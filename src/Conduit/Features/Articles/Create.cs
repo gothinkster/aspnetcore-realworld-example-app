@@ -60,7 +60,7 @@ public class Create
                 var t = await context.Tags.FindAsync(tag);
                 if (t == null)
                 {
-                    t = new Tag() { TagId = tag };
+                    t = new Tag { TagId = tag };
                     await context.Tags.AddAsync(t, cancellationToken);
                     //save immediately for reuse
                     await context.SaveChangesAsync(cancellationToken);
@@ -68,7 +68,7 @@ public class Create
                 tags.Add(t);
             }
 
-            var article = new Article()
+            var article = new Article
             {
                 Author = author,
                 Body = message.Article.Body,
@@ -81,7 +81,7 @@ public class Create
             await context.Articles.AddAsync(article, cancellationToken);
 
             await context.ArticleTags.AddRangeAsync(
-                tags.Select(x => new ArticleTag() { Article = article, Tag = x }),
+                tags.Select(x => new ArticleTag { Article = article, Tag = x }),
                 cancellationToken
             );
 

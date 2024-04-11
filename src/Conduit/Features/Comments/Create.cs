@@ -49,7 +49,7 @@ public class Create
                 cancellationToken
             );
 
-            var comment = new Comment()
+            var comment = new Comment
             {
                 Author = author,
                 Body = message.Model.Comment.Body ?? string.Empty,

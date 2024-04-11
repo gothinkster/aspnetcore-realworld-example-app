@@ -2,7 +2,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Conduit.Domain;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
 using MediatR;
@@ -111,7 +110,7 @@ public class List
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
-            return new ArticlesEnvelope()
+            return new ArticlesEnvelope
             {
                 Articles = articles,
                 ArticlesCount = queryable.Count()

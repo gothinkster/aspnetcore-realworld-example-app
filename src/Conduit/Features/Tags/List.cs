@@ -20,7 +20,7 @@ public class List
                 .Tags.OrderBy(x => x.TagId)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
-            return new TagsEnvelope()
+            return new TagsEnvelope
             {
                 Tags = tags?.Select(x => x.TagId ?? string.Empty).ToList() ?? new List<string>()
             };

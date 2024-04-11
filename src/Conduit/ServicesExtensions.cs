@@ -1,8 +1,14 @@
 using System;
-using System.Text;
+using System.Reflection;
 using System.Threading.Tasks;
+using Conduit.Features.Profiles;
+using Conduit.Infrastructure;
 using Conduit.Infrastructure.Security;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -11,14 +17,38 @@ using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Conduit;
 
-public static class StartupExtensions
+public static class ServicesExtensions
 {
+    public static void AddConduit(this IServiceCollection services)
+    {
+        services.AddMediatR(cfg =>
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly())
+        );
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
+        services.AddScoped(
+            typeof(IPipelineBehavior<,>),
+            typeof(DBContextTransactionPipelineBehavior<,>)
+        );
+
+        services.AddFluentValidationAutoValidation();
+        services.AddFluentValidationClientsideAdapters();
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        services.AddAutoMapper(typeof(Program));
+
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
+        services.AddScoped<IProfileReader, ProfileReader>();
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+    }
+
     public static void AddJwt(this IServiceCollection services)
     {
         services.AddOptions();
 
         var signingKey = new SymmetricSecurityKey(
-            Encoding.ASCII.GetBytes("somethinglongerforthisdumbalgorithmisrequired")
+            "somethinglongerforthisdumbalgorithmisrequired"u8.ToArray()
         );
         var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
         var issuer = "issuer";

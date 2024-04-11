@@ -1,18 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Conduit;
-using Conduit.Features.Profiles;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
-using Conduit.Infrastructure.Security;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
@@ -24,15 +16,6 @@ var defaultDatabaseConnectionSrting = "Filename=realworld.db";
 var defaultDatabaseProvider = "sqlite";
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly())
-);
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
-builder.Services.AddScoped(
-    typeof(IPipelineBehavior<,>),
-    typeof(DBContextTransactionPipelineBehavior<,>)
-);
 
 // take the connection string from the environment variable or use hard-coded database name
 var connectionString = defaultDatabaseConnectionSrting;
@@ -81,7 +64,7 @@ builder.Services.AddSwaggerGen(x =>
     x.SupportNonNullableReferenceTypes();
 
     x.AddSecurityRequirement(
-        new OpenApiSecurityRequirement()
+        new OpenApiSecurityRequirement
         {
             {
                 new OpenApiSecurityScheme
@@ -98,8 +81,8 @@ builder.Services.AddSwaggerGen(x =>
     );
     x.SwaggerDoc("v1", new OpenApiInfo { Title = "RealWorld API", Version = "v1" });
     x.CustomSchemaIds(y => y.FullName);
-    x.DocInclusionPredicate((version, apiDescription) => true);
-    x.TagActionsBy(y => new List<string>()
+    x.DocInclusionPredicate((_, _) => true);
+    x.TagActionsBy(y => new List<string>
     {
         y.GroupName ?? throw new InvalidOperationException()
     });
@@ -123,17 +106,7 @@ builder
             .WhenWritingNull
     );
 
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddFluentValidationClientsideAdapters();
-builder.Services.AddValidatorsFromAssemblyContaining<Startup>();
-
-builder.Services.AddAutoMapper(typeof(Program));
-
-builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-builder.Services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
-builder.Services.AddScoped<IProfileReader, ProfileReader>();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddConduit();
 
 builder.Services.AddJwt();
 
@@ -143,7 +116,7 @@ app.Services.GetRequiredService<ILoggerFactory>().AddSerilogLogging();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
 app.UseAuthentication();
 app.UseMvc();

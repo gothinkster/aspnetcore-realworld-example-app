@@ -109,11 +109,11 @@ public class Edit
                 var at = article.ArticleTags?.FirstOrDefault(t => t.TagId == tag);
                 if (at == null)
                 {
-                    at = new ArticleTag()
+                    at = new ArticleTag
                     {
                         Article = article,
                         ArticleId = article.ArticleId,
-                        Tag = new Tag() { TagId = tag },
+                        Tag = new Tag { TagId = tag },
                         TagId = tag
                     };
                     articleTagsToCreate.Add(at);
