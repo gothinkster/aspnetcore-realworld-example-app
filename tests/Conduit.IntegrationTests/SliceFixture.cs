@@ -10,26 +10,18 @@ namespace Conduit.IntegrationTests;
 
 public class SliceFixture : IDisposable
 {
-    //private static readonly IConfiguration CONFIG;
-
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ServiceProvider _provider;
     private readonly string _dbName = Guid.NewGuid() + ".db";
 
-    //static SliceFixture() => CONFIG = new ConfigurationBuilder()
-    //       .AddEnvironmentVariables()
-    //       .Build();
-
     public SliceFixture()
     {
-        var startup = new Startup();
         var services = new ServiceCollection();
+        services.AddConduit();
 
         var builder = new DbContextOptionsBuilder();
         builder.UseInMemoryDatabase(_dbName);
         services.AddSingleton(new ConduitContext(builder.Options));
-
-        startup.ConfigureServices(services);
 
         _provider = services.BuildServiceProvider();
 

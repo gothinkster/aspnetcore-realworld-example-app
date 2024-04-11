@@ -61,7 +61,7 @@ public class Add
 
             if (favorite == null)
             {
-                favorite = new ArticleFavorite()
+                favorite = new ArticleFavorite
                 {
                     Article = article,
                     ArticleId = article.ArticleId,

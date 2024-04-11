@@ -64,7 +64,7 @@ public class Add
 
             if (followedPeople == null)
             {
-                followedPeople = new FollowedPeople()
+                followedPeople = new FollowedPeople
                 {
                     Observer = observer,
                     ObserverId = observer.PersonId,

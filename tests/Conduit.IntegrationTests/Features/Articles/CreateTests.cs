@@ -11,7 +11,7 @@ public class CreateTests : SliceFixture
     public async Task Expect_Create_Article()
     {
         var command = new Create.Command(
-            new Create.ArticleData()
+            new Create.ArticleData
             {
                 Title = "Test article dsergiu77",
                 Description = "Description of the test article",
