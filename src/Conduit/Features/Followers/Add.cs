@@ -69,7 +69,7 @@ public class Add
                     Observer = observer,
                     ObserverId = observer.PersonId,
                     Target = target,
-                    TargetId = target.PersonId
+                    TargetId = target.PersonId,
                 };
                 await context.FollowedPeople.AddAsync(followedPeople, cancellationToken);
                 await context.SaveChangesAsync(cancellationToken);

@@ -22,7 +22,7 @@ public class List
                 .ToListAsync(cancellationToken);
             return new TagsEnvelope
             {
-                Tags = tags?.Select(x => x.TagId ?? string.Empty).ToList() ?? new List<string>()
+                Tags = tags?.Select(x => x.TagId ?? string.Empty).ToList() ?? new List<string>(),
             };
         }
     }

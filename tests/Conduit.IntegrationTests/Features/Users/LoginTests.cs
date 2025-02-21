@@ -18,7 +18,7 @@ public class LoginTests : SliceFixture
             Username = "username",
             Email = "email",
             Hash = await new PasswordHasher().Hash("password", salt),
-            Salt = salt
+            Salt = salt,
         };
         await InsertAsync(person);
 

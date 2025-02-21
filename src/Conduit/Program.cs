@@ -57,7 +57,7 @@ builder.Services.AddSwaggerGen(x =>
             Description = "Please insert JWT with Bearer into field",
             Name = "Authorization",
             Type = SecuritySchemeType.ApiKey,
-            BearerFormat = "JWT"
+            BearerFormat = "JWT",
         }
     );
 
@@ -72,11 +72,11 @@ builder.Services.AddSwaggerGen(x =>
                     Reference = new OpenApiReference
                     {
                         Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
+                        Id = "Bearer",
+                    },
                 },
                 Array.Empty<string>()
-            }
+            },
         }
     );
     x.SwaggerDoc("v1", new OpenApiInfo { Title = "RealWorld API", Version = "v1" });

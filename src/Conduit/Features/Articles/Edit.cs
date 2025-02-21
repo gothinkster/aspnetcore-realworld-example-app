@@ -114,7 +114,7 @@ public class Edit
                         Article = article,
                         ArticleId = article.ArticleId,
                         Tag = new Tag { TagId = tag },
-                        TagId = tag
+                        TagId = tag,
                     };
                     articleTagsToCreate.Add(at);
                 }

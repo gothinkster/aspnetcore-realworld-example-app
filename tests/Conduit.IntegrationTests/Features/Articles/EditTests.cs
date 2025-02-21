@@ -17,7 +17,7 @@ public class EditTests : SliceFixture
                 Title = "Test article dsergiu77",
                 Description = "Description of the test article",
                 Body = "Body of the test article",
-                TagList = ["tag1", "tag2"]
+                TagList = ["tag1", "tag2"],
             }
         );
 

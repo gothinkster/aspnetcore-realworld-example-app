@@ -72,7 +72,7 @@ public class Create
                     message.User.Password ?? throw new InvalidOperationException(),
                     salt
                 ),
-                Salt = salt
+                Salt = salt,
             };
 
             await context.Persons.AddAsync(person, cancellationToken);

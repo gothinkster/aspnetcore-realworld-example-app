@@ -75,7 +75,7 @@ public static class ServicesExtensions
             // Validate the token expiry
             ValidateLifetime = true,
             // If you want to allow a certain amount of clock drift, set that here:
-            ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero,
         };
 
         services
@@ -94,7 +94,7 @@ public static class ServicesExtensions
                         }
 
                         return Task.CompletedTask;
-                    }
+                    },
                 };
             });
     }
