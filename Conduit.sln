@@ -22,6 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{E0DF0C
 		docker-compose.yml = docker-compose.yml
 		Dockerfile = Dockerfile
 		NuGet.config = NuGet.config
+		.github\workflows\dotnetcore.yml = .github\workflows\dotnetcore.yml
+		.dockerignore = .dockerignore
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{79EC8D73-8DAD-430E-93CE-C1F29DBC33FA}"

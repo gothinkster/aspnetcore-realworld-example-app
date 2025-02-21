@@ -1,4 +1,3 @@
-version: '3'
 services:
   conduit:
     build: .
@@ -6,4 +5,4 @@ services:
      - ASPNETCORE_Conduit_DatabaseProvider=${ASPNETCORE_Conduit_DatabaseProvider}
      - ASPNETCORE_Conduit_ConnectionString=${ASPNETCORE_Conduit_ConnectionString}
     ports:
-     - "5000:5000"
+     - "8080:8080"
