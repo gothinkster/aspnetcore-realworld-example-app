@@ -66,7 +66,7 @@ public class Add
                     Article = article,
                     ArticleId = article.ArticleId,
                     Person = person,
-                    PersonId = person.PersonId
+                    PersonId = person.PersonId,
                 };
                 await context.ArticleFavorites.AddAsync(favorite, cancellationToken);
                 await context.SaveChangesAsync(cancellationToken);

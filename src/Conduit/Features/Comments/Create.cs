@@ -54,7 +54,7 @@ public class Create
                 Author = author,
                 Body = message.Model.Comment.Body ?? string.Empty,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow,
             };
             await context.Comments.AddAsync(comment, cancellationToken);
 

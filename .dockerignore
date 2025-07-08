@@ -283,3 +283,5 @@ Dockerfile
 # .env file contains default environment variables for docker
 .env
 .git/
+bin/
+obj/

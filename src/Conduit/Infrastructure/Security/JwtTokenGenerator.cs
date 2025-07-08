@@ -19,7 +19,7 @@ public class JwtTokenGenerator(IOptions<JwtIssuerOptions> jwtOptions) : IJwtToke
                 JwtRegisteredClaimNames.Iat,
                 new DateTimeOffset(_jwtOptions.IssuedAt).ToUnixTimeSeconds().ToString(),
                 ClaimValueTypes.Integer64
-            )
+            ),
         };
         var jwt = new JwtSecurityToken(
             _jwtOptions.Issuer,

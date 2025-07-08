@@ -287,3 +287,4 @@ tools
 # sqlite database
 *.db-shm
 *.db-wal
+*.db

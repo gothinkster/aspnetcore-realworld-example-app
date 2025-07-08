@@ -5,7 +5,6 @@ using Conduit.Features.Profiles;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Security;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
+using Details = Conduit.Features.Users.Details;
 
 namespace Conduit;
 
@@ -30,9 +30,7 @@ public static class ServicesExtensions
             typeof(DBContextTransactionPipelineBehavior<,>)
         );
 
-        services.AddFluentValidationAutoValidation();
-        services.AddFluentValidationClientsideAdapters();
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddValidatorsFromAssemblyContaining<Details.QueryValidator>();
 
         services.AddAutoMapper(typeof(Program));
 
@@ -75,7 +73,7 @@ public static class ServicesExtensions
             // Validate the token expiry
             ValidateLifetime = true,
             // If you want to allow a certain amount of clock drift, set that here:
-            ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero,
         };
 
         services
@@ -94,7 +92,7 @@ public static class ServicesExtensions
                         }
 
                         return Task.CompletedTask;
-                    }
+                    },
                 };
             });
     }
