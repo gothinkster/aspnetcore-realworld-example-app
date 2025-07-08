@@ -584,8 +584,9 @@
       "conduit": {
         "type": "Project",
         "dependencies": {
-          "AutoMapper": "[15.0.0, )",
+          "AutoMapper": "[14.0.0, )",
           "FluentValidation": "[12.0.0, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.0.0, )",
           "MediatR": "[13.0.0, )",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "[8.0.13, )",
           "Microsoft.EntityFrameworkCore.InMemory": "[8.0.13, )",
@@ -599,13 +600,11 @@
       },
       "AutoMapper": {
         "type": "CentralTransitive",
-        "requested": "[15.0.0, )",
-        "resolved": "15.0.0",
-        "contentHash": "pIOxis0VM4WGV48heK5Y93wysT2gD+hPQd7xFM23wUKsXJ77otM0ugg/wSeUDGJApvJgS3x6kggfLWhK16+E2g==",
+        "requested": "[14.0.0, )",
+        "resolved": "14.0.0",
+        "contentHash": "OC+1neAPM4oCCqQj3g2GJ2shziNNhOkxmNB9cVS8jtx4JbgmRzLcUOxB9Tsz6cVPHugdkHgCaCrTjjSI0Z5sCQ==",
         "dependencies": {
-          "Microsoft.Extensions.Logging": "8.0.0",
-          "Microsoft.Extensions.Options": "8.0.0",
-          "Microsoft.IdentityModel.JsonWebTokens": "8.0.1"
+          "Microsoft.Extensions.Options": "8.0.0"
         }
       },
       "FluentValidation": {
@@ -613,6 +612,16 @@
         "requested": "[12.0.0, )",
         "resolved": "12.0.0",
         "contentHash": "8NVLxtMUXynRHJIX3Hn1ACovaqZIJASufXIIFkD0EUbcd5PmMsL1xUD5h548gCezJ5BzlITaR9CAMrGe29aWpA=="
+      },
+      "FluentValidation.DependencyInjectionExtensions": {
+        "type": "CentralTransitive",
+        "requested": "[12.0.0, )",
+        "resolved": "12.0.0",
+        "contentHash": "B28fBRL1UjhGsBC8fwV6YBZosh+SiU1FxdD7l7p5dGPgRlVI7UnM+Lgzmg+unZtV1Zxzpaw96UY2MYfMaAd8cg==",
+        "dependencies": {
+          "FluentValidation": "12.0.0",
+          "Microsoft.Extensions.Dependencyinjection.Abstractions": "2.1.0"
+        }
       },
       "MediatR": {
         "type": "CentralTransitive",

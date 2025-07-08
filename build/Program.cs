@@ -13,7 +13,7 @@ const string Publish = "publish";
 
 Target(
     Clean,
-    ForEach("publish", "**/bin", "**/obj"),
+    ["publish", "**/bin", "**/obj"],
     dir =>
     {
         IEnumerable<string> GetDirectories(string d) => Glob.Directories(".", d);
@@ -43,11 +43,11 @@ Target(
     }
 );
 
-Target(Build, DependsOn(Format), () => Run("dotnet", "build . -c Release"));
+Target(Build, [Format], () => Run("dotnet", "build . -c Release"));
 
 Target(
     Test,
-    DependsOn(Build),
+    [Build],
     () =>
     {
         IEnumerable<string> GetFiles(string d) => Glob.Files(".", d);
@@ -61,8 +61,8 @@ Target(
 
 Target(
     Publish,
-    DependsOn(Test),
-    ForEach("src/Conduit"),
+    [Test],
+    ["src/Conduit"],
     project =>
     {
         Run(
@@ -72,5 +72,5 @@ Target(
     }
 );
 
-Target("default", DependsOn(Publish), () => Console.WriteLine("Done!"));
+Target("default", [Publish], () => Console.WriteLine("Done!"));
 await RunTargetsAndExitAsync(args);
