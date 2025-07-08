@@ -9,7 +9,7 @@ RUN dotnet run --project build/build.csproj -- publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
 WORKDIR /app
-COPY --link --from=build /src/publish .
+COPY --from=build /src/publish .
 EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "Conduit.dll"]
