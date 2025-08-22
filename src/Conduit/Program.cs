@@ -12,13 +12,13 @@ using Microsoft.OpenApi.Models;
 // read database configuration (database provider + database connection) from environment variables
 //Environment.GetEnvironmentVariable(DEFAULT_DATABASE_PROVIDER)
 //Environment.GetEnvironmentVariable(DEFAULT_DATABASE_CONNECTION_STRING)
-var defaultDatabaseConnectionSrting = "Filename=realworld.db";
+var defaultDatabaseConnectionString = "Filename=realworld.db";
 var defaultDatabaseProvider = "sqlite";
 
 var builder = WebApplication.CreateBuilder(args);
 
 // take the connection string from the environment variable or use hard-coded database name
-var connectionString = defaultDatabaseConnectionSrting;
+var connectionString = defaultDatabaseConnectionString;
 
 // take the database provider from the environment variable or use hard-coded database provider
 var databaseProvider = defaultDatabaseProvider;
