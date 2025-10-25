@@ -91,7 +91,7 @@ builder
     .Services.AddMvc(opt =>
     {
         opt.Conventions.Add(new GroupByApiRootConvention());
-        opt.Filters.Add(typeof(ValidatorActionFilter));
+        opt.Filters.Add<ValidatorActionFilter>();
         opt.EnableEndpointRouting = false;
     })
     .AddJsonOptions(opt =>
