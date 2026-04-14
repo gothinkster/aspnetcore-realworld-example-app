@@ -2,7 +2,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +10,10 @@ namespace Conduit.Features.Profiles;
 
 public class ProfileReader(
     ConduitContext context,
-    ICurrentUserAccessor currentUserAccessor,
-    IMapper mapper
+    ICurrentUserAccessor currentUserAccessor
 ) : IProfileReader
 {
+    private static readonly ConduitMapper _mapper = new();
     public async Task<ProfileEnvelope> ReadProfile(
         string username,
         CancellationToken cancellationToken
@@ -34,7 +33,7 @@ public class ProfileReader(
         {
             throw new RestException(HttpStatusCode.NotFound, new { User = Constants.NOT_FOUND });
         }
-        var profile = mapper.Map<Domain.Person, Profile>(person);
+        var profile = _mapper.ForgeProfile(person);
 
         if (currentUserName != null)
         {

@@ -2,7 +2,6 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
 using Conduit.Infrastructure.Security;
@@ -23,10 +22,11 @@ public class Details
 
     public class QueryHandler(
         ConduitContext context,
-        IJwtTokenGenerator jwtTokenGenerator,
-        IMapper mapper
+        IJwtTokenGenerator jwtTokenGenerator
     ) : IRequestHandler<Query, UserEnvelope>
     {
+        private static readonly ConduitMapper _mapper = new();
+
         public async Task<UserEnvelope> Handle(Query message, CancellationToken cancellationToken)
         {
             var person = await context
@@ -41,7 +41,7 @@ public class Details
                 );
             }
 
-            var user = mapper.Map<Domain.Person, User>(person);
+            var user = _mapper.Forge(person);
             user.Token = jwtTokenGenerator.CreateToken(
                 person.Username ?? throw new InvalidOperationException()
             );

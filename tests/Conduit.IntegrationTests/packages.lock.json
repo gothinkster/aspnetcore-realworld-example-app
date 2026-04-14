@@ -458,9 +458,9 @@
       "conduit": {
         "type": "Project",
         "dependencies": {
-          "AutoMapper": "[14.0.0, )",
           "FluentValidation": "[12.0.0, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.0.0, )",
+          "ForgeMap": "[1.6.0, )",
           "MediatR": "[12.5.0, )",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "[10.0.2, )",
           "Microsoft.EntityFrameworkCore.InMemory": "[10.0.2, )",
@@ -470,15 +470,6 @@
           "Serilog.Extensions.Logging": "[8.0.0, )",
           "Serilog.Sinks.Console": "[6.0.0, )",
           "Swashbuckle.AspNetCore": "[9.0.6, )"
-        }
-      },
-      "AutoMapper": {
-        "type": "CentralTransitive",
-        "requested": "[14.0.0, )",
-        "resolved": "14.0.0",
-        "contentHash": "OC+1neAPM4oCCqQj3g2GJ2shziNNhOkxmNB9cVS8jtx4JbgmRzLcUOxB9Tsz6cVPHugdkHgCaCrTjjSI0Z5sCQ==",
-        "dependencies": {
-          "Microsoft.Extensions.Options": "8.0.0"
         }
       },
       "FluentValidation": {
@@ -496,6 +487,12 @@
           "FluentValidation": "12.0.0",
           "Microsoft.Extensions.Dependencyinjection.Abstractions": "2.1.0"
         }
+      },
+      "ForgeMap": {
+        "type": "CentralTransitive",
+        "requested": "[1.6.0, )",
+        "resolved": "1.6.0",
+        "contentHash": "MSkdwRC/eskFz1msOg4NCbzQsBCOMRV9eSFvNNPnM9u4gw8ZB2WQiexSUQKPxdC1NNfHTbG7b/mXTVvXpWYwaQ=="
       },
       "MediatR": {
         "type": "CentralTransitive",

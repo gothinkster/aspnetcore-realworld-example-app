@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
 using Conduit.Infrastructure.Security;
@@ -38,10 +37,11 @@ public class Edit
     public class Handler(
         ConduitContext context,
         IPasswordHasher passwordHasher,
-        ICurrentUserAccessor currentUserAccessor,
-        IMapper mapper
+        ICurrentUserAccessor currentUserAccessor
     ) : IRequestHandler<Command, UserEnvelope>
     {
+        private static readonly ConduitMapper _mapper = new();
+
         public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
         {
             var currentUsername = currentUserAccessor.GetCurrentUsername();
@@ -70,7 +70,7 @@ public class Edit
 
             await context.SaveChangesAsync(cancellationToken);
 
-            return new UserEnvelope(mapper.Map<Domain.Person, User>(person));
+            return new UserEnvelope(_mapper.Forge(person));
         }
     }
 }
