@@ -459,7 +459,6 @@
       "conduit": {
         "type": "Project",
         "dependencies": {
-          "AutoMapper": "[16.1.1, )",
           "FluentValidation": "[12.0.0, )",
           "FluentValidation.DependencyInjectionExtensions": "[12.0.0, )",
           "MediatR": "[12.5.0, )",
@@ -467,21 +466,11 @@
           "Microsoft.EntityFrameworkCore.InMemory": "[10.0.2, )",
           "Microsoft.EntityFrameworkCore.SqlServer": "[10.0.2, )",
           "Microsoft.EntityFrameworkCore.Sqlite": "[10.0.2, )",
+          "Riok.Mapperly": "[4.3.1, )",
           "Serilog": "[4.3.0, )",
           "Serilog.Extensions.Logging": "[8.0.0, )",
           "Serilog.Sinks.Console": "[6.0.0, )",
           "Swashbuckle.AspNetCore": "[9.0.6, )"
-        }
-      },
-      "AutoMapper": {
-        "type": "CentralTransitive",
-        "requested": "[16.1.1, )",
-        "resolved": "16.1.1",
-        "contentHash": "VNEky8JA15ci+oIDRGHITOGOpV4dILsf8pnn24QhDl2urtqgJ2IXiS/V2EtGU17P/+f6OeFQPJETaZXV9QOIZg==",
-        "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
-          "Microsoft.Extensions.Options": "10.0.0",
-          "Microsoft.IdentityModel.JsonWebTokens": "8.14.0"
         }
       },
       "FluentValidation": {
@@ -557,6 +546,12 @@
           "Microsoft.Extensions.Configuration.Abstractions": "10.0.2",
           "Microsoft.Extensions.Logging": "10.0.2"
         }
+      },
+      "Riok.Mapperly": {
+        "type": "CentralTransitive",
+        "requested": "[4.3.1, )",
+        "resolved": "4.3.1",
+        "contentHash": "oSE+OVLHyiojrws0QVbQaAT2YKsYbyHqJXPdV7EhGseR/dYgeWS2x1T5qY5I4E+RJkJqMSG+FyZOq4SljWgJWQ=="
       },
       "Serilog": {
         "type": "CentralTransitive",

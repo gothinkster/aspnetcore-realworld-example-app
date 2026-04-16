@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using Conduit.Domain;
 using Conduit.Infrastructure;
 using Conduit.Infrastructure.Errors;
@@ -34,7 +33,7 @@ public class Create
         ConduitContext context,
         IPasswordHasher passwordHasher,
         IJwtTokenGenerator jwtTokenGenerator,
-        IMapper mapper
+        ConduitMapper mapper
     ) : IRequestHandler<Command, UserEnvelope>
     {
         public async Task<UserEnvelope> Handle(Command message, CancellationToken cancellationToken)
@@ -78,7 +77,7 @@ public class Create
             await context.Persons.AddAsync(person, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
 
-            var user = mapper.Map<Person, User>(person);
+            var user = mapper.PersonToUser(person);
             user.Token = jwtTokenGenerator.CreateToken(
                 person.Username ?? throw new InvalidOperationException()
             );

@@ -32,7 +32,7 @@ public static class ServicesExtensions
 
         services.AddValidatorsFromAssemblyContaining<Details.QueryValidator>();
 
-        services.AddAutoMapper(cfg => cfg.AddMaps(typeof(Program)));
+        services.AddSingleton<Features.ConduitMapper>();
 
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();

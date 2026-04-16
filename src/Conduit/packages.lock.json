@@ -2,15 +2,6 @@
   "version": 2,
   "dependencies": {
     "net10.0": {
-      "AutoMapper": {
-        "type": "Direct",
-        "requested": "[16.1.1, )",
-        "resolved": "16.1.1",
-        "contentHash": "VNEky8JA15ci+oIDRGHITOGOpV4dILsf8pnn24QhDl2urtqgJ2IXiS/V2EtGU17P/+f6OeFQPJETaZXV9QOIZg==",
-        "dependencies": {
-          "Microsoft.IdentityModel.JsonWebTokens": "8.14.0"
-        }
-      },
       "FluentValidation": {
         "type": "Direct",
         "requested": "[12.0.0, )",
@@ -74,6 +65,12 @@
           "Microsoft.Data.SqlClient": "6.1.1",
           "Microsoft.EntityFrameworkCore.Relational": "10.0.2"
         }
+      },
+      "Riok.Mapperly": {
+        "type": "Direct",
+        "requested": "[4.3.1, )",
+        "resolved": "4.3.1",
+        "contentHash": "oSE+OVLHyiojrws0QVbQaAT2YKsYbyHqJXPdV7EhGseR/dYgeWS2x1T5qY5I4E+RJkJqMSG+FyZOq4SljWgJWQ=="
       },
       "Serilog": {
         "type": "Direct",
