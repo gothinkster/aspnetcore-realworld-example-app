@@ -28,11 +28,6 @@ public class ProfileReader(
         {
             throw new RestException(HttpStatusCode.NotFound, new { User = Constants.NOT_FOUND });
         }
-
-        if (person == null)
-        {
-            throw new RestException(HttpStatusCode.NotFound, new { User = Constants.NOT_FOUND });
-        }
         var profile = mapper.PersonToProfile(person);
 
         if (currentUserName != null)
